@@ -1,0 +1,57 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}system,system/manager{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <form class="input-group col-sm-offset-2 col-sm-2">
+                <input type="text" class="form-control" name="keyword" value="{$keyword}" placeholder="用户名/手机号">
+                <span class="input-group-btn">
+                  <button type="submit" class="btn btn-info btn-flat">搜索</button>
+                </span>
+            </form>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body no-padding">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th width="20">#</th>
+                            <th width="80">用户名</th>
+                            <th width="80">手机号</th>
+                            <th width="80">养分</th>
+                            <th width="80">余额</th>
+                            <th width="120">更新日期</th>
+                            <th width="60">状态</th>
+                            <th width="120">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {volist name="list" id="vo"}
+                        <tr>
+                            <td>{$i}</td>
+                            <td>{$vo['name']}</td>
+                            <td>{$vo['phone']}</td>
+                            <td>{$vo['raise_num']}</td>
+                            <td>{$vo['money']}</td>
+                            <td>{$vo['update_time']}</td>
+                            <td>{:\\app\\common\\model\\Users::getPropInfo('fields_status',$vo['status'])}</td>
+                            <td>
+                                <a class="layui-btn layui-btn-sm" href="{:url('add',['id'=>$vo['id']])}">编辑</a>
+                            </td>
+                        </tr>
+                        {/volist}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+
+            <div class="box-footer clearfix">
+                {$page|raw}
+            </div>
+    </div>
+    <!-- /.error-page -->
+{/block}

@@ -1,0 +1,55 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}system,system/manager{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <a class="btn btn-sm btn-primary" href="{:url('newsCateAdd')}">添加新闻分类</a>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body no-padding">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th width="80">顶级分类</th>
+                            <th width="100">二级分类</th>
+                            <th width="60">状态</th>
+                            <th width="120">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {volist name="list" id="vo"}
+                            <tr>
+                                <td rowspan="{:count($vo['link_child'])+1}">{$vo['name']}</td>
+                                <td>--</td>
+                                <td>{:\\app\\common\\model\\NewsCate::getPropInfo('fields_status',$vo['status'])}</td>
+                                <td>
+                                    <a class="layui-btn layui-btn-sm" href="{:url('newsCateAdd',['id'=>$vo['id']])}">编辑</a>
+                                    <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("newsCateDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
+                                </td>
+                            </tr>
+                            {volist name="vo['link_child']" id="child"}
+                                <tr>
+                                    <td>{$child['name']}</td>
+                                    <td>{:\\app\\common\\model\\NewsCate::getPropInfo('fields_status',$child['status'])}</td>
+                                    <td>
+                                        <a class="layui-btn layui-btn-sm" href="{:url('newsCateAdd',['id'=>$child['id']])}">编辑</a>
+                                        <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("newsCateDel",["id"=>$child["id"]])}')" class="ml-5">  删除</a>
+                                    </td>
+                                </tr>
+                            {/volist}
+                        {/volist}
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+
+            <div class="box-footer clearfix">
+            </div>
+    </div>
+    <!-- /.error-page -->
+{/block}

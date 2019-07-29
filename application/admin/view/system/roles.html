@@ -1,0 +1,45 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}system,system/manager{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <a class="layui-btn layui-btn-sm" href="{:url('rolesAdd')}">添加角色</a>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body no-padding">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th width="20">#</th>
+                            <th width="80">角色名</th>
+                            <th width="120">更新时间</th>
+                            <th width="120">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {volist name="list" id="vo"}
+                        <tr>
+                            <td>{$i}</td>
+                            <td>{$vo['name']}</td>
+                            <td>{$vo['update_time']}</td>
+                            <td>
+                                <a class="layui-btn layui-btn-sm" href="{:url('rolesAdd',['id'=>$vo['id']])}">编辑</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("rolesDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
+                            </td>
+                        </tr>
+                        {/volist}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+
+            <div class="box-footer clearfix">
+                {$page|raw}
+            </div>
+    </div>
+    <!-- /.error-page -->
+{/block}
