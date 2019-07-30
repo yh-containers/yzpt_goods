@@ -7,4 +7,6 @@ return [
     'url' => 'https://up.qiniup.com',
     'fsizeLimit'=> 1024*1024*10,//文件上传大小 10M
     'is_use'=>0,//开启七牛上传
+    'file_prefix'=> '/qn_',
+    'preview_domain'=> 'https://up.qiniup.com', //图片域名
 ];

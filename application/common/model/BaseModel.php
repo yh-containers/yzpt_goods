@@ -55,8 +55,6 @@ class BaseModel extends Model
         }catch (\Exception $e) {
             exception('操作异常'.$e->getMessage());
         }
-
-
     }
 
     /*
@@ -72,7 +70,6 @@ class BaseModel extends Model
         }catch (\Exception $e) {
             return ['code'=>0,'msg'=>'删除异常:'.$e->getMessage()];
         }
-
     }
 
     //验证文件是否是图片
@@ -82,6 +79,28 @@ class BaseModel extends Model
             return null;
         }
         return preg_match('/.*(\.png|\.jpg|\.jpeg|\.gif)$/', $file);
+    }
+
+    //处理图片路径问题
+    public static function handleFile($file='')
+    {
+
+        if(empty($file)) return $file;
+        //当前模块
+        $module = request()->module();
+        if($module=='api'){
+            //api模块增加域名前缀
+            $qiniu_prefix = str_replace('/','\\/',config('qiniu.file_prefix'));
+            if(preg_match('/^'.$qiniu_prefix.'/',$file)){
+                //七牛文件前缀
+                $file = config('qiniu.preview_domain').$file;
+            }else{
+                //当前服务器的域名
+                $file = request()->domain().$file;
+            }
+        }
+        return $file;
+
 
     }
 

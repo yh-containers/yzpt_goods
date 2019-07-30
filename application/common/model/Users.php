@@ -8,16 +8,38 @@ use think\Validate;
 class Users extends BaseModel
 {
     use SoftDelete;
+    //性别
+    public static $fields_sex = ['','男','女','未知'];
     //数据库表名
     protected $name = 'users';
     //自动完成
     protected $insert=['face','name','status'=>1];
+
+    protected function  getIntroAttr($value)
+    {
+        return empty($value)?'':$value;
+    }
+
+    protected function  getAddressAttr($value)
+    {
+        return empty($value)?'':$value;
+    }
 
     protected function getIdAttr($value)
     {
         return $value;
     }
 
+    //用户编号
+    protected function getNumAttr($value)
+    {
+        return sprintf('%06s', $this->id);
+    }
+    //用户头像获取
+    protected function getFaceAttr($value)
+    {
+        return self::handleFile($value);
+    }
     //自动完成头像
     protected function setFaceAttr($value)
     {
@@ -44,6 +66,7 @@ class Users extends BaseModel
         return $value;
     }
 
+
     //自动完成头像
     protected function setNameAttr($value,$data)
     {
@@ -62,6 +85,18 @@ class Users extends BaseModel
         $salt = rand(10000,99999);
         $this->setAttr('salt',$salt);
         return self::generatePwd($value,$salt);
+    }
+
+    //用户label
+    protected function getLabelAttr($value)
+    {
+        return empty($value)?[]:explode("\r\n",$value);
+    }
+    //用户label
+    protected function setLabelAttr($value)
+    {
+        $value = is_array($value)?$value:[$value];
+        return implode("\r\n",$value);
     }
 
     /**
@@ -303,12 +338,49 @@ class Users extends BaseModel
      * */
     public function modInfo(array $data = [])
     {
-        empty($data) && exception('无修改内容');
+        $data = array_filter($data);
+        //无修改内容直接返回
+        if(empty($data)){ return;}
+
         $this->data($data);
         //限制某些字段无法修改
         isset($data['birthday']) && $this->birthday =$data['birthday'];
         $this->readonly(['raise_num','money','phone'])->save();
     }
 
+    /**
+     * 删除用户标签
+     * @param int index
+     * @throws
+     **/
+    public function labelDel($index)
+    {
+        !is_numeric($index) && exception('参数异常:index');
+        $label = $this->label;
+        unset($label[$index]);
+        $this->label = $label;
+        $this->save();
+    }
+    /**
+     * 新增用户标签
+     * @param int index
+     * @throws
+     **/
+    public function labelAdd($name)
+    {
+        empty($name) && exception('标签名不能为空');
+        if(strpos($name,',')!==false){
+            $name = explode(',',$name);
+        }elseif(!is_array($name)){
+            $name = [$name];
+        }
+        $name = array_filter($name);
+        $label = $this->label;
+        foreach ($name as $vo){
+            array_push($label,$vo);
+        }
+        $this->label = $label;
+        $this->save();
+    }
 
 }

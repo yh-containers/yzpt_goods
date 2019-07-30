@@ -5,6 +5,7 @@ use Qiniu\Auth;
 
 class Upload extends Common
 {
+
     protected $fsizeLimit=0;//文件上传大小
 
     protected $need_login=false;
@@ -28,7 +29,7 @@ class Upload extends Common
         if(!empty(config('qiniu.is_use'))){
             $auth = new Auth(config('qiniu.ak'), config('qiniu.sk'));
             $upload_token = $auth->uploadToken(config('qiniu.bucket'),null,config('qiniu.expires'),[
-                'saveKey' => '/qn_'.$type.'/'.date('Ymd').'/'.uniqid($this->user_id.'_').'$(ext)',
+                'saveKey' => config('qiniu.file_prefix').$type.'/'.date('Ymd').'/'.uniqid($this->user_id.'_').'$(ext)',
                 'forceSaveKey' => true,
                 'fsizeLimit' => $this->fsizeLimit,
                 'returnBody' => json_encode(['code'=>0,'msg'=>'上传成功','data'=>[

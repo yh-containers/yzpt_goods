@@ -1,6 +1,8 @@
 <?php
 namespace app\api\controller;
 
+use app\common\model\UsersMoneyLog;
+
 class Mine extends Common
 {
     protected $need_login=true;
@@ -20,7 +22,56 @@ class Mine extends Common
     //个人基本信息
     public function info()
     {
-        return $this->_resData(1,'获取成功',[]);
+        $on_praise_num = input('on_praise_num',0,'intval');
+        $on_user_body = input('on_user_body',0,'intval');
+        $on_user_money = input('on_user_money',0,'intval');
+        $on_user_label = input('on_user_label',0,'intval');
+        $off_user_info = input('off_user_info',0,'intval');//关闭用户基本信息
+        $data=[];
+        if(empty($off_user_info)){
+            //用户资料
+            $data['info']=[
+                'id' => $this->user_model['id'],
+                'num' => $this->user_model['num'],
+                'name' => $this->user_model['name'],
+                'face' => $this->user_model['face'],
+                'sex' => $this->user_model['sex'],
+                'sex_name' => \app\common\model\Users::getPropInfo('fields_sex',$this->user_model['sex']),
+                'intro' => $this->user_model['intro'],
+                'address' => $this->user_model['address'],
+                'birthday' => $this->user_model->birthday,
+            ];
+        }
+
+        //用户余额
+        if($on_user_money){
+            $data['money']=['raise_num'=>0,'money'=>0];
+        }
+        //用户点赞
+        if($on_praise_num){
+            //粉丝
+            $fans_num = (int)\app\common\model\UsersFollow::where(['f_uid'=>$this->user_id])->count();
+            //关注对象
+            $follow_num = (int)\app\common\model\UsersFollow::where(['uid'=>$this->user_id])->count();
+            $data['praise']=['num'=>(int)$this->user_model['praise_num'],'follow'=>$follow_num,'fans'=>$fans_num];
+        }
+        //身体状态
+        if($on_user_body){
+            $data['body']=['star'=>0];
+        }
+        //身体状态
+        if($on_user_label){
+            $label = $this->user_model['label'];
+            $label_data = [];
+            foreach ($label as $key=>$vo){
+                $label_data[] = [
+                    'index' => $key,
+                    'name' => $vo,
+                ];
+            }
+            $data['label']=$label_data;
+        }
+        return $this->_resData(1,'获取成功',$data);
     }
 
 
@@ -71,5 +122,53 @@ class Mine extends Common
             return $this->_resData(0,$e->getMessage());
         }
         return $this->_resData(1,'修改成功');
+    }
+
+    //消费日志
+    public function moneyLog()
+    {
+        //用户消费日志
+        $info = UsersMoneyLog::moneyLogs($this->user_id);
+        $list = [];
+        foreach ($info as $vo){
+            $list[] =[
+                'intro' => $vo['intro'],
+                'money' => $vo['money'],
+                'date_time' => date('Y-m-d H:i',$vo['create_time']),
+            ];
+        }
+        $data=['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
+    //删除标签
+    public function labelDel()
+    {
+        $index = input('index');
+        try{
+            $this->user_model->labelDel($index);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'操作成功');
+    }
+
+    //标签新增
+    public function labelAdd()
+    {
+        $name = input('name','','trim');
+        try{
+            $this->user_model->labelAdd($name);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'操作成功');
+    }
+
+    //标签系统标签
+    public function labelSys()
+    {
+
+        return $this->_resData(1,'操作成功');
     }
 }

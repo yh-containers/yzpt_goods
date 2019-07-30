@@ -72,4 +72,19 @@ class Index extends Common
 
         return $this->_resData(1,'找回成功');
     }
+
+    //系统默认标签
+    public function sysLabel()
+    {
+        $sys_label = \app\common\model\SysSetting::getContent('sys_label');
+        $sys_label = empty($sys_label)?[]:explode(',',$sys_label);
+        $data = [];
+        foreach ($sys_label as $vo){
+            $data[] =[
+                'name' => $vo,
+                'is_active' => 0
+            ];
+        }
+        return $this->_resData(1,'获取成功',$data);
+    }
 }
