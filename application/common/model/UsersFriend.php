@@ -8,5 +8,9 @@ class UsersFriend extends BaseModel
     use SoftDelete;
     protected $name='users_friend';
 
-    
+
+    public function linkUser()
+    {
+//        return $this->b
+    }
 }

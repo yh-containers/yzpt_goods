@@ -7,6 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInit5829cc1889159fa0b05bd6f8f790ebd9
 {
     public static $files = array (
+        'dc1275c308c5b416beb314b6317daca2' => __DIR__ . '/..' . '/overtrue/pinyin/src/const.php',
         '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
         '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
     );
@@ -25,6 +26,10 @@ class ComposerStaticInit5829cc1889159fa0b05bd6f8f790ebd9
         'Q' => 
         array (
             'Qiniu\\' => 6,
+        ),
+        'O' => 
+        array (
+            'Overtrue\\Pinyin\\' => 16,
         ),
     );
 
@@ -48,6 +53,10 @@ class ComposerStaticInit5829cc1889159fa0b05bd6f8f790ebd9
         'Qiniu\\' => 
         array (
             0 => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu',
+        ),
+        'Overtrue\\Pinyin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/pinyin/src',
         ),
     );
 

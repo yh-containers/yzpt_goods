@@ -76,6 +76,11 @@ class Users extends BaseModel
         $name = '用户昵称';
         $phone = empty($data['phone'])?'':$data['phone'];
         !empty($phone) && $name = substr($phone,-4).'用户';
+        if(!empty($name)){
+            $pinyin =new \Overtrue\Pinyin\Pinyin();
+            $py = $pinyin->permalink($name,' ');
+            $this->setAttr('py',$py);
+        }
         return $name;
     }
     //用户密码
@@ -381,6 +386,17 @@ class Users extends BaseModel
         }
         $this->label = $label;
         $this->save();
+    }
+
+    /**
+     * 我的好友
+     * */
+    public static function friends($user_id)
+    {
+        UsersFriend::with('linkUser')->where(['status'=>1])->whereOr([
+            [['uid','=',$user_id]],
+            [['f_uid','=',$user_id]],
+        ])->select();
     }
 
 }
