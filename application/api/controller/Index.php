@@ -87,4 +87,31 @@ class Index extends Common
         }
         return $this->_resData(1,'获取成功',$data);
     }
+
+    //用户
+    public function searchUsers()
+    {
+        $keyword = input('keyword','','trim');
+        empty($keyword) && abort(0,'请输入关键字');
+
+        $data = \app\common\model\Users::field('id,name,face,py')
+                ->where([['name','like','%'.$keyword.'%'],['status','=',1]])->select()->toArray();
+        return $this->_resData(1,'获取成功',$data);
+    }
+
+    //反馈
+    public function feedback()
+    {
+        try{
+            $input_data = input();
+            $input_data['uid'] = $this->user_id;
+            $validate =new \app\common\validate\Feedback();
+            $validate->scene('api_release');
+            $model = new \app\common\model\Feedback();
+            $model->actionAdd($input_data,$validate);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'感谢您的反馈，我们会尽快处理');
+    }
 }

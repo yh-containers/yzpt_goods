@@ -23,6 +23,7 @@ class Upload extends Common
     {
         $data = [
             'upload_token' => '',
+            'preview_domain' => request()->domain(),
             'url' => url('upload',[],false,true).'?type='.$type,
         ];
         // 初始化签权对象
@@ -44,10 +45,8 @@ class Upload extends Common
                 ]])
             ]);
 
-            $data = [
-                'upload_token' => $upload_token,
-                'url' => config('qiniu.url'),
-            ];
+            $data['upload_token'] =$upload_token;
+            $data['url'] =config('qiniu.url');
         }
         return $this->_resData(1,'获取成功',$data);
 
@@ -61,8 +60,9 @@ class Upload extends Common
         $upload_file_key=key($_FILES);
         // 获取表单上传文件 例如上传了001.jpg
         $file = request()->file($upload_file_key);
+        empty($file) && abort(0,'请选择上传文件');
         //上传路径
-        $save_path = '/uploads/'.$type.'/';
+        $save_path = '/uploads/'.$type.'/'.date('Ymd');
 //        !$open_dir_month && $save_path = $save_path.date('Yhm');
         // 移动到框架应用根目录/uploads/ 目录下
         $user_id = $this->user_id;

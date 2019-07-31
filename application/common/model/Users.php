@@ -25,6 +25,12 @@ class Users extends BaseModel
         return empty($value)?'':$value;
     }
 
+    //拼音
+    protected function getPyAttr($value)
+    {
+        return empty($value)?'':$value;
+    }
+
     protected function getIdAttr($value)
     {
         return $value;
@@ -70,16 +76,17 @@ class Users extends BaseModel
     //自动完成头像
     protected function setNameAttr($value,$data)
     {
-        if($value){
-            return $value;
-        }
-        $name = '用户昵称';
+//        if($value){
+//            return $value;
+//        }
+        $name = $value?$value:'用户昵称';
         $phone = empty($data['phone'])?'':$data['phone'];
-        !empty($phone) && $name = substr($phone,-4).'用户';
+        !empty($name) && !empty($phone) && $name = substr($phone,-4).'用户';
+
         if(!empty($name)){
             $pinyin =new \Overtrue\Pinyin\Pinyin();
-            $py = $pinyin->permalink($name,' ');
-            $this->setAttr('py',$py);
+            $py = $pinyin->permalink($name,'-',PINYIN_NAME);
+            $this->setAttr('py',strtoupper($py));
         }
         return $name;
     }
@@ -347,9 +354,9 @@ class Users extends BaseModel
         //无修改内容直接返回
         if(empty($data)){ return;}
 
-        $this->data($data);
+        $this->data($data,true);
         //限制某些字段无法修改
-        isset($data['birthday']) && $this->birthday =$data['birthday'];
+//        isset($data['birthday']) && $this->birthday =$data['birthday'];
         $this->readonly(['raise_num','money','phone'])->save();
     }
 
@@ -393,10 +400,21 @@ class Users extends BaseModel
      * */
     public static function friends($user_id)
     {
-        UsersFriend::with('linkUser')->where(['status'=>1])->whereOr([
-            [['uid','=',$user_id]],
-            [['f_uid','=',$user_id]],
-        ])->select();
+        $friend_field = 'id,name,face,py';
+        $data = [];
+        UsersFriend::whereRaw('status = 1 and (`uid`=:uid or `f_uid`=:f_uid)',['uid'=>$user_id,'f_uid'=>$user_id])
+            ->chunk(100,function($user_friends)use($user_id,$friend_field , &$data){
+            $friend_ids = [];
+            foreach ($user_friends as $vo){
+                $f_uid = $user_id!=$vo['f_uid']?$vo['f_uid']:$vo['uid'];
+                array_push($friend_ids,$f_uid);
+            }
+
+            $users = Users::field($friend_field)->where([['id','in',$friend_ids]])->select()->toArray();
+
+            $data = array_merge($data,$users);
+        });
+        return $data;
     }
 
 }

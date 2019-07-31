@@ -165,10 +165,10 @@ class Mine extends Common
         return $this->_resData(1,'操作成功');
     }
 
-    //标签系统标签
-    public function labelSys()
+    //我的好友
+    public function friends()
     {
-
-        return $this->_resData(1,'操作成功');
+        $data = \app\common\model\Users::friends($this->user_id);
+        return $this->_resData(1,'操作成功',$data);
     }
 }
