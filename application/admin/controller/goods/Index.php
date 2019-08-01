@@ -9,6 +9,11 @@ class Index extends Common
     {
         return view('index');
     }
+
+    public function category(){
+        return view('category');
+    }
+
     public function test()
     {
         return 'goods/test';
