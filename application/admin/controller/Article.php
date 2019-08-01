@@ -23,7 +23,7 @@ class Article extends Common
     public function newsAdd()
     {
 
-        $id = $this->request->param('id');
+        $id  = $this->request->param('id');
         $model = new \app\common\model\News();
 
         //表单提交

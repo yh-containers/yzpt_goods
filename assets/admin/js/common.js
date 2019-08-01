@@ -84,15 +84,18 @@ function sendAjax(url,data,type,func){
             // console.log('beforeSend')
         },
         success:function(res){
-            // console.log(res)
+            //console.log(res)
             // console.log('success')
-            layui.layer.msg(res.msg)
-            if(res.code===1){
-                //成功
-                typeof func ==='function' && setTimeout(func,1000)
+            if(res){
+                layui.layer.msg(res.msg)
+                if(res.code===1){
+                    //成功
+                    typeof func ==='function' && setTimeout(func,1000)
+                }else{
+                    //失败
+                }
             }else{
-                //失败
-
+                typeof func ==='function' && setTimeout(func,1000)
             }
         },
         error:function(res){
