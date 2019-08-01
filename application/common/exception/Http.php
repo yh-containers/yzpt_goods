@@ -21,6 +21,7 @@ class Http extends Handle
         }
 
         // 其他错误交给系统处理
+        return json(['code'=>$e->getCode(), 'msg'=>'异常::'.$e->getMessage()]);
         return parent::render($e);
     }
 

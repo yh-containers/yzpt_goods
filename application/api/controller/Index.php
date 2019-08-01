@@ -94,8 +94,21 @@ class Index extends Common
         $keyword = input('keyword','','trim');
         empty($keyword) && abort(0,'请输入关键字');
 
-        $data = \app\common\model\Users::field('id,name,face,py')
-                ->where([['name','like','%'.$keyword.'%'],['status','=',1]])->select()->toArray();
+        $info = \app\common\model\Users::where([
+                    ['name','like','%'.$keyword.'%'],
+                    ['status','=',1]
+                ])
+                ->paginate();
+        $list = [];
+        foreach ($info as $vo){
+            $list[] =[
+                'id' => $vo['id'],
+                'face' => $vo['face'],
+                'name' => $vo['name'],
+                'py' => $vo['py'],
+            ];
+        }
+        $data=['list'=>$list,'total_page'=>$info->lastPage()];
         return $this->_resData(1,'获取成功',$data);
     }
 

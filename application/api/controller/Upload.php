@@ -22,7 +22,7 @@ class Upload extends Common
     public function info($type='image')
     {
         $data = [
-            'upload_token' => '',
+            'token' => '',
             'preview_domain' => request()->domain(),
             'url' => url('upload',[],false,true).'?type='.$type,
         ];
@@ -30,9 +30,12 @@ class Upload extends Common
         if(!empty(config('qiniu.is_use'))){
             $auth = new Auth(config('qiniu.ak'), config('qiniu.sk'));
             $upload_token = $auth->uploadToken(config('qiniu.bucket'),null,config('qiniu.expires'),[
-                'saveKey' => config('qiniu.file_prefix').$type.'/'.date('Ymd').'/'.uniqid($this->user_id.'_').'$(ext)',
+                'saveKey' => config('qiniu.file_prefix').$type.'/'.date('Ymd').'/'.uniqid($this->user_id.'_'.'$(sec)_$(x:up_index)'.'_').'$(ext)',
                 'forceSaveKey' => true,
                 'fsizeLimit' => $this->fsizeLimit,
+                'callbackBody'=>json_encode([
+                    'up_index'=>'$(x:up_index)'
+                ]),
                 'returnBody' => json_encode(['code'=>0,'msg'=>'上传成功','data'=>[
                     'avinfo' => ['duration'=>'$(avinfo.video.duration)'],
                     'key' => '$(key)',
@@ -45,7 +48,7 @@ class Upload extends Common
                 ]])
             ]);
 
-            $data['upload_token'] =$upload_token;
+            $data['token'] =$upload_token;
             $data['url'] =config('qiniu.url');
         }
         return $this->_resData(1,'获取成功',$data);
@@ -57,16 +60,33 @@ class Upload extends Common
     public function upload($type='image')
     {
 
+//        return $this->_resData(0,json_encode($_FILES));exit;
         $upload_file_key=key($_FILES);
         // 获取表单上传文件 例如上传了001.jpg
-        $file = request()->file($upload_file_key);
-        empty($file) && abort(0,'请选择上传文件');
+        $files = request()->file($upload_file_key);
+        empty($files) && abort(0,'请选择上传文件');
         //上传路径
-        $save_path = '/uploads/'.$type.'/'.date('Ymd');
+        $upload_data = [];
+        if(is_array($files)){
+            foreach($files as $file){
+                $this->_uploadFile($upload_data,$type,$file);
+                return $this->_resData(1,'上传成功',$upload_data);
+            }
+        }else{
+            $this->_uploadFile($upload_data,$type,$files);
+            return $this->_resData(1,'上传成功',$upload_data[0]);
+
+        }
+    }
+
+    private function _uploadFile(array &$upload_data,$type,$file)
+    {
+        $save_path = '/uploads/'.$type.'/'.date('Ymd').'/';
 //        !$open_dir_month && $save_path = $save_path.date('Yhm');
         // 移动到框架应用根目录/uploads/ 目录下
         $user_id = $this->user_id;
         $mine_type = 'file';
+
         $info = $file
             ->validate(['size'=>$this->fsizeLimit])
             ->rule(function($obj)use(&$mine_type,$user_id){
@@ -75,20 +95,20 @@ class Upload extends Common
                 return (empty($user_id)?'':$user_id).'_'.md5(json_encode($file_info));
             })
             ->move( $this->root_path.$save_path);
+        $data = [
+            'key'=>'',
+            'fsize' => 0,
+            'ext' => '',
+            'mime_type' => $mine_type,
+        ];
         if($info){
-//            dump($info);exit;
             // 成功上传后 获取上传信息
-            $data = [
-                'key'=>str_replace('\\','/',$save_path.$info->getSaveName()),
-                'fsize' => $info->getSize(),
-                'ext' => '.'.$info->getExtension(),
-                'mime_type' => $mine_type,
-            ];
-
-            return array_merge([ 'code'=>1,'msg'=>'上传成功'],['data'=>$data]);
+            $data['key'] =str_replace('\\','/',$save_path.$info->getSaveName());
+            $data['fsize'] =$info->getSize();
+            $data['ext'] =$info->getExtension();
         }else{
-            // 上传失败获取错误信息
-            return [ 'code'=>0,'msg'=>$file->getError()];
+            $data['error_msg']=$info->getError();
         }
+        array_push($upload_data,$data);
     }
 }
