@@ -7,7 +7,7 @@ class Dynamic extends Validate
 {
     protected $rule = [
         'content'  => 'requireCallback:checkContent',
-        'file'  => 'checkFile'
+//        'file'  => 'checkFile'
     ];
 
     protected $message  =   [
@@ -32,11 +32,11 @@ class Dynamic extends Validate
     }
 
     //验证文件
-    protected function checkFile($value,$rule,$data=[])
-    {
-        if($value && (!isset($data['mine_type']) || isset($data['size']))){
-            return '文件上传参数错误:type-size';
-        }
-        return true;
-    }
+//    protected function checkFile($value,$rule,$data=[])
+//    {
+//        if($value && (!isset($data['mine_type']) || isset($data['size']))){
+//            return '文件上传参数错误:type-size';
+//        }
+//        return true;
+//    }
 }

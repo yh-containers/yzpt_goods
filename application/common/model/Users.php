@@ -400,7 +400,7 @@ class Users extends BaseModel
      * */
     public static function friends($user_id)
     {
-        $friend_field = 'id,name,face,py';
+        $friend_field = 'id,name,face,left(py,1) as flag';
         $data = [];
         UsersFriend::whereRaw('status = 1 and (`uid`=:uid or `f_uid`=:f_uid)',['uid'=>$user_id,'f_uid'=>$user_id])
             ->chunk(100,function($user_friends)use($user_id,$friend_field , &$data){
