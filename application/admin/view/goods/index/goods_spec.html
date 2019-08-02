@@ -1,0 +1,56 @@
+{extend name="base" /}
+
+{block name="content"}
+
+<div class="box box-primary">
+    <!-- /.box-header -->
+    <div class="box-header with-border">
+        <div class="col-sm-3">
+            <a class="btn btn-sm btn-adn" href="{:url('specAdd')}">添加商品规格</a>
+        </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-body no-padding">
+        <table class="table table-striped" id="layer-photos-demo">
+            <thead>
+            <tr>
+                <th width="20">#</th>
+                <th width="80">规格</th>
+                <th width="80">发布时间</th>
+                <th width="120">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="list" id="vo"}
+            <tr>
+                <td>{$vo.id}</td>
+                <td>{$vo['spec_name']}</td>
+                <td>{:$vo['update_time']}</td>
+                <td>
+                    <a class="layui-btn layui-btn-sm" href="{:url('specAdd',['id'=>$vo['id']])}">编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("specDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
+                </td>
+            </tr>
+
+                {volist name="vo.link_child" id="v1"}
+                <tr>
+                    <td>{$v1.id}</td>
+                    <td>|__ {$v1['spec_name']}</td>
+                    <td>{:$v1['update_time']}</td>
+                    <td>
+                        <a class="layui-btn layui-btn-sm" href="{:url('specAdd',['id'=>$v1['id']])}">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("specDel",["id"=>$v1["id"]])}')" class="ml-5">  删除</a>
+                    </td>
+                </tr>
+                {/volist}
+            {/volist}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="box-footer clearfix">
+        {$page|raw}
+    </div>
+</div>
+<!-- /.error-page -->
+{/block}

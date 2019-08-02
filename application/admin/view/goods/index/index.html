@@ -4,11 +4,49 @@
 
     <div class="box box-primary">
         <div class="box-header with-border">
-            <!--<h3 class="box-title">Quick Example</h3>-->
+            <div class="col-sm-3">
+                <a class="btn btn-sm btn-adn" href="{:url('goodsAdd')}">添加商品</a>
+            </div>
         </div>
         <!-- /.box-header -->
             <div class="box-body no-padding">
-
+                <table class="table table-striped" id="layer-photos-demo">
+                    <thead>
+                    <tr>
+                        <th width="20">#</th>
+                        <th width="80">商品名称</th>
+                        <th width="80">商品图片</th>
+                        <th width="80">商品分类</th>
+                        <th width="80">商品价格</th>
+                        <th width="80">是否上架</th>
+                        <th width="80">是否热卖</th>
+                        <th width="80">是否精品</th>
+                        <th width="80">是否特价</th>
+                        <th width="80">发布时间</th>
+                        <th width="120">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="list" id="vo"}
+                    <tr>
+                        <td>{$vo.id}</td>
+                        <td>{$vo['goods_name']}</td>
+                        <td> <img src="{$vo['image']}" alt="" width="40" height="40"> </td>
+                        <td>{$vo['cate_name']}</td>
+                        <td>{$vo['price']}</td>
+                        <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_state',$vo['state'])}</td>
+                        <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_hot',$vo['is_hot'])}</td>
+                        <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_best',$vo['is_best'])}</td>
+                        <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_special',$vo['is_special'])}</td>
+                        <td>{:$vo['update_time']}</td>
+                        <td>
+                            <a class="layui-btn layui-btn-sm" href="{:url('goodsAdd',['id'=>$vo['id']])}">编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("goodsDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
             </div>
             <!-- /.box-body -->
 

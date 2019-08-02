@@ -1,0 +1,43 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}goods,goods.index/goods_spec{/block}
+
+{block name="content"}
+
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <!--<h3 class="box-title">Quick Example</h3>-->
+    </div>
+    <!-- /.box-header -->
+    <!-- form start -->
+    <div class="box-body">
+        <form id="form" action="" class="form-horizontal">
+            <input type="hidden" name="id" value="{$model['id']}"/>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">所属</label>
+                <div class="col-sm-10">
+                    <select name="pid" class="form-control">
+                        <option value="0">请选择</option>
+                        {volist name="cate" id="vo"}
+                        <option value="{$vo['id']}"  {:$model['pid']==$vo['id']?'selected':''} >{$vo['spec_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">规格名称</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" placeholder="规格名称" name="spec_name" value="{$model['spec_name']}">
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <!-- /.box-body -->
+
+    <div class="box-footer">
+        <button type="button" onclick="$.common.submitForm()" class="col-sm-offset-2 btn  btn-info">保存</button>
+    </div>
+</div>
+
+{/block}
