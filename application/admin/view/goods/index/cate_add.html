@@ -20,7 +20,7 @@
                         <option value="0">请选择分类</option>
                         {volist name="cate" id="vo"}
                         <option value="{$vo['id']}"  {:$model['pid']==$vo['id']?'selected':''} >{$vo['cate_name']}</option>
-                        {volist name="vo['cate_child']" id="child"}
+                        {volist name="vo['link_child_cate']" id="child"}
                         <option value="{$child['id']}"  {:$model['pid']==$child['id']?'selected':''} >|—— {$child['cate_name']}</option>
                         {/volist}
                         {/volist}
@@ -51,7 +51,7 @@
                         正常
                     </label>
                     <label>
-                        <input type="radio" name="state" value="0" {:$model['state']==0?'checked':''}>
+                        <input type="radio" name="state" value="2" {:$model['state']==2?'checked':''}>
                         关闭
                     </label>
                 </div>

@@ -10,15 +10,16 @@ use think\model\concern\SoftDelete;
 class GoodsCategory extends BaseModel
 {
     use SoftDelete;
-    protected $deleteTime = 'delete_time';
+    public static $fields_status = ['','正常','关闭'];
     //数据库表名
     protected $table = 'gd_category';
-    public function cateChild()
-    {
-        return $this->hasMany('GoodsCategory','pid');
-    }
+
     public function linkChildCate()
     {
-        return $this->hasMany('GoodsCategory','pid');
+        return $this->hasMany('GoodsCategory','pid')->order('sort asc');
+    }
+    public function GoodsCate()
+    {
+        return $this->hasMany('Goods','cate_id')->order('sort asc');
     }
 }
