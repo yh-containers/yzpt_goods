@@ -90,12 +90,12 @@ function sendAjax(url,data,type,func){
                 layui.layer.msg(res.msg)
                 if(res.code===1){
                     //成功
-                    typeof func ==='function' && setTimeout(func,1000)
+                    typeof func ==='function' && setTimeout(()=>{func(res)},1000)
                 }else{
                     //失败
                 }
             }else{
-                typeof func ==='function' && setTimeout(func,1000)
+                typeof func ==='function' && setTimeout(()=>{func(res)},1000)
             }
         },
         error:function(res){

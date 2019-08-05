@@ -26,7 +26,7 @@ class Dynamic extends BaseModel
     {
         $file = [];
         if(!empty($value)){
-            $value = '[{"key":"/uploads/dynamic/20190801/_52c85aba0108396cfb99d7e48e3d7646.jpg","fsize":3300075,"ext":"jpg","mime_type":"image/jpeg"}]';
+//            $value = '[{"key":"/uploads/dynamic/20190801/_52c85aba0108396cfb99d7e48e3d7646.jpg","fsize":3300075,"ext":"jpg","mime_type":"image/jpeg"}]';
             $value = json_decode($value,true);
 //            dump( $value);exit;
 

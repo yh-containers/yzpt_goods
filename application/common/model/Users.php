@@ -31,10 +31,6 @@ class Users extends BaseModel
         return empty($value)?'':$value;
     }
 
-    protected function getIdAttr($value)
-    {
-        return $value;
-    }
 
     //用户编号
     protected function getNumAttr($value)

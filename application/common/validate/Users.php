@@ -23,9 +23,7 @@ class Users extends Validate
     {
         return $this->only(['password','phone','verify'])
             ->append('password', 'require')
-            ->append('account', 'require')
             ->append('phone', 'require|validPhone|checkExist:2')
-            ->append('account','checkExist')
             ->append('verify', 'require|checkVerify:2')
             ;
     }
@@ -35,10 +33,7 @@ class Users extends Validate
     {
         return $this->only(['password','phone','verify'])
             ->append('password', 'require|confirm:re_password')
-            ->append('account', 'require')
             ->append('phone', 'require|validPhone|checkExist:1')
-            ->append('account','checkExist')
-
             ->append('verify', 'require|checkVerify:1')
             ;
     }
