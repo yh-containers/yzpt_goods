@@ -1,0 +1,40 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}goods,goods.index/index{/block}
+
+{block name="content"}
+
+<div class="box box-primary">
+    <!-- /.box-header -->
+    <div class="box-header with-border">
+        <ul class="nav nav-tabs">
+            <li class=""><a href="{:url('goodsAdd',['id'=>$id])}">商品信息</a></li>
+            <li class=""><a href="{:url('goodsAdd',['id'=>$id])}">详情介绍</a></li>
+            <li class=""><a href="{:url('goodsAdd',['id'=>$id])}">规格属性</a></li>
+            <li class="active"><a href="javascript:;" data-toggle="tab" aria-expanded="false">规格属性库存</a></li>
+        </ul>
+    </div>
+    <div class="box-body tab-content">
+        <form id="form" action="" class="form-horizontal">
+            <input type="hidden" name="id" value="{$id}">
+            {volist name="stocks" id="list" key="k"}
+            <div class="form-group">
+                <label class="col-sm-2 control-label">{$list.name}</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" placeholder="库存" name="stock[{$k}]" value="{$list.stock}">
+                    <input type="hidden" name="goods_id[{$k}]" value="{$list.goods_id}">
+                    <input type="hidden" name="sv_ids[{$k}]" value="{$list.sv_ids}">
+                    <input type="hidden" name="sid[{$k}]" value="{$list.id}">
+                </div>
+            </div>
+            {/volist}
+        </form>
+    </div>
+    <div class="box-footer">
+        <button type="button" onclick="$.common.submitForm()" class="col-sm-offset-2 btn  btn-info">保存</button>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+{/block}

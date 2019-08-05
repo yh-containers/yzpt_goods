@@ -30,7 +30,7 @@
                 <td>{$vo['cate_name']}</td>
                 <td> <img src="{$vo['image']}" alt="" width="40" height="40"> </td>
                 <td>{:$vo['update_time']}</td>
-                <td>{:\\app\\common\\model\\GoodsCategory::getPropInfo('fields_status',$vo['state'])}</td>
+                <td>{:\\app\\common\\model\\GoodsCategory::getPropInfo('fields_status',$vo['status'])}</td>
                 <td>
                     <a class="layui-btn layui-btn-sm" href="{:url('cateAdd',['id'=>$vo['id']])}">编辑</a>
                     <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("cateDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
@@ -43,7 +43,7 @@
                     <td>|— {$v1['cate_name']}</td>
                     <td> <img src="{$v1['image']}" alt="" width="40" height="40"> </td>
                     <td>{:$v1['update_time']}</td>
-                    <td>{:\\app\\common\\model\\GoodsCategory::getPropInfo('fields_state',$v1['state'])}</td>
+                    <td>{:\\app\\common\\model\\GoodsCategory::getPropInfo('fields_status',$v1['status'])}</td>
                     <td>
                         <a class="layui-btn layui-btn-sm" href="{:url('cateAdd',['id'=>$v1['id']])}">编辑</a>
                         <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("cateDel",["id"=>$v1["id"]])}')" class="ml-5">  删除</a>
@@ -55,7 +55,7 @@
                         <td>|— |__ {$v2['cate_name']}</td>
                         <td> <img src="{$v2['image']}" alt="" width="40" height="40"> </td>
                         <td>{:$v2['update_time']}</td>
-                        <td>{:\\app\\common\\model\\GoodsCategory::getPropInfo('fields_state',$v2['state'])}</td>
+                        <td>{:\\app\\common\\model\\GoodsCategory::getPropInfo('fields_status',$v2['status'])}</td>
                         <td>
                             <a class="layui-btn layui-btn-sm" href="{:url('cateAdd',['id'=>$v2['id']])}">编辑</a>
                             <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("cateDel",["id"=>$v2["id"]])}')" class="ml-5">  删除</a>

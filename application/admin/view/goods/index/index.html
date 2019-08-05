@@ -31,10 +31,10 @@
                     <tr>
                         <td>{$vo.id}</td>
                         <td>{$vo['goods_name']}</td>
-                        <td> <img src="{$vo['image']}" alt="" width="40" height="40"> </td>
+                        <td> <img src="{$vo['goods_image']}" alt="" width="40" height="40"> </td>
                         <td>{$vo['cate_name']}</td>
                         <td>{$vo['price']}</td>
-                        <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_state',$vo['state'])}</td>
+                        <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_status',$vo['status'])}</td>
                         <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_hot',$vo['is_hot'])}</td>
                         <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_best',$vo['is_best'])}</td>
                         <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_special',$vo['is_special'])}</td>

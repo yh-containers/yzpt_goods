@@ -66,6 +66,44 @@ $.common={
             }
         });
         return uploadInst
+    },
+    //文件上传
+    fileUploadCopy:function(upload,elem,func){
+        //执行实例
+        var uploadInst =  upload.render({
+            elem: elem //绑定元素
+            ,done: function(res){
+                //上传完毕回调
+                var item = this.item;
+                if(res.code===1){
+                    //上传成功
+                    if(func!==false){
+                        //默认请求成功指定动作
+                        func = typeof func ==='function' ? func:(res,query_select)=>{
+                            //保存图片路径
+                            if(upn == 1){
+                                query_select.prev().val(res.path)
+                                query_select.parent().find('img').attr('src',res.path)
+                            }else{
+                                query_select.parent().append('<img src="'+res.path+'" width="100" height="100">');
+                            }
+                            query_select.parent().append('<input value="'+res.path+'" name="image_arr[]" type="hidden">');
+                            upn++;
+                        }
+                        //执行函数
+                        func(res,$(item))
+                    }
+
+                }else{
+                    layui.layer.msg(res.msg)
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+                layui.layer.msg('上传异常!  ')
+            }
+        });
+        return uploadInst
     }
 }
 
@@ -73,7 +111,7 @@ $.common={
 function sendAjax(url,data,type,func){
     type = (typeof type===undefined)||(typeof type==='undefined')?'get':type
     type = type.toLowerCase()==='get'?'get':'post'
-    var layer_load
+    var layer_load;
     $.ajax({
         url:url,
         type:type,
