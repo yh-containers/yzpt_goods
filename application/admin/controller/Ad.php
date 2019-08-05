@@ -34,7 +34,13 @@ class Ad extends Common
         if($this->request->isAjax()){
             $php_input = $this->request->param();
             $validate = new \app\common\validate\Ad();
-            return $model->actionAdd($php_input,$validate);
+            try{
+
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
         }
         $model = $model->get($id);
 

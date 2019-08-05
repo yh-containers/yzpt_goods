@@ -25,7 +25,12 @@ class System extends Common
             if(empty($php_input['password']) && isset($php_input['password'])) unset($php_input['password']);
 
             $validate = new \app\common\validate\SysRole();
-            return $model->actionAdd($php_input,$validate);
+            try{
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
         }
 
         $model = $model->get($id);
@@ -66,7 +71,13 @@ class System extends Common
             if(empty($php_input['password']) && isset($php_input['password'])) unset($php_input['password']);
 
             $validate = new \app\common\validate\SysManager();
-            return $model->actionAdd($php_input,$validate);
+            try{
+
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
         }
         $model = $model->get($id);
         //查询角色

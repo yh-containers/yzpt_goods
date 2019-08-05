@@ -30,7 +30,13 @@ class Article extends Common
         if($this->request->isAjax()){
             $php_input = $this->request->param();//获取当前请求的参数
             $validate = new \app\common\validate\News();
-            return $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            try{
+
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
         }
         $model = $model->get($id);
         //获取分类
@@ -75,7 +81,13 @@ class Article extends Common
             if(empty($php_input['password']) && isset($php_input['password'])) unset($php_input['password']);
 
             $validate = new \app\common\validate\NewsCate();
-            return $model->actionAdd($php_input,$validate);
+            try{
+
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
         }
 
         $model = $model->get($id);
