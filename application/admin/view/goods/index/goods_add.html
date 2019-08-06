@@ -11,7 +11,6 @@
             <li class="active"><a href="#goods_info" data-toggle="tab" aria-expanded="true">商品信息</a></li>
             <li class=""><a href="#goods_content" data-toggle="tab" aria-expanded="false">详情介绍</a></li>
             <li class=""><a href="#goods_spec" data-toggle="tab" aria-expanded="false">规格属性</a></li>
-            {if condition="$model['id'] && $model['own_spec_value']"}<li><a href="{:url('spec_stock',['id'=>$model['id']])}">规格属性库存</a></li>{/if}
         </ul>
     </div>
     <!-- form start -->
@@ -131,29 +130,11 @@
                     <label class="col-sm-2 control-label">是否特价</label>
                     <div class="col-sm-10">
                         <label>
-                            <input type="radio" onclick="isSpecial(1)" name="is_special" value="1" {:$model['is_special']==1?'checked':''} />是
+                            <input type="radio" name="is_special" value="1" {:$model['is_special']==1?'checked':''} />是
                         </label>
                         <label>
-                            <input type="radio" onclick="isSpecial(2)" name="is_special" value="2" {:$model['is_special']==2 || !$model['is_special']?'checked':''}>否
+                            <input type="radio" name="is_special" value="2" {:$model['is_special']==2 || !$model['is_special']?'checked':''}>否
                         </label>
-                    </div>
-                </div>
-                <div class="form-group" id="special" {if condition="$model['is_special'] neq 1"}style="display: none"{/if}>
-                    <label class="col-sm-2 control-label">特价时间</label>
-                    <div class="col-sm-10">
-                        <label>
-                            <input type="text" class="form-control start_time" name="special_time[0]" value="{$model.special_time.0}" />
-                        </label>
-                         ~
-                        <label>
-                            <input type="text" class="form-control end_time" name="special_time[1]" value="{$model.special_time.1}" >
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group" id="special_price" {if condition="$model['is_special'] neq 1"}style="display: none"{/if}>
-                    <label class="col-sm-2 control-label">特价</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" placeholder="特价" name="special_price" value="{$model['special_price']}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -214,39 +195,58 @@
                     {volist name="spec" id="v1"}
                         {if condition="$v1['id'] eq $model['spec_id']"}
                         {volist name="v1.link_child" id="cv1"}
+                        <div class="form-group">
+                            <div>
+                                <label class="col-md-1">{$cv1.spec_name} </label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control in" id="adv{$cv1.id}">
+                                    <a href="javascript:addRow({$cv1.id});" class="add_rows">+</a>
+                                </div>
+                                <div style="clear: both"></div>
+                            </div>
+                            <div id="virtue{$cv1.id}" class="virtue" ref="{$cv1.id}">
+                                {$cv1.spec_name}值：
                             {volist name="model.own_spec_value" id="spv" key="ks"}
                                 {eq name="spv.spec_id" value="$cv1.id"}
-                        <div class="form-group" id="virtue{$cv1.id}">
-                            <label class="col-md-2">{$cv1.spec_name} <a href="javascript:addRow({$cv1.id});" class="add_rows">+</a></label>
-                                    {eq name="ks" value="1"}
-                                        <div  class="col-md-10">
-                                            <input type="text" class="form-control in" name="value_name[{$cv1.id}][]" value="{$spv.value_name}">
-                                            <input type="text" class="form-control in" name="value_price[{$cv1.id}][]" value="{$spv.value_price}">
-                                            <input type="hidden" name="value_id[{$cv1.id}][]" value="{$spv.id}">
-                                        </div>
-                                        <div style="clear: both"></div>
-                                    {else/}
-                                    <div>
-                                        <label class="col-md-2"> </label>
-                                        <div  class="col-md-10">
-                                            <input type="text" class="form-control in" name="value_name[{$cv1.id}][]" value="{$spv.value_name}">
-                                            <input type="text" class="form-control in" name="value_price[{$cv1.id}][]" value="{$spv.value_price}">
-                                            <input type="hidden" name="value_id[{$cv1.id}][]" value="{$spv.id}">
-                                        </div>
-                                        <div style="clear: both"></div>
-                                    </div>
-                                    {/eq}
-                        </div>
+                                        <span  class="nd" id="addr{$spv.id}">
+                                            <!--<a href="javascript:closeRow({$spv.id});" class="add_rows ot">X</a>-->
+                                            {$spv.value_name}
+                                            <input type="hidden" class="skuname" name="value_name[{$cv1.id}][{$spv.id}]" value="{$spv.value_name}">
+                                            <input type="hidden" class="skuid" name="value_id[{$cv1.id}][{$spv.id}]" value="{$spv.id}">
+                                        </span>
                                 {/eq}
                             {/volist}
+                            </div>
+                        </div>
                         {/volist}
+                        <div class="form-group" id="skuVal">
+                            <div class="dm">
+                                <label class="col-md-2"> 属性 </label>
+                                <label class="col-md-2"> 价格 </label>
+                                <label class="col-md-2"> 库存 </label>
+                                <div style="clear: both"></div>
+                            </div>    
+                            {volist name="sku" id="skv" key="sk"}
+                            <div class="dm sk{$sk}" ref="{$sk}">
+                                <label class="col-md-2">{$skv.name} </label>
+                                <div class="col-md-6">
+                                    <input type="text" name="sku[price][{$sk}]" value="{$skv.price}" class="form-control in" placeholder="价格">
+                                    <input type="text" name="sku[stock][{$sk}]" value="{$skv.stock}" class="form-control in" placeholder="库存">
+                                    <input type="hidden" name="sku[id][{$sk}]" value="{$skv.id}">
+                                </div>
+                                <div style="clear: both"></div>
+                            </div>
+                            {/volist}
+                        </div>
                         {/if}
+                        <div class="form-group" id="skuVal_add"></div>
                     {/volist}
                     </div>
                     {else/}
                     <input type="hidden" name="value_name[]" value="0">
-                    <input type="hidden" name="value_price[]" value="0">
-                    <input type="hidden" name="value_stock[]" value="0">
+                    <input type="hidden" name="value_id[]" value="0">
+                    <input type="hidden" name="sku[]" value="0">
+                    <input type="hidden" name="new_sku[]" value="0">
                     {/if}
                 </div>
             </div>
@@ -272,24 +272,35 @@
 <style>
     .in{display: inline-block;width: 30%;margin-right:10px;}
     .add_rows{display: inline-block;width: 20px;height: 20px;text-align: center;border: 1px solid;line-height: 18px;border-radius: 50%;margin: 8px 0 15px 24px;}
-    .cp{padding: 0;}
-    .ot{margin-left: 63px}
+    .nd{display: inline-block; width: auto;padding: 5px 12px;color: #fff;background-color: #3c8dbc;border-radius: 5px;margin-right: 5px;}
+    .virtue{border-bottom: 1px solid #00c0ef;width: 95%;padding: 10px 0;font-size: 16px;}
+    .ot{margin: 0 8px 0 -8px;border: 0;border-right: 1px solid #ccc;border-radius: 0;color: #ff0000;font-size: 15px;height: auto;}
+    .dm{margin: 10px 0;}
 </style>
 {volist name="spec" id="val"}
 <script type="text/html" id="columnTemp{$val.id}">
     <label class="col-md-2 control-label">属性列表</label>
     <div class="col-md-10">
         {volist name="val.link_child" id="cvs" key="k"}
-        <div class="form-group" id="virtue{$cvs.id}">
-            <label class="col-md-2">{$cvs.spec_name} <a href="javascript:addRow({$cvs.id});" class="add_rows">+</a></label>
-            <div  class="col-md-10">
-                <input type="text" class="form-control in" name="value_name[{$cvs.id}][]" placeholder="属性名">
-                <input type="text" class="form-control in" name="value_price[{$cvs.id}][]" placeholder="属性价">
-                <input type="hidden" name="value_id[{$cvs.id}][]">
+        <div class="form-group">
+            <div>
+                <label class="col-md-1">{$cvs.spec_name} </label>
+                <div  class="col-md-10">
+                    <input type="text" class="form-control in" id="adv{$cvs.id}" placeholder="属性值"><a href="javascript:addRow({$cvs.id});" class="add_rows">+</a>
+                </div>
+                <div style="clear: both"></div>
             </div>
-            <div style="clear: both"></div>
+            <div id="virtue{$cvs.id}" class="virtue" ref="{$cvs.id}">{$cvs.spec_name}值：</div>
         </div>
         {/volist}
+        <div class="form-group" id="skuVal_add">
+            <div class="dm">
+                <label class="col-md-2"> 属性 </label>
+                <label class="col-md-2"> 价格 </label>
+                <label class="col-md-2"> 库存 </label>
+                <div style="clear: both"></div>
+            </div>
+        </div>
     </div>
 </script>
 {/volist}
@@ -324,15 +335,6 @@
             $('#fares').hide();
         }
     }
-    function isSpecial(str){
-        if(str == 1){
-            $('#special').show();
-            $('#special_price').show();
-        }else{
-            $('#special').hide();
-            $('#special_price').hide();
-        }
-    }
     function getRule(obj){
         var rid = $(obj).val();
         if(rid>0){
@@ -341,18 +343,115 @@
             $("#rules").html(html);
         }
     }
+    {if condition="$model.own_spec_value"}
+    var adt = {php}echo $model['own_spec_value'][count($model['own_spec_value'])-1]['id']+1;{/php};
+    {else/}
     var adt = 0;
+    {/if}
+    //console.log(111);
+
     function addRow(sid){
-        $('#virtue'+sid).append('<div id="addr'+adt+'"><label class="col-md-2 cp">&nbsp; <a href="javascript:closeRow('+adt+');" class="add_rows ot">-</a></label>\n' +
-            '            <div  class="col-md-10">\n' +
-            '                <input type="text" class="form-control in" name="value_name['+sid+'][]" placeholder="属性名">\n' +
-            '                <input type="text" class="form-control in" name="value_price['+sid+'][]" placeholder="属性价">\n' +
-            '                <input type="hidden" name="value_id['+sid+'][]">\n' +
-            '            </div></div><div style="clear: both"></div></div>');
+        var sv = $('#adv'+sid).val();
+        if(!sv)
+            return false;
+        $('#virtue'+sid).append('<span class="nd" id="addr'+adt+'" ref='+sid+'><a href="javascript:closeRow('+adt+');" class="add_rows ot">X</a>' +
+            sv +'  <input type="hidden" class="skuname" name="value_name['+sid+']['+adt+']" value="'+sv+'"><input type="hidden" class="skuid" name="value_id['+sid+']['+adt+']">' +
+            '            </span>');
         adt++;
+        $('#adv'+sid).val('');
+        var arr = [];
+        arr['id'] = '';
+        arr['name'] = sv;
+        doSku(arr,sid);
     }
     function closeRow(k) {
         $('#addr'+k).remove();
+        ni = 0;
+        final_sku = '';
+        final_sku_show = new Array();
+        addSku();
+    }
+    
+    var final_sku = '';
+    var ni = 0;
+    var final_sku_show = new Array();
+    function addSku(){
+        var sku = new Array();
+        $('.virtue').each(function () {
+            var sku_i = $(this).attr('ref');
+            var ndl = $(this).find('.nd').length;
+            for (var i=0;i<ndl;i++){
+                sku[i] = new Array();
+                sku[i]['id'] = $(this).find('.nd:eq('+i+')').find('.skuid').val();
+                sku[i]['name'] = $(this).find('.nd:eq('+i+')').find('.skuname').val();
+                doSku(sku[i],sku_i);
+            }            
+        });
+    }
+    addSku();
+    function doSku(Arr,sku_key){
+        if(final_sku){
+            if(final_sku[sku_key]){
+                var isin = 0;
+                for(var i in final_sku[sku_key]){
+                    if(final_sku[sku_key][i]['name'] != Arr['name']){
+                        isin = 1;
+                    }
+                }
+                if(isin){
+                    final_sku[sku_key][(final_sku[sku_key].length)] = Arr;
+                    if(!Arr['id'])
+                        Arr['is_add'] = 1;
+                    final_sku_show[(final_sku_show.length)] = Arr;
+                }
+            }else{
+                final_sku[sku_key] = new Array();
+                final_sku[sku_key][0] = new Array();
+                final_sku[sku_key][0] = Arr;
+            }
+            
+            for (var i in final_sku) {
+                if(i != sku_key){
+                    for(var j=0;j<final_sku[i].length;j++){
+                        final_sku_show[ni] = new Array();
+                        final_sku_show[ni]['id'] = Arr['id']+','+final_sku[i][j]['id'];
+                        final_sku_show[ni]['name'] = Arr['name']+' | '+final_sku[i][j]['name'];
+                        if(!Arr['id'] || !final_sku[i][j]['id']){
+                            final_sku_show[ni]['is_add'] = 1;
+                        }
+                        ni++;
+                    }
+                }
+            }
+        }else{
+            final_sku = new Array();
+            final_sku[sku_key] = new Array();
+            final_sku[sku_key][0] = new Array();
+            final_sku[sku_key][0] = Arr;
+            if(!Arr['id'])
+                Arr['is_add'] = 1;
+            final_sku_show[0] = Arr;
+        }
+        addToSku(final_sku_show);
+    }
+    function addToSku(finalSku){
+        $('#skuVal_add').empty();
+        for(var i in finalSku){
+            if(finalSku[i]['is_add'] == 1) {
+                $('#skuVal_add').append('<div class="dm sk'+i+'" ref="'+i+'">\n' +
+                    '<a href="javascript:closeSku('+i+');" class="add_rows">X</a><label class="col-md-2">'+finalSku[i]['name']+' </label>\n' +
+                    '<div class="col-md-6">\n' +
+                    '<input type="text" name="new_sku[price]['+i+']" value="" class="form-control in" placeholder="价格">\n' +
+                    '<input type="text" name="new_sku[stock]['+i+']" value="" class="form-control in" placeholder="库存">\n' +
+                    '<input type="hidden" name="new_sku[name]['+i+']" value="'+finalSku[i]['name']+'">\n' +
+                    '</div>\n' +
+                    '<div style="clear: both"></div>\n' +
+                    '</div>');
+            }
+        }
+    }
+    function closeSku(sk){
+        $('.sk'+sk).remove();
     }
 </script>
 {/block}

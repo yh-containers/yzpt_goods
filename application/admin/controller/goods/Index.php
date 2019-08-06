@@ -21,26 +21,34 @@ class Index extends Common
         $id  = $this->request->param('id');
         $model = new \app\common\model\Goods();
         $data = $model->with('ownSpecValue')->get($id);
+        if($id){
+            $isok = 0;
+            foreach ($data['own_spec_value'] as $v){
+                if($v) $isok = 1;
+            }
+            if($isok == 0) $data['own_spec_value']=0;
+        }
         //表单提交
         if($this->request->isAjax()){
             $php_input = $this->request->param();
+            $image_arr = $this->request->param('image_arr');
+            $sku = $this->request->param('sku');
+            $new_sku = $this->request->param('new_sku');
             $php_input['image_arr'] = implode(',',$php_input['image_arr']);
-            $php_input['special_time'] = implode(',',$php_input['special_time']);
             $validate = new \app\common\validate\Goods();
-            //商品属性值
+            //商品属性
             if($php_input['value_name']){
                 $spec['value_name'] = $php_input['value_name'];
                 unset($php_input['value_name']);
-                $spec['value_price'] = $php_input['value_price'];
-                unset($php_input['value_price']);
                 $spec['value_id'] = $php_input['value_id'];
                 unset($php_input['value_id']);
             }
             $model->actionAdd($php_input,$validate);
             $goods_id = $php_input['id'];
             if(empty($php_input['id'])){
-                $goods_id = $model->getLastInsID();
+                $goods_id = $model->id;
             }
+            $svIdsArr = array();
             foreach ($spec['value_name'] as $sid=>$v){
                 foreach ($v as $k=>$sv){
                     $specArr = array();
@@ -48,16 +56,43 @@ class Index extends Common
                     $specArr['spec_id'] = $sid;
                     $specArr['goods_id'] = $goods_id;
                     $specArr['value_name'] = $spec['value_name'][$sid][$k];
-                    $specArr['value_price'] = $spec['value_price'][$sid][$k];
-                    //if(empty($specArr['id'])) unset($specArr['id']);
                     $spec_model = new \app\common\model\GoodsSpecValue();
                     $spec_model->actionAdd($specArr);
+                    $svIdsArr[$specArr['value_name']] = $specArr['id'];
+                    if(empty($specArr['id'])){
+                        $svIdsArr[$specArr['value_name']] = $spec_model->id;
+                    }
                 }
             }
-            echo '';die;
+            if($sku['price'] || $sku['stock']){
+                foreach ($sku['price'] as $sk=>$row){
+                    $upinfo = array();
+                    $upinfo['price'] = $row;
+                    $upinfo['stock'] = $sku['stock'][$sk];
+                    $upinfo['id'] = $sku['id'][$sk];
+                    $addSpecStock = new \app\common\model\GoodsSpecStock();
+                    $addSpecStock->actionAdd($upinfo);
+                }
+            }
+            if($new_sku['price'] || $new_sku['stock']){
+                foreach ($new_sku['price'] as $sk1=>$sku_price){
+                    $addSku = array();
+                    $addSku['goods_id'] = $goods_id;
+                    $addSku['price'] = $sku_price;
+                    $addSku['stock'] = $new_sku['stock'][$sk1];
+                    $nameArr = explode('|',$new_sku['name'][$sk1]);
+                    $addSku['sv_ids'] = array();
+                    foreach ($nameArr as $nk=>$name){
+                        $addSku['sv_ids'][$nk] = $svIdsArr[trim($name)];
+                    }
+                    $addSku['sv_ids'] = implode(',',$addSku['sv_ids']);
+                    $addSpecStockModel = new \app\common\model\GoodsSpecStock();
+                    $addSpecStockModel->actionAdd($addSku);
+                }
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
         }
-        $data['image_arr'] = explode(',',$data['image_arr']);
-        $data['special_time'] = explode(',',$data['special_time']);
+        if($data['image_arr']) $data['image_arr'] = explode(',',$data['image_arr']);
         //分类
         $cate_list = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
             return $query->where(['status'=>1])->with('linkChildCate');
@@ -66,66 +101,27 @@ class Index extends Common
         $spec_list = \app\common\model\GoodsSpec::with(['linkChild'=>function($query){
             return $query->where([]);
         }])->where(['pid'=>0])->order('sort asc')->select();
+        $sku_list = array();
+        if($id){
+            $sku_list  = \app\common\model\GoodsSpecStock::where('goods_id='.$id)->field('id,sv_ids,stock,price')->select();
+            if($sku_list){
+                $specModel = new \app\common\model\GoodsSpecValue();
+                foreach ($sku_list as &$skv){
+                    $spv = $specModel->where('id in('.$skv['sv_ids'].') and goods_id='.$id)->field('value_name')->select();
+                    $skv['name'] = '';
+                    foreach ($spv as $res){
+                        $skv['name'] .= $res['value_name'].' | ';
+                    }
+                    $skv['name'] = trim( $skv['name'],' | ');
+                }
+            }
+        }
         return view('goods_add',[
             'model'=>$data,
             'cate'=>$cate_list,
-            'spec'=>$spec_list
+            'spec'=>$spec_list,
+            'sku'=>$sku_list
         ]);
-    }
-    //商品的属性库存
-    public function spec_stock(){
-        $id  = $this->request->param('id');
-        $model = new \app\common\model\Goods();
-        $data = $model->field('goods_name,spec_id')->get($id);
-        if(empty($data['goods_name'])){
-            $this->error('商品不存在');
-        }
-        if($this->request->isAjax()){
-            $php_input = $this->request->param();
-            foreach ($php_input['stock'] as $k=>$v){
-                if($v){
-                    $addInfo = [];
-                    $addInfo['stock'] = $v;
-                    $addInfo['sv_ids'] = $php_input['sv_ids'][$k];
-                    $addInfo['goods_id'] = $php_input['goods_id'][$k];
-                    $addInfo['id'] = $php_input['sid'][$k];
-                    //if(!$addInfo['id']) unset($addInfo['id']);
-                    $addSpecStock = new \app\common\model\GoodsSpecStock();
-                    $addSpecStock->actionAdd($addInfo);
-                }
-            }
-            echo '';die;
-        }
-        $spec_list = \app\common\model\GoodsSpec::where(['pid'=>$data['spec_id']])->field('id')->select();
-        $newSpec = [];
-        $j = 0;
-        //foreach ($spec_list as $k=>$v){
-            $arr1 = \app\common\model\GoodsSpecValue::where('spec_id='.$spec_list[0]['id'].' and goods_id='.$id)->field('id,value_name')->select();
-            $arr2 = [];
-            //if(1){
-            $arr2 = \app\common\model\GoodsSpecValue::where('spec_id='.$spec_list[1]['id'].' and goods_id='.$id)->field('id,value_name')->select();
-            //}
-            $specStock = new \app\common\model\GoodsSpecStock();
-            if($arr1 && $arr2){
-                foreach ($arr1 as $k1=>$v1){
-                    foreach ($arr2 as $k2=>$v2){
-                        $newSpec[$j]['sv_ids'] = $v1['id'] .','.$v2['id'];
-                        $newSpec[$j]['goods_id'] = $id;
-                        $stocks = $specStock->where($newSpec[$j])->field('id,stock')->find();
-                        if($stocks){
-                            $newSpec[$j]['id'] = $stocks['id'];
-                            $newSpec[$j]['stock'] = $stocks['stock'];
-                        }else{
-                            $newSpec[$j]['id'] = '0';
-                            $newSpec[$j]['stock'] = '';
-                        }
-                        $newSpec[$j]['name'] = $v1['value_name'] .' + '.$v2['value_name'];
-                        $j++;
-                    }
-                }
-            }
-        //}
-        return view('sepc_stock',['id'=>$id,'stocks'=>$newSpec]);
     }
     //商品删除
     public function goodsDel()
@@ -133,10 +129,10 @@ class Index extends Common
         $id = $this->request->param('id',0,'int');
         $model = new \app\common\model\Goods();
         $data = $model->field('goods_image,image_arr')->get($id);
-        unlink($data['goods_image']);
+        @unlink($data['goods_image']);
         $image_arr = explode(',',$data['image_arr']);
         foreach ($image_arr as $iv){
-            unlink($iv);
+            @unlink($iv);
         }
         return $model->actionDel(['id'=>$id]);
     }
@@ -158,7 +154,12 @@ class Index extends Common
         if($this->request->isAjax()){
             $php_input = $this->request->param();
             $validate = new \app\common\validate\GoodsCategory();
-            return $model->actionAdd($php_input,$validate);
+            try{
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
         }
         //获取分类
         $cate_list = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
@@ -194,7 +195,12 @@ class Index extends Common
         if($this->request->isAjax()){
             $php_input = $this->request->param();
             $validate = new \app\common\validate\GoodsSpec();
-            return $model->actionAdd($php_input,$validate);
+            try{
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
         }
         //获取属性
         $cate_list = \app\common\model\GoodsSpec::where(['pid'=>0])->order('sort asc')->select();

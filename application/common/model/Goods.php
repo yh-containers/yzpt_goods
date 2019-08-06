@@ -18,6 +18,6 @@ class Goods extends BaseModel
     protected $table = 'gd_goods';
     public function ownSpecValue()
     {
-        return $this->hasMany('GoodsSpecValue','goods_id')->order('create_time asc');
+        return $this->hasMany('GoodsSpecValue','goods_id')->order('id asc');
     }
 }
