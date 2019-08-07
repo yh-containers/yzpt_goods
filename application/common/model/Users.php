@@ -413,4 +413,9 @@ class Users extends BaseModel
         return $data;
     }
 
+    //我是否关注
+    public function linkHasFollow()
+    {
+        return $this->hasOne('UsersFollow','f_uid')->whereNotNull('follow_time');
+    }
 }

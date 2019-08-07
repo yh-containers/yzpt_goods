@@ -8,6 +8,40 @@ class Dynamic extends BaseModel
 
     protected $name='dynamic';
 
+    public static $fields_status =[
+        ['name'=>'公开'],
+        ['name'=>'私密'],
+        ['name'=>'部分人可见'],
+        ['name'=>'部分人不可见'],
+    ];
+
+    //发布时间
+    protected function getReleaseDateAttr()
+    {
+        return $this->create_time;
+    }
+
+    //发布的文件组合
+    protected function getFileGroupAttr()
+    {
+        $data = [];
+        $file = $this->file;
+        $file = empty($file)?[]:explode(',',$file);
+        $ext = $this->ext;
+        $ext = empty($ext)?[]:explode(',',$ext);
+        foreach ($file as $key=>$vo){
+            array_push($data,[
+                'file' => self::handleFile($vo),
+                'ext'  => isset($ext[$key])?$ext[$key]:'',
+            ]);
+        }
+//        $size = $this->size;
+//        $mine_type = $this->mine_type;
+
+        return $data;
+    }
+
+
     //设置poi信息
     protected function setLocationPoiAttr($value)
     {
@@ -63,6 +97,69 @@ class Dynamic extends BaseModel
 //        return empty($value)?'00:00:00':sprintf('%2d:%2d:%2d',intval($value/60/60),intval($value/60),intval($value%60));
 //    }
 
+    /**
+     * 评论
+     * @param Users $user_model;
+     * @param array $data;
+     * @throws
+     * @return DyComment
+     * */
+    public static function addComment(Users $user_model,array $data=[])
+    {
+        empty($data['content']) && exception('内容不能为空');
+        empty($data['id']) && exception('对象异常:id');
 
+        $model = new DyComment();
+        $model->uid = $user_model->id;
+        $model->dy_id = $data['id'];
+        $model->to_uid = empty($data['to_uid'])?0:$data['to_uid'];
+        $model->content = $data['content'];
+        $model->save();
+        return $model;
+    }
+
+
+    /**
+     * 评论
+     * @param Users $user_model;
+     * @param array $data;
+     * @throws
+     * @return DyPraise
+     * */
+    public static function praise(Users $user_model,array $data=[])
+    {
+        empty($data['id']) && exception('对象异常:id');
+        $model = DyPraise::where(['uid'=>$user_model->id,'dy_id'=>$data['id']])->find();
+        if(empty($model)){
+            $model = new DyPraise();
+        }
+
+        $model->uid = $user_model->id;
+        $model->dy_id = $data['id'];
+        $model->praise_date = empty($model->praise_date)?date('Y-m-d H:i:s'):null;
+        $model->save();
+        return $model;
+    }
+
+
+
+
+    //动态用户
+    public function linkUsers()
+    {
+        return $this->belongsTo('Users','uid');
+    }
+
+    //动态评论
+    public function linkCommentCount()
+    {
+        return $this->hasOne('DyComment','dy_id')->field('dy_id,count(*) as comment_count')->group('dy_id');
+    }
+
+    //是否点过赞
+    public function linkIsPraise()
+    {
+        return $this->hasOne('DyPraise','dy_id')->whereNotNull('praise_date');
+    }
 
 }

@@ -85,7 +85,7 @@ class BaseModel extends Model
     public static function handleFile($file='')
     {
 
-        if(empty($file)) return $file;
+        if(empty($file)) return '';
         //当前模块
         $module = request()->module();
         if($module=='api'){
