@@ -169,6 +169,31 @@ class Info extends Common
     }
 
 
+    //评论--
+    public function actComment()
+    {
+        $php_input = input();
+        try{
+            \app\common\model\Activity::addComment($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+
+        return $this->_resData(1,'评论成功');
+    }
+    //-点赞
+    public function actPraise()
+    {
+        $php_input = input();
+        try{
+            $model = \app\common\model\Activity::praise($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+
+        return $this->_resData(1,$model->praise_date?'点赞成功':'已取消点赞');
+    }
+
 
 
     //好友列表
