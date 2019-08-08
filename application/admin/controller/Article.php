@@ -78,7 +78,6 @@ class Article extends Common
         //表单提交
         if($this->request->isAjax()){
             $php_input = $this->request->param();
-            if(empty($php_input['password']) && isset($php_input['password'])) unset($php_input['password']);
 
             $validate = new \app\common\validate\NewsCate();
             try{
@@ -106,4 +105,90 @@ class Article extends Common
         $model = new \app\common\model\NewsCate();
         return $model->actionDel(['id'=>$id]);
     }
+
+    //动态列表
+    public function dynamic()
+    {
+        $keyword = input('keyword','','trim');
+        $where=[];
+        !empty($keyword) && $where[]=['content','like','%'.$keyword.'%'];
+        $list = \app\common\model\Dynamic::with(['linkUsers'])->where($where)->paginate();
+        //dump($list);die;
+        // 获取分页显示
+        $page = $list->render();
+        return view('dynamic',[
+            'keyword' => $keyword,
+            'list' => $list,
+            'page'=>$page
+        ]);
+    }
+
+
+    //活动列表
+    public function activity()
+    {
+        $keyword = input('keyword','','trim');
+        $where=[];
+        !empty($keyword) && $where[]=['content','like','%'.$keyword.'%'];
+        $list = \app\common\model\Activity::with(['linkUsers'])->where($where)->paginate();
+        //dump($list);die;
+        // 获取分页显示
+        $page = $list->render();
+        return view('activity',[
+            'keyword' => $keyword,
+            'list' => $list,
+            'page'=>$page
+        ]);
+    }
+
+    //乐库
+    public function music()
+    {
+        $keyword = input('keyword','','trim');
+        $where=[];
+        !empty($keyword) && $where[]=['name','like','%'.$keyword.'%'];
+        $list = \app\common\model\Music::where($where)->paginate();
+        //dump($list);die;
+        // 获取分页显示
+        $page = $list->render();
+        return view('music',[
+            'keyword' => $keyword,
+            'list' => $list,
+            'page'=>$page
+        ]);
+    }
+
+    //添加乐库
+    public function musicAdd()
+    {
+        $id  = $this->request->param('id');
+        $model = new \app\common\model\Music();
+        //表单提交
+        if($this->request->isAjax()){
+            $php_input = $this->request->param();//获取当前请求的参数
+            $validate = new \app\common\validate\Music();
+            try{
+
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
+        }
+        $model = $model->get($id);
+
+        return view('musicAdd',[
+            'model'=>$model,
+        ]);
+    }
+
+
+    //删除数据
+    public function musicDel()
+    {
+        $id = $this->request->param('id',0,'int');
+        $model = new \app\common\model\Music();
+        return $model->actionDel(['id'=>$id]);
+    }
+
 }

@@ -1,0 +1,89 @@
+{extend name="base" /}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <!--<h3 class="box-title">Quick Example</h3>-->
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body">
+                <form id="form" action="" class="form-horizontal">
+                    <input type="hidden" name="id" value="{$model['id']}"/>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="名称" name="name" value="{$model['name']}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">作者</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="作者" name="author" value="{$model['author']}"  maxlength="20">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">音乐文件</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" name="duration" value="{:empty($model['duration'])?0:$model['duration']}" />
+                            <input type="hidden" name="file" value="{$model['file']}" />
+                            <button type="button" class="layui-btn upload-img" lay-data="{ url: '{:url('upload/upload',['type'=>'article'])}', accept: 'audio',acceptMime:'audio/*',exts:'mp3'}">
+                                <i class="layui-icon">&#xe67c;</i>音乐文件(mp3格式)
+                            </button>
+                            <img width="80" height="80" src="{$model['file']}" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">排序</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" placeholder="排序" name="sort" value="{$model['sort']}"  maxlength="20">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-10">
+                            <label>
+                                <input type="radio" name="status" value="1" {:$model['status']!=2?'checked':''} />
+                                正常
+                            </label>
+                            <label>
+                                <input type="radio" name="status" value="2" {:$model['status']==2?'checked':''}>
+                                关闭
+                            </label>
+                        </div>
+                    </div>
+
+
+                </form>
+
+            </div>
+            <!-- /.box-body -->
+
+        <div class="box-footer">
+            <button type="button" onclick="$.common.submitForm()" class="col-sm-offset-2 btn  btn-info">保存</button>
+        </div>
+    </div>
+
+{/block}
+
+
+{block name="script"}
+
+<script>
+    //引用上传组件
+    layui.use(['upload'],function(){
+        var upload = layui.upload;
+        $.common.fileUpload(upload,'.upload-img',(res,query_select)=>{
+            //保存图片路径
+            query_select.prev().val(res.path)
+            query_select.parent().find('img').attr('src',res.path)
+            res.hasOwnProperty('duration') && query_select.parent().find("input[name='duration']").val(res.duration)
+        })
+
+    })
+</script>
+{/block}
