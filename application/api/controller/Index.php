@@ -127,4 +127,27 @@ class Index extends Common
         }
         return $this->_resData(1,'感谢您的反馈，我们会尽快处理');
     }
+    
+    //系统乐库
+    public function music()
+    {
+        $where = [];
+        $where[] = ['status','=',1];
+        $list =[];
+        $info=\app\common\model\Music::where($where)
+            ->order('sort asc')->paginate()
+            ->each(function($item,$index)use(&$list){
+                array_push($list,[
+                    'id'=>$item['id'],
+                    'name'=>$item['name'],
+                    'author'=>$item['author'],
+                    'file'=>$item['file'],
+                    'size'=>$item['size'],
+                    'ext'=>$item['ext'],
+                    'duration'=>$item['duration'],
+                ]);
+            });
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
 }

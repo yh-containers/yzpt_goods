@@ -15,6 +15,11 @@ class Users extends BaseModel
     //自动完成
     protected $insert=['face','name','status'=>1];
 
+    //养分变更自从
+    protected $c_raise_type=0;//类型
+    protected $c_raise_num=0;//数量
+    protected $c_raise_intro='';//介绍
+
     protected function  getIntroAttr($value)
     {
         return empty($value)?'':$value;
@@ -106,6 +111,16 @@ class Users extends BaseModel
         $value = is_array($value)?$value:[$value];
         return implode("\r\n",$value);
     }
+
+
+    public static function init()
+    {
+        //养分日志记录
+        self::event('raise_logs', function ($model) {
+            UsersRaiseLogs::recordLog($model['id'],$model->c_raise_num,$model->c_raise_type,$model->c_raise_intro);
+        });
+    }
+
 
     /**
      * 用户登录
@@ -218,6 +233,22 @@ class Users extends BaseModel
         return $model;
 
 
+    }
+
+    /**
+     * 记录用户积分
+     * @param int $num 用户积分
+     * @param int $type 交易类型
+     * @param string $intro 获得说明
+     * */
+    public function recordRaise($num,$type=0,$intro='')
+    {
+        $bool = $num>0?$this->setInc('raise_num',$num):$this->setDec('raise_num',$num);
+        //绑定日志事件
+        $this->c_raise_type=$type;
+        $this->c_raise_num=$num;
+        $this->c_raise_intro=$intro;
+        $this->trigger('raise_logs');
     }
 
     /**

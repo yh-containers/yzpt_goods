@@ -24,13 +24,14 @@ class Dynamic extends BaseModel
     //发布的文件组合
     protected function getFileGroupAttr()
     {
-        $data = [];
+        $data = ['type'=>'','data'=>[]];
         $file = $this->file;
         $file = empty($file)?[]:explode(',',$file);
         $ext = $this->ext;
         $ext = empty($ext)?[]:explode(',',$ext);
         foreach ($file as $key=>$vo){
-            array_push($data,[
+            empty($data['type']) && $data['type']=self::checkImg($ext[$key])?'image':'video';
+            array_push($data['data'],[
                 'file' => self::handleFile($vo),
                 'ext'  => isset($ext[$key])?$ext[$key]:'',
             ]);
