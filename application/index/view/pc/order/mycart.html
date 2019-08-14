@@ -1,0 +1,104 @@
+{extend name="public" /}
+{block name="cate"}{/block}
+{block name="show_search"}0,1{/block}
+{block name="content"}
+	<div class="main">
+		<div class="shopping w1200">
+			<div class="air" {if condition="$cart_count gt 0"}style="display: none;"{/if}>
+				<p><img src="/assets/index/images/air04.png"></p>
+				<p>購物車還沒有商品哦~快去購物吧</p>
+				<a href="/">去購物</a>
+			</div>
+			{if($cart_count)}
+			<section class="cartMain">
+				<div class="cartBox">
+					<div class="shop_info">
+						<div class="all_check">
+							<!--店铺全选-->
+							<input type="checkbox" id="shop_a" class="shopChoice">
+							<label for="shop_a" class="shop"></label>
+							<label for="shop_a" class="wenzi">全選</label>
+						</div>
+						<div class="cartMain_hd">
+							<ul class="order_lists cartTop">
+								<li class="list_con">商品信息</li>
+								<li class="list_price">单价</li>
+								<li class="list_amount">数量</li>
+								<li class="list_sum">金额</li>
+								<li class="list_op">操作</li>
+							</ul>
+						</div>
+					</div>
+					<div class="order_content">
+						{volist name="cart_list" id="cart" key="k"}
+						<ul class="order_lists">
+							<li class="list_chk">
+							{if condition="$cart['status'] eq 1"}
+								<input type="checkbox" id="checkbox_{$k}" class="son_check" value="{$cart.id}">
+								<label for="checkbox_{$k}"></label>
+							{else/}
+								商品已下架
+							{/if}
+							</li>
+							<li class="list_con">
+								<div class="list_img"><a href="{:url('Goods/detail',['id'=>$cart['gid']])}"><img src="{$cart.goods_image}" alt=""></a></div>
+								<div class="list_text"><a href="{:url('Goods/detail',['id'=>$cart['gid']])}"> {$cart.goods_name} {$cart.spec_name}</a></div>
+							</li>
+							<li class="list_price">
+								<span class="price">￥{$cart.price}</span>
+							</li>
+							<li class="list_amount">
+								<div class="amount_box" data-id="{$cart.id}">
+									<a href="javascript:;" class="reduce reSty">-</a>
+									<input type="text" value="{$cart.num}" class="sum">
+									<a href="javascript:;" class="plus">+</a>
+								</div>
+							</li>
+							<li class="list_sum">
+								<span class="sum_price">￥{$cart.price*$cart.num}</span>
+							</li>
+							<li class="list_op">
+								<p class="del"><a href="javascript:;" data-id="{$cart.id}" class="delBtn">删除商品</a></p>
+								{if($cart['is_collect'])}{else}<p class="del"><a href="javascript:;" data-id="{$cart.id}" class="movein">移入我的收藏</a></p>{/if}
+							</li>
+						</ul>
+						{/volist}
+					</div>
+				</div>
+				<!--底部-->
+				<div class="bar-wrapper">
+					<div class="select_all"><input type="checkbox" name="" id="select_all" class="whole_check"><label for="select_all"></label><label for="select_all" class="wenzi">全选</label></div>
+					<div class="select_operat">
+						<a href="javascript:;" class="xuanzhong">删除选中的商品</a>
+						<a href="javascript:;" class="yiru">移入我的收藏</a>
+					</div>
+					<div class="bar-right">
+						<div class="piece">已选商品<strong class="piece_num">0</strong>件</div>
+						<div class="totalMoney">总价（含运费）: <strong class="total_text">￥0.00</strong></div>
+						<div class="calBtn"><a href="javascript:;">去结算</a></div>
+					</div>
+				</div>
+			</section>
+			{/if}
+			<section class="model_bg"></section>
+			<section class="my_model">
+				<p class="title">温馨提示<span class="closeModel">X</span></p>
+				<div class="content">
+					<p><img src="/assets/index/images/icon03.png"><span>确定要删除商品吗？</span></p>
+					<div class="opBtn"><a href="javascript:;" tag="del" class="dialog-sure">确定</a><a href="javascript:;" class="dialog-close">取消</a></div>
+				</div>
+			</section>
+
+			<section class="my_tips">
+				<p class="title">温馨提示<span class="closeModel">X</span></p>
+				<div class="content">
+					<p><img src="/assets/index/images/icon03.png"><span>确定要将商品移入我的收藏吗？</span></p>
+					<div class="opBtn"><a href="javascript:;" tag="col" class="dialog-sure">确定</a><a href="javascript:;" class="dialog-close">取消</a></div>
+				</div>
+			</section>
+		</div>
+	</div>
+{/block}
+{block name="footer_script"}
+<script src="/assets/index/js/carts.js"></script>
+{/block}

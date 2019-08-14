@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{block name="title"}{:config('app_name')}{/block}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" type="text/css" href="/assets/index/font/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/index/css/css.css"/>
+    <script type="text/javascript" src="/assets/index/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/assets/index/js/jquery.SuperSlide.2.1.1.js"></script>
+    <meta name="author" content="深圳市深正互联网络有限公司" />
+</head>
+<body>
+	<div class="header" style="background:#e52346;">
+		{:widget('Components/headerTop')}
+
+		<div class="header_center w1200 clearfix">
+			<div class="header_logo"><a href="index.html"><img src="/assets/index/images/logo02.png"></a></div>
+			<ul class="clearfix">
+				<li><a href="/Member">我的养众网</a></li>
+				<li><a href="/">返回首页</a></li>
+			</ul>
+			<div class="search">
+				<p class="clearfix"><input type="text" name="" class="ssk" placeholder="搜索商品"><input type="submit" name="" value="搜索" class="ss"></p>
+			</div>
+		</div>
+	</div>
+	<div class="main inside_main">
+		<div class="personal w1200 clearfix">
+			<div class="left_sort">
+				<dl>
+					<dt>订单管理</dt>
+					<dd {if condition="$active eq 'order'"}class="cur"{/if}><a href="{:url('Member/orderlist')}">我的订单</a></dd>
+					<dd {if condition="$active eq 'ret'"}class="cur"{/if}><a href="{:url('Member/myretreat')}">我的退换货</a></dd>
+					<dd {if condition="$active eq 'com'"}class="cur"{/if}><a href="{:url('Member/mycomment')}">我的评论</a></dd>
+					<dd {if condition="$active eq 'col'"}class="cur"{/if}><a href="{:url('Member/collect')}">我的收藏</a></dd>
+				</dl>
+				<dl>
+					<dt>我的账户</dt>
+					<dd {if condition="$active eq 'user'"}class="cur"{/if}><a href="{:url('Member/center')}">基本信息</a></dd>
+					<dd {if condition="$active eq 'safe'"}class="cur"{/if}><a href="{:url('Member/mysafe')}">账户安全</a></dd>
+					<dd {if condition="$active eq 'addr'"}class="cur"{/if}><a href="{:url('Member/myaddress')}">收货地址</a></dd>
+				</dl>
+			</div>
+			{block name="member_content"}
+			
+			{/block}
+		</div>
+	</div>
+
+	{:widget('Components/footer')}
+	
+	{block name="member_footer"}
+	
+	{/block}
+</body>
+</html>

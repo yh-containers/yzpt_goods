@@ -16,6 +16,10 @@ class NewsCate extends BaseModel
     {
         return $this->belongsTo('NewsCate','pid');
     }
+    public function linkCateNews()
+    {
+        return $this->hasMany('News','cid')->field('id,cid,title');
+    }
     //
     public function linkChild()
     {

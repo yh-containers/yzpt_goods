@@ -1,0 +1,267 @@
+{extend name="public" /}
+{block name="cate"}{/block}
+{block name="show_search"}0,2{/block}
+{block name="content"}
+	<div class="main">
+		<div class="order_fill w1200">
+			<div class="top">
+				<h2>确认订单</h2>
+				<p>请仔细核对填写收货地址，以确保物流快递及时准确的投递</p>
+			</div>
+			<div class="add_content" style="display: none;">
+				<form id="toForm" action="{:url('Member/myaddress')}" onsubmit="return toSubmit();">
+					<input type="hidden" id="form_id" name="id" value="">
+				<h4>新增收货地址</h4>
+				<div class="add_fill">
+					<label><em>*</em>收货人：</label>
+					<input type="text" class="requires" id="form_username" name="username" value="">
+				</div>
+				<div class="add_fill">
+					<label><em>*</em>手机：</label>
+					<input type="text" class="requires" id="form_phone" name="phone" value="">
+				</div>
+				<div class="add_fill">
+					<label><em>*</em>所在地区：</label>
+					<div class="area_select clearfix">
+						<select class="requires" name="province" id="provinces">
+							<option value="请选择">请选择</option>
+						</select>
+						<select class="requires" name="city" id="citys">
+							<option value="请选择">请选择</option>
+						</select>
+						<select class="requires" name="town" id="towns">
+							<option value="请选择">请选择</option>
+						</select>
+					</div>
+				</div>
+				<div class="add_fill">
+					<label><em>*</em>详细地址：</label>
+					<textarea  class="requires" id="form_addr_extra" name="addr_extra" placeholder="街道、小区、楼牌号等，无须重复填写省市区"></textarea>
+				</div>
+				<div class="add_default">
+					<input type="checkbox" name="is_default" id="moren" class="moren" value="1">
+					<label for="moren">设为默认地址</label>
+					<span>设置后我们将在您购物时自动选中该收获地址</span>
+				</div>
+				<div class="add_btn">
+					<input type="submit" value="保存并使用">
+					<a href="javascript:;" class="add_cancel">取消</a>
+				</div>
+				</form>
+			</div>
+			<form id="createForm" action="{:url('Order/createorder')}">
+			<div class="address_list">
+				<ul>
+					{volist name="addr_list" id="addr"}
+					<li {if($addr.is_default)}class="cur"{/if} id="addr{$addr.id}">
+						<div class="send">寄送至：</div>
+						<div class="dizhi">
+							<input type="radio" name="address" {if($addr.is_default)}checked="checked"{/if} value="{$addr.id}">
+							<span>{$addr.username}</span>
+							<span>{$addr.phone}</span>
+							<span>{$addr.addr} {$addr.addr_extra}</span>
+						</div>
+						<div class="operate">
+							{if($addr.is_default)}<a href="javascript:;">默认地址</a>{else/}<a href="javascript:;" onclick="DefaultIt({$addr.id});">设为默认地址</a>{/if}
+							<a href="javascript:;" data-id="{$addr.id}" data-username="{$addr.username}" data-zip_code="{$addr.zip_code}" data-phone="{$addr.phone}" data-addr_extra="{$addr.addr_extra}" onclick="addrEdit(this);">编辑</a>
+							<a href="javascript:;" onclick="addrDel({$addr.id});" class="del">删除</a>
+						</div>
+					</li>
+					{/volist}
+				</ul>
+				<div class="new_address"><a href="javascript:;" class="new_add">+新增地址</a></div>
+			</div>
+			<div class="payment_method">
+				<h3>支付方式</h3>
+				<ul class="clearfix">
+					<li>
+						<input type="radio" name="pay" value="alipay" checked="true">
+						<img src="/assets/index/images/pay01.jpg">
+					</li>
+					<li>
+						<input type="radio" name="pay" value="wechat">
+						<img src="/assets/index/images/pay02.jpg">
+					</li>
+					<!--<li>
+						<input type="radio" name="pay" value="">
+						<img src="/assets/index/images/pay03.jpg">
+					</li>-->
+				</ul>
+			</div>
+			<div class="pro_info">
+				<div class="pro_info_title">
+					<h3>商品信息</h3>
+				</div>
+				<div class="pro_info_content">
+					<div class="info_top clearfix">
+						<div class="info">商品信息</div>
+						<div class="price">单价</div>
+						<div class="num">数量</div>
+						<div class="subtotal">小计</div>
+					</div>
+					<ul>
+						{volist name="goods_list" id="goods"}
+						<li>
+							<div class="info">
+								<a href="products_det.html">
+									<div class="img"><img src="{$goods.goods_image}"></div>
+									<div class="text">{$goods.goods_name}</div>
+								</a>
+							</div>
+							<div class="price">￥{$goods.price}</div>
+							<div class="num">X{$goods.num}</div>
+							<div class="subtotal">￥{$goods.price*$goods.num}</div>
+						</li>
+						{/volist}
+					</ul>
+				</div>
+			</div>
+			<div class="pro_info">
+				<div class="pro_message">
+					<span>买家留言：</span><input type="text" name="remark" placeholder="选填：对本次交易的说明（建议填写已经和商家达成一致的说明）">
+				</div>
+				<div class="total">
+					<p>商品总金额：<span>￥{$total}</span></p>
+					<p>运费：<span>￥0</span></p>
+					<p>优惠：<span>￥0</span></p>
+				</div>
+			</div>
+			<div class="order_btn">
+				<a href="javaScript:history.go(-1);" class="return">&lt; 返回购物车</a>
+				<div class="price">应付金额：<span>{$total}</span>元<a href="javascript:;" onclick="toCreateOrder();">提交订单</a></div>
+			</div>
+			</form>
+		</div>
+	</div>
+
+{/block}
+
+{block name="footer_script"}
+	<script type="text/javascript">
+		/*选择收货地址*/
+		$(".address_list ul li").on("click",function(){
+			$(this).addClass("cur").siblings().removeClass("cur");
+			$(this).find("input").attr("checked","checked");
+		});
+
+		/*选择支付方式*/
+		$(".payment_method ul li").on("click",function(){
+			$(this).find("input").attr("checked","checked");
+		});
+
+		/*新增地址*/
+		$(".order_fill .new_add").on("click",function(){
+			$('#form_id').val('');
+			$(".address_list").hide();
+			$(".add_content").show();
+		});
+		//地址编辑
+		function addrEdit(Obj){
+			$('#form_id').val($(Obj).attr('data-id'));
+			$('#form_username').val($(Obj).attr('data-username'));
+			$('#form_phone').val($(Obj).attr('data-phone'));
+			$('#form_addr_extra').val($(Obj).attr('data-addr_extra'));
+			$(".address_list").hide();
+			$(".add_content").show();
+		}
+		function toSubmit(){
+  			var flag = true;
+			$('#toForm .requires').each(function (k, v){
+			    if($(this).val() == ''){				    
+			      flag = false;
+			      $(this).focus();
+			    }
+		  	});
+		  	if(!flag){
+		    	return false;
+		  	}
+		  	var url = $("#toForm").attr('action');
+		  	var data = $("#toForm").serialize();
+		  	if($('#form_id').val()){
+		  		sendAjax(url,data,1);
+		  	}else{
+		  		sendAjax(url,data,0);				
+		  	}		  	
+		  	return false;
+		}
+		function addrDel(aid){
+			sendAjax("{:url('Member/addrchange')}",{'id':aid,'type':'del'},0);
+			$('#addr'+aid).remove();
+		}
+		function DefaultIt(aid){
+			sendAjax("{:url('Member/addrchange')}",{'id':aid,'is_default':1,'type':'default'},1);
+		}
+		function sendAjax(ajaxUrl,ajaxData,isre){
+			$.ajax({
+		  		url:ajaxUrl, 
+		  		data:ajaxData, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code &&　isre){
+			  			history.go(0);
+			  		}else if(!re.code){
+			  			alert(re.msg);
+			  		}
+			  		if(re.code && re.id){
+			  			ajaxData = decodeURIComponent(ajaxData ,true);
+			  			var datas = new Array();
+			  			ajaxData.split('&').forEach(function (item) {
+                           	item = item.split('=');
+                            var name = item[0],
+                                val = item[1];
+							datas[name] = val;
+                        });
+			  			$(".add_content").hide();
+			  			$(".address_list ul li").find('input[type=radio]').removeAttr('checked');
+			  			$(".address_list ul").find('li').removeClass("cur");
+						$(".address_list").find('ul').append('<li class="cur" id="addr'+re.id+'"><div class="send">寄送至：</div><div class="dizhi"><input type="radio" name="address" checked="checked" value="'+re.id+'"><span>'+datas.username+'</span><span>'+datas.phone+'</span><span>'+datas.province+datas.city+datas.town+datas.addr_extra+'</span></div><div class="operate"><a href="javascript:;" data-id="'+re.id+'" data-username="'+datas.username+'" data-phone="'+datas.phone+'" data-addr_extra="'+datas.addr_extra+'" onclick="addrEdit(this);">编辑</a><a href="javascript:;">删除</a></div></li>');
+						$(".address_list").show();
+			  		}
+			  	}	
+		  	})
+		}
+		function toCreateOrder(){
+			var ajaxUrl = $("#createForm").attr('action');
+		  	var ajaxData = $("#createForm").serialize();
+		  	$.ajax({
+		  		url:ajaxUrl, 
+		  		data:ajaxData, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+					if(re.code){
+						window.location.href = "{:url('Order/payorder')}?order_id="+re.order_id
+					}else{
+						alert(re.msg);
+					}
+				}
+			})
+		} 
+
+		$(".order_fill").on("click",".add_modify",function(){
+			$(".add_list").hide();
+			$(".add_content").show();
+		});
+
+		/*取消添加地址*/
+		$(".order_fill .add_cancel").on("click",function(){
+			$(".address_list").show();
+			$(".add_content").hide();
+		});
+
+		/*删除地址*/
+		$(".address_list ul li .del").on("click",function(){
+			$(this).parents(".address_list ul li").remove();
+		});
+
+		/*设置默认地址*/
+		$(".add_default .moren").click(function(){
+		  $(this).toggleClass("on_checkbox");
+		});
+	</script>
+
+	<!-- 地址 -->
+	<script src="/assets/index/js/distpicker.data.js"></script>
+	<script src="/assets/index/js/distpicker.js"></script>
+{/block}	

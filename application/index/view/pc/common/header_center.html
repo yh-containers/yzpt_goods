@@ -1,0 +1,30 @@
+<div class="header_center w1200 clearfix">
+    <div class="header_logo"><a href="/"><img src="/assets/index/images/logo.png"></a></div>
+    {if($show_search)}
+    <div class="header_search">
+        <p class="clearfix"><input type="text" name="" class="ssk" placeholder="搜索商品"><input type="submit" name="" value="搜索" class="ss"></p>
+    </div>
+    <div class="header_shopping"><a href="{:url('Order/cart')}">我的购物车{if($cart_count)}<span>{$cart_count}</span>{/if}</a></div>
+    <div class="header_ewm">
+        <p><img src="/assets/index/images/ewm.jpg"></p>
+        <p>手机商城</p>
+    </div>
+    {else/}
+    <div class="header_process">
+        <ul class="clearfix">
+            <li {if condition="$step eq 1"}class="cur"{/if}>
+                <i class="icon"><img src="/assets/index/images/icon18.png"></i>
+                <p>我的购物车</p>
+            </li>
+            <li {if condition="$step eq 2"}class="cur"{/if}>
+                <i class="icon"><img src="/assets/index/images/icon19.png"></i>
+                <p>确认订单</p>
+            </li>
+            <li {if condition="$step eq 3"}class="cur"{/if}>
+                <i class="icon"><img src="/assets/index/images/icon20.png"></i>
+                <p>提交支付</p>
+            </li>
+        </ul>
+    </div>
+    {/if}
+</div>

@@ -1,0 +1,39 @@
+<div class="header_bottom">
+    <div class=" w1200 clearfix">
+        <div class="header_sort">
+            <h2>商品分类</h2>
+            {if($is_show)}
+            <ul class="clearfix">
+                {volist name="cate_list" id="cate"}
+                <li>
+                    <i class="icon"><img src="/assets/index/images/icon02.png"></i>
+                    <div class="text">
+                        <h2><a href="{:url('Goods/goods_list',['cate_id'=>$cate['id']])}">{$cate.cate_name}</a></h2>
+                        <!-- <p><a href="products.html">阿胶</a><span>|</span><a href="products.html">三七粉</a><span>|</span><a href="products.html">膳食汉方</a></p> -->
+                    </div>
+                    <div class="sort_sub">
+                        <ul>
+                            {volist name="cate.link_child_cate" id="child_cate"}
+                            <li>
+                                <div class="one"><a href="{:url('Goods/goods_list',['cate_id'=>$child_cate['id']])}">{$child_cate.cate_name}</a></div>
+                                <div class="two">
+                                    {volist name="child_cate.link_child_cate" id="child_cate2"}
+                                    <a href="{:url('Goods/goods_list',['cate_id'=>$child_cate2['id']])}">{$child_cate2.cate_name}</a>
+                                    {/volist}
+                                </div>
+                            </li>
+                            {/volist}
+                        </ul>
+                    </div>
+                </li>
+                {/volist}
+            </ul>
+            {/if}
+        </div>
+        <div class="header_nav">
+            <ul class="clearfix">
+                <li class="on"><a href="/">首页</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

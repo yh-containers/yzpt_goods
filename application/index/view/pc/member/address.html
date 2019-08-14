@@ -1,0 +1,162 @@
+{extend name="member" /}
+{block name="member_content"}
+	<div class="personal_content">
+		<div class="address">
+			<div class="title">
+				<p>已有<span>{:count($addr_list)}</span>收货地址<em>（最多添加15个收货地址）</em></p>
+				<a href="javascript:;">添加新收货地址+</a>
+			</div>
+			<div class="address_list">
+				<ul>
+					<li>
+						<div class="recipient">收件人</div>
+						<div class="rec_adda">收货地址</div>
+						<div class="zip_code">邮编</div>
+						<div class="phone">手机/电话</div>
+						<div class="operating">操作</div>
+					</li>
+					{volist name="addr_list" id="addr"}
+					<li>
+						<div class="recipient">{$addr.username}</div>
+						<div class="rec_adda">{$addr.addr} {$addr.addr_extra} </div>
+						<div class="zip_code">{$addr.zip_code}</div>
+						<div class="phone">{$addr.phone}</div>
+						<div class="operating">
+							{if($addr['is_default'])}
+							<a href="javascript:;" class="moren">默认地址</a>
+							{else/}
+							<a href="javascript:;" onclick="DefaultIt({$addr.id});">设为默认</a>
+							{/if}
+							<a href="javascript:;" data-id="{$addr.id}" data-username="{$addr.username}" data-zip_code="{$addr.zip_code}" data-phone="{$addr.phone}" data-addr_extra="{$addr.addr_extra}" onclick="addrEdit(this);">修改</a>
+							<a href="javascript:;" onclick="addrDel({$addr.id});">删除</a>
+						</div>
+					</li>
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	</div>
+{/block}
+{block name="member_footer"}
+	<div class="operating_pop add_address">
+		<div class="pop_content">
+			<div class="title">添加新地址<a href="javascript:;" class="close"><img src="/assets/index/images/close02.png"></a></div>
+			<div class="content">
+				<form id="toForm" action="{:url('Member/myaddress')}">
+					<input type="hidden" id="form_id" name="id" value="">
+				<div class="box">
+					<label><span>*</span>收货人：</label>
+					<input type="text" class="requires" id="form_username" name="username" value="">
+				</div>
+				<div class="box">
+					<label><span>*</span>手机号码：</label>
+					<input type="text" class="requires" id="form_phone" name="phone" value="">
+				</div>
+				<div class="box">
+					<label><span>*</span>所在地区：</label>
+					<div class="area_select clearfix">
+						<select class="requires" name="province" id="provinces">
+							<option value="请选择">请选择</option>
+						</select>
+						<select class="requires" name="city" id="citys">
+							<option value="请选择">请选择</option>
+						</select>
+						<select class="requires" name="town" id="towns">
+							<option value="请选择">请选择</option>
+						</select>
+					</div>
+				</div>
+				<div class="box">
+					<label><span>*</span>详细地址：</label>
+					<input type="text" class="requires" id="form_addr_extra" name="addr_extra" value="">
+				</div>
+				<div class="box">
+					<label><span>*</span>邮政编码：</label>
+					<input type="text" class="requires" id="form_zip_code" name="zip_code" value="">
+				</div>
+				</form>
+				<div class="operating">
+					<a href="javascript:;" onclick="toSubmit();">保存收货地址</a>
+					<a href="javascript:;" class="close">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 地址 -->
+	<script src="/assets/index/js/distpicker.data.js"></script>
+	<script src="/assets/index/js/distpicker.js"></script>
+
+	<script type="text/javascript">
+		$(function(){
+			/*添加地址*/
+			$(".address .title a").click(function(){
+				$('#form_id').val('');
+				$(".add_address").show();
+			});
+
+			/*修改地址*/
+			// $(".address .modify").click(function(){
+			// 	$(".add_address").show();	
+			// });
+
+			/*删除地址*/
+			// $(".address .del").click(function(){
+			// 	$(this).parents("li").remove();
+			// });
+
+			/*关闭弹窗*/
+			$(".operating_pop .close").click(function(){
+				$(".operating_pop").hide();
+			});
+		
+			
+		})
+
+		function addrEdit(Obj){
+			$('#form_id').val($(Obj).attr('data-id'));
+			$('#form_username').val($(Obj).attr('data-username'));
+			$('#form_phone').val($(Obj).attr('data-phone'));
+			$('#form_zip_code').val($(Obj).attr('data-zip_code'));
+			$('#form_addr_extra').val($(Obj).attr('data-addr_extra'));
+			$(".add_address").show();
+		}
+		function toSubmit(){
+  			var flag = true;
+			$('#toForm .requires').each(function (k, v){
+			    if($(this).val() == ''){				    
+			      flag = false;
+			      $(this).focus();
+			    }
+		  	});
+		  	if(!flag){
+		    	return false;
+		  	}
+		  	var url = $("#toForm").attr('action');
+		  	var data = $("#toForm").serialize();
+		  	sendAjax(url,data,1);
+		  	return false;
+		}
+		function addrDel(aid){
+			sendAjax("{:url('Member/addrchange')}",{'id':aid,'type':'del'},1);
+		}
+		function DefaultIt(aid){
+			sendAjax("{:url('Member/addrchange')}",{'id':aid,'is_default':1,'type':'default'},1);
+		}
+		function sendAjax(ajaxUrl,ajaxData,isre){
+			$.ajax({
+		  		url:ajaxUrl, 
+		  		data:ajaxData, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code && isre){
+			  			history.go(0);
+			  		}else if(!re.code){
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		}
+	</script>
+{/block}

@@ -1,0 +1,315 @@
+{extend name="public" /}
+
+{block name="content"}
+<div class="main inside_main">
+        <div class="products">
+            <div class="bread_crumbs w1200 clearfix">
+                <a href="/">首页</a>
+                {volist name="bread" id="bread_nav"}
+                <span>&gt;</span><a href="{$bread_nav.url}">{$bread_nav.name}</a>
+                {/volist}
+                <span>&gt;</span><a href="javascript:;">{$goods.goods_name} </a>
+            </div>
+            <div class="products_det w1200">
+                <div class="product_intro clearfix">
+                    <div id="preview">
+                        <div class="jqzoom" id="spec-n1">
+                            <IMG src="{$goods.goods_image}" jqimg="{$goods.goods_image}">
+                        </div>
+                        <div id="spec-n5">
+                            <div class="control" id="spec-left">
+                            </div>
+                            <div id="spec-list">
+                                <ul class="list-h">
+                                    {volist name="goods.image_arr" id="img"}
+                                    <li><img src="{$img}"> </li>
+                                    {/volist}
+                                </ul>
+                            </div>
+                            <div class="control" id="spec-right">
+                            </div>
+                        </div>
+                        <div class="favorite_shar clearfix">
+                            <div class="bdsharebuttonbox"><a href="#" class="bds_more" id="bds_more" data-cmd="more">分享</a></div>
+                            <a href="javascript:addCollect();" class="shar">收藏（{$collect_count}）</a>
+                        </div>
+                    </div>
+                    <div class="product_select">
+                        <div class="product_det_title">{$goods.goods_name}</div>
+                        <div class="product_det_price">
+                            <p>价　格：<span id="goods_price">￥{$goods.price}</span></p>
+                        </div>
+                        <div class="product_det_eva">
+                            <p><span>累计评价：</span><a href="javascript:;">295</a></p>
+                        </div>
+                        <div class="product_det_type">
+                            <!-- 商品规格 -->
+                            {volist name="sku_arr" id="sku"}
+                            <div class="select_deploy clearfix">
+                                <span>{$sku.spec_name}：</span>
+                                <ul class="sku_val">
+                                    {volist name="sku.spec_val" id="sku_attr" key='k'}
+                                    <li {if condition="$k eq 1"}class="disabled"{/if} ref="{$sku_attr.id}"><span>{$sku_attr.value_name}</span></li>
+                                    {/volist}
+                                </ul>
+                            </div>
+                            {/volist}
+
+                            <div class="select_deploy clearfix">
+                                <span style="line-height: 32px;">购买数量：</span>
+                                <div class="buy_num">
+                                    <input id="num" data_step="1" data_min="1" data_max="99" data_digit="0" value="1" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                                    <div class="add_sub">
+                                        <p id="numr" onselectstart="return false;" style="margin-bottom:4px;">+</p>
+                                        <p id="numl" onselectstart="return false;">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product_det_buy">
+                            <a href="javascript:;" class="ljgm" onclick="addCart(1);">立即购买</a>
+                            <a href="javascript:;" onclick="addCart(0);" class="jrgwc">加入购物车</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="product_det_bottom clearfix">
+                    <!-- 猜你喜欢 -->
+                    <div class="best_selling">
+                        <div class="selling_title">为你推荐</div>
+                        <ul>
+                            {volist name="like_list" id="rem"}
+                            <li>
+                                <a href="{:url('Goods/detail',['id'=>$rem['id']])}">
+                                    <div class="selling_img"><img src="{$rem.goods_image}"></div>
+                                    <div class="selling_text">
+                                        <p>{$rem.goods_name} </p>
+                                        <h3>￥{$rem.price}</h3>
+                                    </div>
+                                </a>
+                            </li>
+                            {/volist}
+                        </ul>
+                    </div>
+                    <!-- 商品详情 -->
+                    <div class="product_description">
+                        <div class="hd">
+                            <ul>
+                                <li><a href="#one">商品简介</a></li>
+                                <li><a href="#two">参数规格</a></li>
+                                <li><a href="#three">商品评价</a></li>
+                            </ul>
+                        </div>
+                        <div class="bd">
+                            <!-- 商品详情介绍 -->
+                            <div class="con">
+                                {$goods.content|raw}
+                            </div>
+                            <!-- 商品规格 -->
+                            <div class="con parameter">
+                                {$goods.norm_brief|raw}
+                            </div>
+                            <!-- 商品评价 -->
+                            <div class="con evaluation">
+                                <div class="praise">
+                                    <h3>好评度</h3>
+                                    <div class="percentage">99<span>%</span></div>
+                                    <p>评价总数：<span>10</span></p>
+                                </div>
+                                <div class="inHd">
+                                    <ul class="clearfix">
+                                        <li>全部<span>（33）</span></li>
+                                        <li>晒图<span>（10）</span></li>
+                                        <li>好评<span>（2）</span></li>
+                                        <li>好评<span>（1）</span></li>
+                                        <li>差评<span>（0）</span></li>
+                                    </ul>
+                                </div>
+                                <div class="inBd">
+                                    <!-- 全部 -->
+                                    <div class="con">
+                                        <ul class="clearfix">
+                                            <li>
+                                                <div class="eva_avatar">
+                                                    <p><img src="images/toux01.png"></p>
+                                                    <p>容景呀</p>
+                                                </div>
+                                                <div class="eva_content">
+                                                    <div class="eva_star"><span>星级：</span><em class="star5"></em></div>
+                                                    <p>这个手机拿着感觉特别好，外形也很不错，第一次在这买，以后用好了还会买的，而且商家服务态度很好</p>
+                                                    <ul class="clearfix tz-gallery">
+                                                        <li class="thumbnail">
+                                                            <a class="lightbox" href="images/pro01.jpg">
+                                                                <img src="images/pro01.jpg">
+                                                            </a>
+                                                        </li>
+                                                        <li class="thumbnail">
+                                                            <a class="lightbox" href="images/pro02.jpg">
+                                                                <img src="images/pro02.jpg">
+                                                            </a>
+                                                        </li>
+                                                        <li class="thumbnail">
+                                                            <a class="lightbox" href="images/pro01.jpg">
+                                                                <img src="images/pro01.jpg">
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="package_info"><span>2018-08-14 13:07</span></div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="page">
+                                            <div class="page_num clearfix">
+                                                <a href="" class="prev">&lt;</a>
+                                                <a href="" class="cur">1</a>
+                                                <a href="">2</a>
+                                                <a href="">3</a>
+                                                <a href="">4</a>
+                                                <a href="javascript:;">...</a>
+                                                <a href="">50</a>
+                                                <a href="" class="next">&gt;</a>
+                                            </div>
+                                            <div class="jump"><span>共50页，跳转到：</span><input type="text" name="" class="jump_kuan"><input type="submit" value="确定" name="" class="jump_btn"></div>
+                                        </div>
+                                    </div>
+                                    <div class="con" style="display: none">
+                                        <div class="eva_air">
+                                            暂无相关评价
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}
+{block name="footer_script"}
+    <script type="text/javascript">
+
+        /*产品详情多页签*/
+        jQuery(".evaluation").slide({ titCell:".inHd li",mainCell:".inBd",trigger:"click"});
+        /* 外层outBox左滚动切换 */
+        jQuery(".product_description").slide({ effect:"fade",trigger:"click"});
+        
+
+        /*多页签栏目监控*/
+        $(function(){
+            var win=$(window); 
+            var sc=$(document);
+            win.scroll(function(){
+              if(sc.scrollTop()>=940){
+                $(".product_description > .hd").addClass("topBarfix");
+                $(".product_description .details").attr("id","one");
+                $(".product_description .parameter").attr("id","two");
+                $(".product_description .evaluation").attr("id","three");
+              }else{
+                $(".product_description > .hd").removeClass("topBarfix");
+                $(".product_description .details").attr("id","");
+                $(".product_description .parameter").attr("id","");
+                $(".product_description .evaluation").attr("id","");
+              }
+            });
+        });
+    </script>
+
+    <!-- 数量加减 -->
+    <script type="text/javascript" src="/assets/index/js/num-alignment.js"></script>
+
+    <!-- 类型选择 -->
+    <script>
+        $(function(){
+            //加载获取属性价格
+            if($(".select_deploy")){
+                getSkuAttrVal();
+            }
+        });
+        $(".select_deploy ul li").on("click",function(){
+            $(this).addClass("disabled").siblings().removeClass("disabled");
+            getSkuAttrVal();
+        });
+        var goods_id = {$goods.id},sku_id = 0;
+
+        function getSkuAttrVal(){
+            var sid = '';
+            $(".sku_val").each(function(){
+                var lileng = $(this).find('li').length;
+                for(var i=0; i<lileng;i++){
+                    var is_desabled = $(this).find('li:eq('+i+')').attr('class');
+                    if(is_desabled == 'disabled'){
+                        sid += $(this).find('li:eq('+i+')').attr('ref')+',';
+                    }
+                }
+            })
+            $.ajax({
+                url:'{:url("Goods/search_sku")}',
+                data:{'sv_ids':sid,'goods_id':goods_id},
+                dataType:'json',
+                type:'post',
+                success:function(e){
+                    if(e.err == 0){
+                        $('#goods_price').html('');
+                        $('#goods_price').html('￥'+e.price);
+                        sku_id = e.id;
+                    }
+                }
+            });
+        }
+        function addCart(isck){
+            if(!sku_id){
+              getSkuAttrVal();  
+            }
+            var num = $('#num').val();
+            sendAjax("{:url('Goods/addcart')}",{'gid':goods_id,'sid':sku_id,'num':num,'is_checked':isck});
+        }
+        function addCollect(){
+            sendAjax("{:url('Goods/collect')}",{'gid':goods_id});
+        }
+        /*加入购物车成功*/
+        $(function(){            
+            /*关闭弹窗*/
+            $('.tips_close').click(function(){
+                $('.remind_popup').hide();
+                $(".tips_bg").remove();
+                history.go(0);
+            });
+        });
+        function sendAjax(ajaxUrl,ajaxData){
+            $.ajax({
+                url:ajaxUrl,
+                data:ajaxData,
+                dataType:'json',
+                type:'post',
+                success:function(e){
+                    $('#cart_msg').html('');
+                    $('#cart_msg').html(e.msg);
+                    $('.remind_popup').show();
+                    $("body").append("<div class='tips_bg'></div>");
+                    if(e.code && ajaxData.is_checked){
+                        window.location.href="{:url('Order/detail')}";
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- 图片放大镜 -->
+    <script src="/assets/index/js/lib.js" type=text/javascript></script>
+    <script src="/assets/index/js/163css.js" type=text/javascript></script>
+
+    <!-- 评价图片放大 -->
+    <script type="text/javascript" src="/assets/index/js/baguetteBox.min.js"></script>
+    <script>
+        baguetteBox.run('.tz-gallery');
+    </script>
+{/block}
+{block name="footer"}
+    <div class="tips remind_popup">
+        <div class="tips_title"><strong>温馨提示</strong><span class="tips_close"><img src="/assets/index/images/close.png"></span></div>
+        <div class="tips_content"><img src="/assets/index/images/icon16.jpg"><span id="cart_msg">加入购物车成功</span></div>
+        <div class="tips_bottom clearfix">
+            <a href="javascript:;" class="define tips_close">确定</a>
+        </div>
+    </div>
+{/block}

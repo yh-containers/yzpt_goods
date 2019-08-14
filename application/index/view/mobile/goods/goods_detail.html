@@ -1,0 +1,730 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">产品详情</div>
+	</header>
+	<main class="main">
+		<div class="products_det">
+			<div class="slider-wrap slider-wrap-banner mgtop">
+				<div class="swiper-container swiper-container-banner" >
+					<div class="swiper-wrapper">
+						{volist name="goods.image_arr" id="img"}
+					   	<div class="swiper-slide"><img src="{$img}" /></div>
+					   	{/volist}
+					</div>
+					<div class="pagination banner-pagination" id="pagination"></div>
+				</div>
+			</div>
+			<div class="det_info">
+				<div class="name">{$goods.goods_name}</div>
+				<div class="price">
+					<span>￥{$goods.price}</span><s>￥{$goods.original_price}</s>
+				</div>
+				<div class="norm">
+					<a href="javascript:;">规格<span>标准</span></a>
+				</div>
+			</div>
+			<div class="product_description">
+				<div class="hd">
+					<ul class="clearfix">
+						<li>详情</li>
+						<li>评价</li>
+						<li>规格说明</li>
+					</ul>
+				</div>
+				<div class="bd">
+					<!-- 商品介绍 -->
+					<div class="con">
+						{$goods.content|raw}
+					</div>
+					<!-- 评价 -->
+					<div class="con evaluation">
+						<div class="inHd">
+							<ul class="clearfix">
+								<li>全部评价6.2w</li>
+								<li>好评5K</li>
+								<li>好评22</li>
+								<li>差评8</li>
+								<li>有图评价200</li>
+							</ul>
+						</div>
+						<div class="inBd">
+							<div class="con">
+								<ul class="clearfix">
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                </ul>
+							</div>
+							<div class="con">
+								<ul class="clearfix">
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                </ul>
+							</div>
+							<div class="con">
+								<ul class="clearfix">
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                </ul>
+							</div>
+							<div class="con">
+								<ul class="clearfix">
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_img">
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro01.jpg">
+					                                <img src="images/pro01.jpg" alt="Park">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro02.jpg">
+					                                <img src="images/pro02.jpg" alt="Bridge">
+					                            </a>
+					                        </div>
+					                    
+					                        <div class="thumbnail">
+					                            <a class="lightbox" href="images/pro03.jpg">
+					                                <img src="images/pro03.jpg" alt="Tuneel">
+					                            </a>
+					                        </div>
+					                    </div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                    <li>
+				                        <div class="evaluation_top">
+				                            <div class="score">
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span class="cur"></span>
+				                                <span></span>
+				                            </div>
+				                            <div class="evaluation_right">
+				                                <span>Y***0</span>
+				                            </div>
+				                        </div>
+				                        <div class="evaluation_text">很大一瓶 这个价钱蛮实惠的 拿回来的时候我室友还以为我买了个洗头发的 瓶子很高级，刚刚用口红在手上涂了一下然后去洗清洁效果还可以差不多洗掉了剩了一点点印子，然后我又用洗面奶洗.</div>
+				                        <div class="evaluation_time">2018-04-09</div>
+				                    </li>
+				                </ul>
+							</div>
+							<div class="con">
+								<div class="air">暂无相关评价~</div>
+							</div>
+						</div>
+					</div>
+					<!-- 规格说明 -->
+					<div class="con sale">
+						{$goods.norm_brief|raw}
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<footer class="det_footer">
+		<a href="tel:0755-12369987"><i class="icon iconfont icon-kefu"></i><span>联系客服</span></a>
+		<a href="javascript:addCollect();" class="coll"><i class="icon iconfont icon-xingxing"></i><span>收藏</span></a>
+		<a href="{:url('Order/cart')}"><i class="icon iconfont icon-gouwuche"></i><span>购物车</span></a>
+		<a href="javascript:;" class="add_cart">加入购物车</a>
+		<a href="javascript:;" class="buy_now">立即购买</a>
+	</footer>
+
+	<div class="buy_pop">
+		<div class="content">
+			<div class="close"><i class="icon iconfont icon-guanbi"></i></div>
+			<div class="pro_info clearfix">
+				<div class="img"><img src="{$goods.goods_image}"></div>
+				<div class="text">
+					<h2>{$goods.goods_name}</h2>
+					<p id="goods_price">￥169</p>
+				</div>
+			</div>
+			<div class="select">
+				{volist name="sku_arr" id="sku"}
+				<div class="pro_norm clearfix">
+					<span>{$sku.spec_name}</span>
+					<ul class="sku_val">
+						{volist name="sku.spec_val" id="sku_attr" key='k'}
+						<li {if condition="$k eq 1"}class="cur"{/if} ref="{$sku_attr.id}">{$sku_attr.value_name}</li>
+						{/volist}
+					</ul>
+				</div>
+				{/volist}
+				<div class="buy_num clearfix">
+					<span>购买数量</span>
+					<div class="quantity">
+						<div id="numl" class="quantity_btn" onselectstart="return false;">-</div>
+							<input id="num" data_step="1" data_min="1" data_max="99" data_digit="0" value="1" readonly="readonly">
+						<div id="numr" class="quantity_btn" onselectstart="return false;"> + </div>
+					</div>
+				</div>
+				
+			</div>
+			<div class="btn"><a href="javascript:;">确定</a></div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="js/num-alignment.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="/assets/index/mobile/css/swiper.min.css">
+	<script src="/assets/index/mobile/js/swiper-3.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		//banner
+		var swiper = new Swiper('.swiper-container-banner',{
+	   	pagination: '.banner-pagination',
+	   	paginationClickable: true,
+	   	loop: true,
+        autoplay:3000,
+	  	});
+	</script>
+
+	<script type="text/javascript" src="/assets/index/mobile/js/jquery.SuperSlide.2.1.1.js"></script>
+	<script type="text/javascript">
+		/*产品详情多页签*/
+		jQuery(".evaluation").slide({ titCell:".inHd li",mainCell:".inBd",trigger:"click"});
+		/* 外层outBox左滚动切换 */
+		jQuery(".product_description").slide({ effect:"fade",trigger:"click"});
+
+		/*下单选择*/
+		$(".buy_pop .content .select ul li").click(function(){
+			$(this).addClass("cur");
+			$(this).siblings().removeClass("cur");
+			getSkuAttrVal();
+		});
+		$("#numr").click(function(){
+			var num = $('#num').val();
+			num++;
+			$('#num').val(num);
+		})
+		$("#numl").click(function(){
+			var num = $('#num').val();
+			num--;
+			if(num<=1)
+				num=1;
+			$('#num').val(num);
+		})
+		$(function(){
+            //加载获取属性价格
+            if($(".pro_norm")){
+                getSkuAttrVal();
+            }
+        });
+		var goods_id = {$goods.id},sku_id = 0;
+
+        function getSkuAttrVal(){
+            var sid = '';
+            $(".sku_val").each(function(){
+                var lileng = $(this).find('li').length;
+                for(var i=0; i<lileng;i++){
+                    var is_desabled = $(this).find('li:eq('+i+')').attr('class');
+                    if(is_desabled == 'cur'){
+                        sid += $(this).find('li:eq('+i+')').attr('ref')+',';
+                    }
+                }
+            })
+            $.ajax({
+                url:'{:url("Goods/search_sku")}',
+                data:{'sv_ids':sid,'goods_id':goods_id},
+                dataType:'json',
+                type:'post',
+                success:function(e){
+                    if(e.err == 0){
+                        $('#goods_price').html('');
+                        $('#goods_price').html('￥'+e.price);
+                        sku_id = e.id;
+                    }
+                }
+            });
+        }
+        function addCart(isck){
+            if(!sku_id){
+              getSkuAttrVal();  
+            }
+            var num = $('#num').val();
+            sendAjax("{:url('Goods/addcart')}",{'gid':goods_id,'sid':sku_id,'num':num,'is_checked':isck});
+        }
+        function addCollect(){
+            sendAjax("{:url('Goods/collect')}",{'gid':goods_id});
+        }
+		/*加入购物车*/
+		$(".det_footer .add_cart").click(function(){
+			$(".buy_pop").show();
+			$(".buy_pop .btn a").attr('href','javascript:addCart(0);');
+		});
+		//立即购买
+		$(".det_footer .buy_now").click(function(){
+			$(".buy_pop").show();
+			$(".buy_pop .btn a").attr('href','javascript:addCart(1);');
+
+		});
+
+		$(".buy_pop .content .btn,.buy_pop .close").click(function(){
+			$(".buy_pop").hide();
+		});
+
+		function sendAjax(ajaxUrl,ajaxData){
+            $.ajax({
+                url:ajaxUrl,
+                data:ajaxData,
+                dataType:'json',
+                type:'post',
+                success:function(e){
+                    alert(e.msg);
+                    if(e.code && ajaxData.is_checked){
+                        window.location.href="{:url('Order/detail')}";
+                    }
+                }
+            });
+        }
+	</script>
+
+	<script type="text/javascript" src="/assets/index/mobile/js/baguetteBox.min.js"></script>
+    <script type="text/javascript">
+        baguetteBox.run('.evaluation_img');
+    </script>
+{/block}
+{block name="footer"}{/block}

@@ -1,0 +1,79 @@
+{extend name="login_reg" /}
+{block name="title"}{:config('app_name')} _ 登录{/block}
+{block name="content"}
+	<div class="main">
+		<div class="login">
+			<div class="title">
+				<p><img src="/assets/index/images/logo.png"></p>
+				<h3>养众网登录</h3>
+			</div>
+			<div class="login_box">
+				<form id="toForm" action="{:url('Index/dologin')}">
+				<div class="box">
+					<i class="icon"><img src="/assets/index/images/icon21.png"></i>
+					<input type="text" class="requires" name="account" placeholder="手机号">
+				</div>
+				<div class="box">
+					<i class="icon"><img src="/assets/index/images/icon22.png"></i>
+					<input type="password" class="requires" name="password" placeholder="密码">
+				</div>
+				<div class="btn"><input type="submit" name="" value="登录"></div>
+				</form>
+				<div class="link"><a href="{:url('Index/register')}">立即注册</a><span>|</span><a href="forget_pwd.html">忘记密码？</a></div>
+			</div>
+			<div class="other_login">
+				<h2><span>其他方式登陆</span></h2>
+				<ul>
+					<li><a href="javascript:;"><img src="/assets/index/images/qq.png"></a></li>
+					<li><a href="javascript:;"><img src="/assets/index/images/wb.png"></a></li>
+					<li><a href="javascript:;"><img src="/assets/index/images/wx.png"></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$("#toForm").submit(function(){
+				var _this = $(this);
+	  			var flag = true;
+				$('form .requires').each(function (k, v){
+				    if($(this).val() == ''){				    
+				      flag = false;
+				      $(this).focus();
+				    }
+			  	});
+			  	if(!flag){
+			    	window.location.href="#"
+			    	return false;
+			  	}
+			  	var url = _this.attr('action');
+			  	var data = _this.serialize();
+			  	$.ajax({
+			  		url:url, 
+			  		data:data, 
+					dataType:'json',
+					type:'post', 
+					success:function (re){
+				  		if(re.err){
+				  			alert(re.msg);
+				  		}else{
+				  			window.location.href='/';
+				  		}
+				  	}	
+			  	})
+			  	return false;
+			})
+		})
+	</script>
+
+	<div class="sidebar">
+		<ul>
+			<li><a href="personal.html"><i class="icon"><img src="/assets/index/images/icon12.png"></i></a></li>
+			<li><a href="shopping.html"><i class="icon"><img src="/assets/index/images/icon13.png"></i><span>购物车</span></a></li>
+			<li><a href="javascript:;" target="_blank"><i class="icon"><img src="/assets/index/images/icon14.png"></i></a></li>
+		</ul>
+		<div class="sidebar_bottom">
+        	<div title="返回顶部" id="return_top" class="return_top"><img src="/assets/index/images/icon15.png"></div>
+		</div>
+	</div>
+{/block}
