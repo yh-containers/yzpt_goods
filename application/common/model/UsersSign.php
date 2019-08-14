@@ -45,7 +45,7 @@ class UsersSign extends BaseModel
             exception($e->getMessage());
         }
 
-        return $num;
+        return [$new_model->lx_times,$num];
     }
 
 

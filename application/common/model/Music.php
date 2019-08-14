@@ -11,7 +11,7 @@ class Music extends BaseModel
     protected $name='music';
 
 
-    protected function getImgAttr($value)
+    protected function getFileAttr($value)
     {
         return self::handleFile($value);
     }

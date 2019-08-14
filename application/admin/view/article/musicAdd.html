@@ -28,12 +28,13 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">音乐文件</label>
                         <div class="col-sm-10">
+                            <input type="hidden" name="ext" value="{:empty($model['ext'])?'':$model['ext']}" />
                             <input type="hidden" name="duration" value="{:empty($model['duration'])?0:$model['duration']}" />
                             <input type="hidden" name="file" value="{$model['file']}" />
-                            <button type="button" class="layui-btn upload-img" lay-data="{ url: '{:url('upload/upload',['type'=>'article'])}', accept: 'audio',acceptMime:'audio/*',exts:'mp3'}">
+                            <button type="button" class="layui-btn upload-img" lay-data='{:action('upload/info',['type'=>'music','accept'=>'audio','acceptMime'=>'audio/*','exts'=>'mp3'])}'>
                                 <i class="layui-icon">&#xe67c;</i>音乐文件(mp3格式)
                             </button>
-                            <img width="80" height="80" src="{$model['file']}" />
+                            <a href="{$model['file']}" target="_blank">{:$model['file']?'查看资源':'未上传资源'}</a>
                         </div>
                     </div>
 
@@ -80,7 +81,7 @@
         $.common.fileUpload(upload,'.upload-img',(res,query_select)=>{
             //保存图片路径
             query_select.prev().val(res.path)
-            query_select.parent().find('img').attr('src',res.path)
+            query_select.parent().find('a').attr('href',res.path).text('查看资源')
             res.hasOwnProperty('duration') && query_select.parent().find("input[name='duration']").val(res.duration)
         })
 

@@ -2,6 +2,21 @@
 <!--高亮选中效果-->
 {block name="current_index"}goods,goods.index/index{/block}
 
+{block name="style"}
+<style>
+    .in{display: inline-block;width: 30%;margin-right:10px;}
+    .add_rows{display: inline-block;width: 20px;height: 20px;text-align: center;border: 1px solid;line-height: 18px;border-radius: 50%;margin: 8px 0 15px 24px;}
+    .nd{display: inline-block; width: auto;padding: 5px 12px;color: #fff;background-color: #3c8dbc;border-radius: 5px;margin-right: 5px;}
+    .virtue{border-bottom: 1px solid #00c0ef;width: 95%;padding: 10px 0;font-size: 16px;}
+    .ot{margin: 0 8px 0 -8px;border: 0;border-right: 1px solid #ccc;border-radius: 0;color: #ff0000;font-size: 15px;height: auto;}
+    .dm{margin: 10px 0;}
+
+    .goods-group{display: flex;flex-wrap: wrap;}
+    .goods-group .item{display: inline-block;position: relative;margin-right: 5px}
+    .goods-group .item i{position: absolute; top:0; size: 18px;color: white; background: red}
+
+</style>
+{/block}
 {block name="content"}
 
 <div class="box box-primary">
@@ -55,14 +70,20 @@
                     <label class="col-sm-2 control-label">商品图</label>
                     <div class="col-sm-10">
                         <input type="hidden" name="goods_image" value="{$model['goods_image']}" />
-                        <button type="button" class="layui-btn upload-img" lay-data="{ url: '{:url('upload/upload',['type'=>'goods'])}', accept: 'images'}">
+                        <button type="button" class="layui-btn upload-img" lay-data='{:action('upload/info',['type'=>'goods'])}'>
                             <i class="layui-icon">&#xe67c;</i>商品图
                         </button>
-                        <img width="100" height="100" src="{$model['goods_image']}" />
-                        {volist name="model.image_arr" id="iv" key="k"}
-                        <input type="hidden" name="image_arr[]" value="{$iv}">
-                        {if condition="$k neq 1"}<img width="100" height="100" src="{$iv}"/>{/if}
-                        {/volist}
+                        <div class="help-block goods-group">
+
+                            {volist name="model.image_arr" id="iv" key="k"}
+                                <div class="item">
+                                    <i class="fa fa-fw fa-close"></i>
+                                    <img src="{$iv}" width="100" height="100">
+                                    <input value="{$iv}" name="image_arr[]" type="hidden">
+                                </div>
+                            {/volist}
+                        </div>
+
                     </div>
                 </div>
                 <!--商品价格-->
@@ -269,14 +290,7 @@
 <script type="text/javascript" src="/assets/ueditor1_4_3_3/ueditor.all.js"></script>
 
 <script src="/assets/admin/js/arttemplate/template.js"></script>
-<style>
-    .in{display: inline-block;width: 30%;margin-right:10px;}
-    .add_rows{display: inline-block;width: 20px;height: 20px;text-align: center;border: 1px solid;line-height: 18px;border-radius: 50%;margin: 8px 0 15px 24px;}
-    .nd{display: inline-block; width: auto;padding: 5px 12px;color: #fff;background-color: #3c8dbc;border-radius: 5px;margin-right: 5px;}
-    .virtue{border-bottom: 1px solid #00c0ef;width: 95%;padding: 10px 0;font-size: 16px;}
-    .ot{margin: 0 8px 0 -8px;border: 0;border-right: 1px solid #ccc;border-radius: 0;color: #ff0000;font-size: 15px;height: auto;}
-    .dm{margin: 10px 0;}
-</style>
+
 {volist name="spec" id="val"}
 <script type="text/html" id="columnTemp{$val.id}">
     <label class="col-md-2 control-label">属性列表</label>
@@ -313,7 +327,16 @@
         var upload = layui.upload;
         var laydate = layui.laydate;
         //$.common.fileUpload(upload,'.upload-img')
-        $.common.fileUploadCopy(upload,'.upload-img')
+        $.common.fileUpload(upload,'.upload-img',(res,query_select)=>{
+            //图片显示域名
+            var preview_domain = res.hasOwnProperty('preview_domain')?res.preview_domain:'';
+            var html = ' <div class="item">' +
+                '<i class="fa fa-fw fa-close"></i>' +
+                '<img src="'+preview_domain+res.key+'" width="100" height="100">' +
+                '<input value="'+res.key+'" name="image_arr[]" type="hidden">' +
+                '</div>'
+            query_select.parent().find('.help-block').append(html);
+        })
         //执行一个laydate实例
         laydate.render({
             elem: '.end_time' //指定元素
@@ -328,6 +351,12 @@
             ,max: '2080-12-31'
         });
     })
+
+    //删除图片
+    $(".goods-group").on('click','i',function(){
+        $(this).parent().remove()
+    })
+
     function isShip(str){
         if(str == 2){
             $('#fares').show();

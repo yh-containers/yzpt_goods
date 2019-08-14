@@ -37,7 +37,7 @@
                 <label class="col-sm-2 control-label">分类图</label>
                 <div class="col-sm-10">
                     <input type="hidden" name="image" value="{$model['image']}" />
-                    <button type="button" class="layui-btn upload-img" lay-data="{ url: '{:url('upload/upload',['type'=>'gd_category'])}', accept: 'images'}">
+                    <button type="button" class="layui-btn upload-img" lay-data='{:action('upload/info',['type'=>'gd_category'])}'>
                         <i class="layui-icon">&#xe67c;</i>分类图
                     </button>
                     <img width="80" height="80" src="{$model['image']}" />

@@ -29,4 +29,22 @@ class Common extends Controller
             }
         }
     }
+
+
+    /**
+     * 响应数据
+     * @param int $code 状态码
+     * @param string $msg 消息
+     * @param array $data
+     * @return array
+     * */
+    final protected function _resData($code=0,$msg='操作失败',array $data=[])
+    {
+        $res_data = [
+            'code' => $code,
+            'msg'=>$msg,
+        ];
+        !empty($data) && $res_data['data']= $data;
+        return $res_data;
+    }
 }

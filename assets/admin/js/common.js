@@ -39,21 +39,23 @@ $.common={
             ,done: function(res){
                 //上传完毕回调
                 var item = this.item;
+                var res_data = res.hasOwnProperty('data')?res.data:{};
                 if(res.code===1){
                     //上传成功
                     if(func!==false){
                         //默认请求成功指定动作
-                        func = typeof func ==='function' ? func:(res,query_select)=>{
+                        func = typeof func ==='function' ? func:(res_data,query_select)=>{
                             //默认
-                            // console.log(res)
+                            console.log(res_data)
                             // console.log(query_select.parents().html())
-
+                            var path = res_data.hasOwnProperty('key')?res_data.key:'';
+                            var preview_domain = res_data.hasOwnProperty('preview_domain')?res_data.preview_domain:'';
                             //保存图片路径
-                            query_select.prev().val(res.path)
-                            query_select.parent().find('img').attr('src',res.path)
+                            query_select.prev().val(path)
+                            query_select.parent().find('img').attr('src',preview_domain+path)
                         }
                         //执行函数
-                        func(res,$(item))
+                        func(res_data,$(item))
                     }
 
                 }else{
@@ -67,44 +69,6 @@ $.common={
         });
         return uploadInst
     },
-    //文件上传
-    fileUploadCopy:function(upload,elem,func){
-        //执行实例
-        var uploadInst =  upload.render({
-            elem: elem //绑定元素
-            ,done: function(res){
-                //上传完毕回调
-                var item = this.item;
-                if(res.code===1){
-                    //上传成功
-                    if(func!==false){
-                        //默认请求成功指定动作
-                        func = typeof func ==='function' ? func:(res,query_select)=>{
-                            //保存图片路径
-                            if(upn == 1){
-                                query_select.prev().val(res.path)
-                                query_select.parent().find('img').attr('src',res.path)
-                            }else{
-                                query_select.parent().append('<img src="'+res.path+'" width="100" height="100">');
-                            }
-                            query_select.parent().append('<input value="'+res.path+'" name="image_arr[]" type="hidden">');
-                            upn++;
-                        }
-                        //执行函数
-                        func(res,$(item))
-                    }
-
-                }else{
-                    layui.layer.msg(res.msg)
-                }
-            }
-            ,error: function(){
-                //请求异常回调
-                layui.layer.msg('上传异常!  ')
-            }
-        });
-        return uploadInst
-    }
 }
 
 //发送请求

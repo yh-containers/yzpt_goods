@@ -175,18 +175,27 @@ class Mine extends Common
     //签到信息
     public function signInfo()
     {
-        $month = input('month',date('Y-m'),'trim');
+        $month = input('month','','trim');
+        $month = empty($month)?date('Y-m'):date('Y-m',strtotime($month));
         $last_month = date('Y-m-01',strtotime('+1 month',strtotime($month)));
         $sign_day = [];
         \app\common\model\UsersSign::where([
+            ['uid','=',$this->user_id],
             ['date','>=',$month],
             ['date','<',$last_month]
-        ])->select()->each(function($item,$index)use(&$sign_day){
+        ])->order('id asc')->select()->each(function($item,$index)use(&$sign_day,&$last_times){
             array_push($sign_day,$item['date']);
-
+            $last_times = $item['lx_times'];
         });
+        //签到数据
+        $sing_model = \app\common\model\UsersSign::order('id desc')->find();
+        $last_times = empty($sing_model)?0:$sing_model['lx_times']; //连续签到次数
+        $today_sign_status = $sing_model['date']==date('Y-m-d')?1:0; //今天是否签到
+
         return $this->_resData(1,'操作成功',[
-            'sign_day'=>$sign_day
+            'sign_day'=>$sign_day,
+            'last_times'=>$last_times,
+            'today_sign_status'=>$today_sign_status,
         ]);
     }
 
@@ -194,10 +203,10 @@ class Mine extends Common
     public function sign()
     {
         try{
-            $num = \app\common\model\UsersSign::sign($this->user_model);
+            list($last_times,$num )= \app\common\model\UsersSign::sign($this->user_model);
         }catch (\Exception $e){
             return $this->_resData(0,$e->getMessage());
         }
-        return $this->_resData(1,'签到成功',['num'=>$num]);
+        return $this->_resData(1,'签到成功',['last_times'=>$last_times,'num'=>$num]);
     }
 }
