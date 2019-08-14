@@ -78,7 +78,7 @@ class BaseModel extends Model
         if(empty($file)){
             return null;
         }
-        return preg_match('/.*(\.png|\.jpg|\.jpeg|\.gif)$/', $file);
+        return preg_match('/.*(\.?png|\.?jpg|\.?jpeg|\.?gif)$/', $file);
     }
 
     //处理图片路径问题

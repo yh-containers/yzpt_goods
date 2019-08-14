@@ -140,4 +140,7 @@ class Index extends Common
             die;
         }
     }
+    public function phpinfo(){
+        phpinfo();
+    }
 }

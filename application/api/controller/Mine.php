@@ -171,4 +171,33 @@ class Mine extends Common
         $data = \app\common\model\Users::friends($this->user_id);
         return $this->_resData(1,'操作成功',$data);
     }
+
+    //签到信息
+    public function signInfo()
+    {
+        $month = input('month',date('Y-m'),'trim');
+        $last_month = date('Y-m-01',strtotime('+1 month',strtotime($month)));
+        $sign_day = [];
+        \app\common\model\UsersSign::where([
+            ['date','>=',$month],
+            ['date','<',$last_month]
+        ])->select()->each(function($item,$index)use(&$sign_day){
+            array_push($sign_day,$item['date']);
+
+        });
+        return $this->_resData(1,'操作成功',[
+            'sign_day'=>$sign_day
+        ]);
+    }
+
+    //用户签到
+    public function sign()
+    {
+        try{
+            $num = \app\common\model\UsersSign::sign($this->user_model);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'签到成功',['num'=>$num]);
+    }
 }
