@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{block name="title"}{:config('app_name')}{/block}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" type="text/css" href="/assets/index/font/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/index/css/css.css"/>
+    <script type="text/javascript" src="/assets/index/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/assets/index/js/jquery.SuperSlide.2.1.1.js"></script>
+    <meta name="author" content="深圳市深正互联网络有限公司" />
+    {block name="top_script"}{/block}
+</head>
+<body>
+    <div class="header login_header">
+        <div class="header_center w1200 clearfix">
+            <div class="header_logo"><a href="/"><img src="/assets/index/images/logo.png"></a></div>
+            {block name="header_right"}{/block}
+        </div>
+    </div>
+    {block name="content"}{/block}
+</body>
+</html>    

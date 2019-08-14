@@ -1,0 +1,105 @@
+<div class="footer">
+    <div class="footer_sort">
+        <div class="w1200">
+            <div class="footer_service clearfix">
+                <dl>
+                    <dt><img src="/assets/index/images/icon08.jpg"></dt>
+                    <dd>
+                        <h3>官方自营</h3>
+                        <p>商城所有商品均为自营</p>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><img src="/assets/index/images/icon09.jpg"></dt>
+                    <dd>
+                        <h3>正品承诺</h3>
+                        <p>厂商直供，保证质量</p>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><img src="/assets/index/images/icon10.jpg"></dt>
+                    <dd>
+                        <h3>物流配送</h3>
+                        <p>交易便利 节省时间</p>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><img src="/assets/index/images/icon11.jpg"></dt>
+                    <dd>
+                        <h3>售后无忧</h3>
+                        <p>7天无理由退货</p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="footer_sort_list clearfix">
+                {volist name="article" id="aval"}
+                <dl>
+                    <dt><a href="javascript:;">{$aval.name}</a></dt>
+                    {volist name="aval.link_cate_news" id="ca"}
+                    <dd><a href="{:url('Article/index',['id'=>$ca['id']])}">{$ca.title}</a></dd>
+                    {/volist}
+                </dl>
+                {/volist}
+                <!--<dl>
+                    <dt><a href="about.html">新手指南</a></dt>
+                    <dd><a href="about.html">购物流程</a></dd>
+                    <dd><a href="about.html">购物条款</a></dd>
+                    <dd><a href="about.html">常见问题</a></dd>
+                </dl>
+                <dl>
+                    <dt><a href="about.html">支付及发票</a></dt>
+                    <dd><a href="about.html">支付方式</a></dd>
+                    <dd><a href="about.html">支付说明</a></dd>
+                    <dd><a href="about.html">发票说明</a></dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="about.html">配送方式</a></dt>
+                    <dd><a href="about.html">运费收取说明</a></dd>
+                    <dd><a href="about.html">发货与签收</a></dd>
+                    <dd><a href="about.html">配送说明</a></dd>
+                    <dd><a href="about.html">大件商品服务</a></dd>
+                </dl>
+                <dl>
+                    <dt><a href="about.html">售后服务</a></dt>
+                    <dd><a href="about.html">退货政策</a></dd>
+                    <dd><a href="about.html">退货流程</a></dd>
+                    <dd><a href="about.html">售后说明</a></dd>
+                    <dd><a href="about.html">联系客服</a></dd>
+                </dl>
+                <dl>
+                    <dt><a href="about.html">会员介绍</a></dt>
+                    <dd><a href="about.html">会员说明</a></dd>
+                </dl>-->
+
+                <ul class="clearfix">
+                    <li>
+                        <p><img src="/assets/index/images/ewm.jpg"></p>
+                        <p>养众手机端</p>
+                    </li>
+                    <li>
+                        <p><img src="/assets/index/images/ewm.jpg"></p>
+                        <p>养众APP</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer_copyright">
+        <div class="w1200">
+            <p><a href="contact.html">联系我们</a><span>|</span><a href="help.html">帮助中心</a><span>|</span><a href="javascript:;">服务热线:400-807-7117</a></p>
+            <p>Copyright © 养众网有限公司</p>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar">
+    <ul>
+        <li><a href="{:url('Member/center')}"><i class="icon"><img src="/assets/index/images/icon12.png"></i></a></li>
+        <li><a href="{:url('Order/cart')}""><i class="icon"><img src="/assets/index/images/icon13.png"></i><span>购物车</span></a></li>
+        <li><a href="javascript:;" target="_blank"><i class="icon"><img src="/assets/index/images/icon14.png"></i></a></li>
+    </ul>
+    <div class="sidebar_bottom">
+        <div title="返回顶部" id="return_top" class="return_top"><img src="/assets/index/images/icon15.png"></div>
+    </div>
+</div>

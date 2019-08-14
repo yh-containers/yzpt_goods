@@ -13,6 +13,7 @@ class Ad extends BaseModel
     public static $fields_type = [
         ['name'=>'启动图'],
         ['name'=>'引导页'],
+        ['name'=>'首页banner'],
     ];
 
 }

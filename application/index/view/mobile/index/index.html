@@ -1,0 +1,53 @@
+{extend name="base" /}
+{block name="center"}
+	<div class="slider-wrap slider-wrap-banner mgtop">
+		<div class="swiper-container swiper-container-banner" >
+			<div class="swiper-wrapper">
+				{volist name="banner" id="bv"}
+			   	<div class="swiper-slide"><img src="{$bv.img}" /></div>
+			   	{/volist}
+			</div>
+			<div class="pagination banner-pagination" id="pagination"></div>
+		</div>
+	</div>
+	<main class="main wrapper">
+		<div class="index_sort">
+			<ul class="clearfix">
+				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon01.png"><span>促销活动</span></a></li>
+				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon02.png"><span>维生素</span></a></li>
+				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon03.png"><span>母婴</span></a></li>
+				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon04.png"><span>保健器械</span></a></li>
+				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon05.png"><span>滋补</span></a></li>
+			</ul>
+		</div>
+		<div class="products">
+			<div class="title">精品推荐</div>
+			<ul class="clearfix">
+				{volist name="goods.new" id="g"}
+				<li>
+					<a href="{:url('Goods/detail',['id'=>$g['id']])}">
+						<div class="img"><img src="{$g.goods_image}"></div>
+						<div class="text">
+							<h2>{$g.goods_name}</h2>
+							<p>￥{$g.price}<s>￥{$g.original_price}</s></p>
+						</div>
+					</a>
+				</li>
+				{/volist}
+			</ul>
+		</div>
+	</main>
+
+	<link rel="stylesheet" type="text/css" href="/assets/index/mobile/css/swiper.min.css">
+	<script src="/assets/index/mobile/js/swiper-3.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		//banner
+		var swiper = new Swiper('.swiper-container-banner',{
+	   	pagination: '.banner-pagination',
+	   	paginationClickable: true,
+	   	loop: true,
+        autoplay:3000,
+	  	});
+
+	</script>
+{/block}

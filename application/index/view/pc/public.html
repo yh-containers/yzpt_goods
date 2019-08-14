@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{block name="title"}{:config('app_name')}{/block}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" type="text/css" href="/assets/index/font/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/index/css/css.css"/>
+    <script type="text/javascript" src="/assets/index/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/assets/index/js/jquery.SuperSlide.2.1.1.js"></script>
+    <meta name="author" content="深圳市深正互联网络有限公司" />
+    {block name="top_script"}{/block}
+</head>
+<body>
+<div class="header">
+    {:widget('Components/headerTop')}
+    {php}
+        $param = "{block name="show_search"}1,0{/block}";
+        $param = explode(',',$param);
+    {/php}
+    {:widget('Components/headerCenter',['show_search'=>$param[0],'step'=>$param[1]])}
+    <!--显示分类-->
+    {php}
+        $is_show = "{block name="show_cate"}0{/block}";
+    {/php}
+    {block name="cate"}
+    {:widget('Components/headerCate',['is_show'=>$is_show])}
+    {/block}
+</div>
+{block name="content"}
+{/block}
+
+
+{:widget('Components/footer')}
+
+{block name="footer"}{/block}
+{block name="footer_script"}{/block}
+<!-- banner -->
+{block name="script"}
+{/block}
+
+</body>
+</html>

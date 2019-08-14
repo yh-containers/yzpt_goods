@@ -1,0 +1,344 @@
+{extend name="member" /}
+{block name="member_content"}
+			<div class="personal_content">
+				<div class="basic_info">
+					<div class="hd">
+						<ul class="clearfix">
+							<li>基本信息</li>
+							<li>头像信息</li>
+						</ul>
+					</div>
+					<div class="bd">
+						<div class="conWrap">
+							<div class="con info_box">
+								<form id="toForm" action="{:url('Member/center')}">
+								<div class="box">
+									<label><span>*</span>昵称：</label>
+									<input type="text" class="requires" name="name" value="{$member.name}">
+								</div>
+								<div class="gender">
+									<span>性别：</span>
+									<input type="radio" name="sex" value="1" {if condition="$member['sex'] eq 1"}checked{/if} id="nan">
+									<label for="nan">男</label>
+									<input type="radio" name="sex" value="0" {if condition="$member['sex'] eq 0"}checked{/if} id="nv">
+									<label for="nv">女</label>
+								</div>
+								<div class="box">
+									<label><span>*</span>真实姓名：</label>
+									<input type="text" class="requires" name="real_name" value="{$member.real_name}">
+								</div>
+								<div class="box">
+									<label><span>*</span>联系地址：</label>
+									<input type="text" class="requires" name="address" value="{$member.address}">
+								</div>
+								<div class="tel"><label>手机号码：</label>{$member.phone}<a href="javascript:;">修改</a></div>
+								<div class="btn"><input type="submit" name="" value="保存"></div>
+								</form>
+							</div>
+							<div class="con modify_avatar">
+								<div class="left">
+									<div class="upload">
+										<p>请选择您要上传的图片</p>
+										<input type="file" name="file" id="file">
+									</div>
+									<input type="hidden" id="uploadFace" name="face" value="{$member.face}">
+									<p>仅支持格式为gif、jpg、png，大小在2M以内的图片</p>
+									<p><img src="{$member.face}" id="preview" class="preview"></p>
+									<p><input type="button" onclick="uploadFaces();" class="submit" value="保存"></p>
+								</div>
+								<div class="right">
+									<h3>效果预览</h3>
+									<p>您上传的头像会自动生成两种尺寸，请注意小尺寸的头像是否清晰</p>
+									<p><br /></p>
+									<p><img src="{$member.face}" class="preview"></p>
+									<p>100*100像素</p>
+									<p><br /></p>
+									<p class="half"><img src="{$member.face}" class="preview"></p>
+									<p>50*50像素</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+{/block}
+{block name="member_footer"}
+	<div class="operating_pop modify_phone">
+		<div class="pop_content">
+			<div class="title">修改手机号码<a href="javascript:;" class="close"><img src="/assets/index/images/close02.png"></a></div>
+			<div class="content">
+				<div class="box">
+					<label>已验证手机：</label>
+					<span>{$member.phone}</span>
+				</div>
+				<div class="box">
+					<label>手机验证码：</label>
+					<input type="text" name="" id="first_code">
+					<button type="button" class="obtain" onclick="sendemail(parseInt({$member.phone}))">获取验证码</button>
+				</div>
+				<div class="box">
+					<label>图形验证码：</label>
+					<input type="text" name="" id="first_verify">
+					<img src="{:captcha_src()}" onclick="changeImage(this)">
+				</div>
+				<div class="operating">
+					<a href="javascript:;" onclick="nextChange(parseInt({$member.phone}));">下一步</a>
+					<a href="javascript:;" class="close">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="operating_pop new_phone">
+		<div class="pop_content">
+			<div class="title">修改手机号码<a href="javascript:;" class="close"><img src="/assets/index/images/close02.png"></a></div>
+			<div class="content">
+				<div class="box">
+					<label>新手机号码：</label>
+					<input type="text" name="" id="new_phone">
+				</div>
+				<div class="box">
+					<label>手机验证码：</label>
+					<input type="text" name="" id="code">
+					<button type="button" class="obtain2" onclick="sendemail2()">获取验证码</button>
+				</div>
+				<div class="box">
+					<label>图形验证码：</label>
+					<input type="text" name="" id="verify">
+					<img src="{:captcha_src()}" id="nvs" onclick="changeImage(this)">
+				</div>
+				<div class="operating">
+					<a href="javascript:;" onclick="toChangePhone();">提交</a>
+					<a href="javascript:;" class="close">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="clipArea">
+	    <div class="clipwrap">
+	        <button id="clipBtn">完成</button>
+	        <button id="clipClose">取消</button>
+	    </div>
+	</div>
+	<script src="/assets/index/js/hammer.min.js"></script>
+	<script src="/assets/index/js/lrz.all.bundle.js"></script>
+	<script src="/assets/index/js/iscroll-zoom-min.js"></script>
+	<script src="/assets/index/js/PhotoClip.js"></script>
+	<script>
+	    document.addEventListener('touchmove', function (e) {
+	        e.preventDefault();
+	    }, false);
+	    var clipArea = new PhotoClip("#clipArea", {
+	        size: [280, 280],
+	        outputSize: [640, 640],
+	        file: "#file",
+	        view: "#view",
+	        ok: "#clipBtn",
+	        loadComplete: function () {
+	            $("#clipArea").css("display", "block");
+	        },
+	        done: function (dataURL) {
+	            $(".preview").attr("src", dataURL);
+	            $(".image").val(dataURL);
+	            $("#clipArea").css("display", "none");
+	        }
+	    });
+	    $("#clipClose").click(function () {
+	        $("#clipArea").css("display", "none");
+	    })
+	    $("#changeImage").click(function () {
+	        $("#file").click();
+	    });
+	</script>
+
+	<script type="text/javascript">
+		jQuery(".basic_info").slide({ mainCell:".conWrap",targetCell:".more a",effect:"fade"});
+	</script>
+
+	<script type="text/javascript">
+		/*修改手机*/
+		$(".info_box .tel a").click(function(){
+			changeImage($('#vs'));
+			$(".modify_phone").show();
+		});
+
+		/*下一步*/
+		function nextChange(phone){
+			$.ajax({
+		  		url:"{:url('Member/checkuser')}", 
+		  		data:{"phone":phone,'code':$('#first_code').val(),'verify':$("#first_verify").val()}, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code){
+			  			$(".modify_phone").hide();
+						$(".new_phone").show();
+						changeImage($('#nvs'));
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		}
+
+		function toChangePhone(){
+			var phone = $('#new_phone').val();
+			if(phone.length != 11){
+				return false;
+			}
+			$.ajax({
+		  		url:"{:url('Member/mysafe')}", 
+		  		data:{"phone":phone,'code':$('#code').val(),'verify':$("#verify").val(),'type':'phone'}, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code){
+			  			alert('请用新手机号重新登录');
+			  			history.go(0);
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		}
+
+		/*关闭弹窗*/
+		$(".operating_pop .close").click(function(){
+			$(".operating_pop").hide();
+			history.go(0);
+		});
+	</script>
+	<!-- 验证码倒计时 -->
+	<script type="text/javascript">
+		var countdown=60; 
+		function sendemail(phone){
+			if(!phone){
+				return false;
+			}
+			$.ajax({
+				url:'{:url("Index/sendSms")}', 
+				data:{'phone':phone,'type':1},
+				dataType:'json',
+				type:'post', 
+				success:function (e){
+					if(e.code){
+			    		var obj = $(".obtain");
+			    		settime(obj);
+			    	}else{
+			    		alert(e.msg);
+			    	}
+			    }
+		    })
+		}
+		function sendemail2(){
+			var phone = $('#new_phone').val();
+			if(phone.length != 11){
+				return false;
+			}
+			$.ajax({
+				url:'{:url("Index/sendSms")}', 
+				data:{'phone':phone,'type':1},
+				dataType:'json',
+				type:'post', 
+				success:function (e){
+					if(e.code){
+			    		var obj = $(".obtain2");
+			    		settime(obj);
+			    	}else{
+			    		alert(e.msg);
+			    	}
+			    }
+		    })
+		}
+		function settime(obj) { //发送验证码倒计时
+		    if (countdown == 0) { 
+		        obj.attr('disabled',false); 
+		        obj.text("获取验证码");
+		        countdown = 60; 
+		        obj.css("background","");
+		        return;
+		    } else { 
+		        obj.attr('disabled',true);
+		        obj.text("重新发送(" + countdown + ")");
+		        countdown--; 
+		    } 
+			setTimeout(function() { 
+		    	settime(obj) 
+			}
+		    ,1000) 
+		}
+		function changeImage(obj) {
+	        var url = "{:captcha_src()}";
+	        if(url.indexOf('?')>-1){
+	            url = url+'&m='+Math.random()
+	        }else{
+	            url = url+'?m='+Math.random()
+	        }
+	        $(obj).attr('src',url);
+	    }
+	</script>
+	<!-- 表单提交 -->
+	<script type="text/javascript">
+		$(function(){
+			$("#toForm").submit(function(){
+				var _this = $(this);
+	  			var flag = true;
+				$('#toForm .requires').each(function (k, v){
+				    if($(this).val() == ''){				    
+				      flag = false;
+				      $(this).focus();
+				    }
+			  	});
+			  	if(!flag){
+			    	return false;
+			  	}
+			  	var url = _this.attr('action');
+			  	var data = _this.serialize();
+			  	sendAjax(url,data,1);
+			  	return false;
+			})
+			$("#clipBtn").click(function(){
+				condata();
+			});
+		})
+		///文件上传
+		function condata(){
+			var uri = "{:url('upload/upload',['type'=>'member_face'])}";
+			var fd = new FormData();
+				fd.append('file',$('#file')[0].files[0]);
+			$.ajax({  
+			     url : uri,  
+			     type : "POST",  
+			     data : fd, 
+			     dataType:'json',
+			     processData:false,   
+			     contentType:false, 
+			     success : function(e) {
+			     	if(e.path){
+			     		$('#uploadFace').val('');
+			     		$('#uploadFace').val(e.path);
+			     	}
+			     }
+			});
+		}
+		function sendAjax(ajaxUrl,ajaxData,isre){
+			$.ajax({
+		  		url:ajaxUrl, 
+		  		data:ajaxData, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code && isre){
+			  			history.go(0);
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		}
+		function uploadFaces(){
+			sendAjax("{:url('Member/center')}",{'face':$('#uploadFace').val()},1)
+		}
+	</script>
+{/block}

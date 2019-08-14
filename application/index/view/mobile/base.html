@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone = no" />
+    <title>{block name="title"}{:config('app_name')}{/block}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="深圳市深正互联网络有限公司" />
+    <link rel="stylesheet" type="text/css" href="/assets/index/mobile/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/index/mobile/font/iconfont.css">
+    <script type="text/javascript" src="/assets/index/mobile/js/jquery-1.11.0.min.js"></script>
+    {block name="top_script"}{/block}
+</head>
+<body style="background:#fff;">
+    {block name="header_search"}
+    <header class="header">
+        <div class="index_search">
+            <a href="search.html"><i class="icon iconfont icon-search"></i>搜名称 关键字</a>
+        </div>
+        <div class="header_right"><a href="message.html"><i class="icon iconfont icon-xiaoxi"></i><span></span></a></div>
+    </header>
+    {/block}
+    {block name="center"}
+    {/block}
+    {block name="footer"}
+        {php}
+            $is_active = "{block name="is_active"}1{/block}";
+        {/php}
+        {:widget('Components/mobile_footer',['is_active'=>$is_active])}    
+    {/block}
+</body>
+</html>

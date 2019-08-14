@@ -1,0 +1,46 @@
+{extend name="member" /}
+{block name="title"}{:config('app_name')} - 我的收藏{/block}
+{block name="member_content"}
+			<div class="personal_content">
+				<h2>我的收藏</h2>
+				<div class="collection">
+					<ul class="clearfix">
+						{volist name="col_list" id="col"}
+						<li class="col{$col.gid}">
+							<a href="{:url('Goods/detail',['id'=>$col['gid']])}">
+								<div class="img"><img src="{$col.goods_image}"></div>
+								<div class="text">
+									<h3>{$col.goods_name}</h3>
+									<p>￥{$col.price}</p>
+								</div>
+							</a>
+							<div class="operating">
+								<a href="javascript:;" onclick="collect({$col.gid});" class="add">取消收藏</a>
+								<a href="javascript:;" onclick="addToCart({$col.gid});" class="join">加入购物车</a>
+							</div>
+						</li>
+						{/volist}
+					</ul>
+					<div class="page">
+						<div class="page_num clearfix">
+							{$page}
+		                </div>
+					</div>
+				</div>
+			</div>
+{/block}
+{block name="member_footer"}
+	<script type="text/javascript">
+		function collect(goods_id){
+            $.ajax({
+                url:"{:url('Goods/collect')}",
+                data:{'gid':goods_id},
+                dataType:'json',
+                type:'post',
+                success:function(e){                    
+                    $('.col'+goods_id).remove();
+                }
+            });
+        }
+	</script>
+{/block}

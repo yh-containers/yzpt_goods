@@ -18,8 +18,8 @@ class GoodsCategory extends BaseModel
     {
         return $this->hasMany('GoodsCategory','pid')->order('sort asc');
     }
-    public function GoodsCate()
+    public function SuperCate()
     {
-        return $this->hasMany('Goods','cate_id')->order('sort asc');
+        return $this->hasMany('GoodsCategory','id','pid')->field('pid,cate_name,id')->order('sort asc');
     }
 }

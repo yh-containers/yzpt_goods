@@ -1,0 +1,262 @@
+{extend name="member" /}
+{block name="member_content"}
+			<div class="personal_content">
+				<h2>账户安全</h2>
+				<div class="safety">
+					<ul>
+						<li>
+							<div class="fl">
+								<h3>绑定手机 {$member.phone}</h3>
+								<p>用于登录养众网网站账号</p>
+							</div>
+							<div class="fr"><a href="javascript:;" class="tel">修改</a></div>
+						</li>
+						<li>
+							<div class="fl">
+								<h3>账号密码</h3>
+								<p>用于保护账号资讯及登录安全</p>
+							</div>
+							<div class="fr"><a href="javascript:;" class="pwd">修改</a></div>
+						</li>
+						<li>
+							<div class="fl">
+								<h3>微信绑定</h3>
+								<p>用于微信授权直接登录</p>
+							</div>
+							<div class="fr"><a href="javascript:;">解除绑定</a></div>
+						</li>
+					</ul>
+				</div>
+			</div>
+{/block}
+{block name="member_footer"}
+	<div class="operating_pop modify_phone">
+		<div class="pop_content">
+			<div class="title">修改手机号码<a href="javascript:;" class="close"><img src="/assets/index/images/close02.png"></a></div>
+			<div class="content">
+				<div class="box">
+					<label>已验证手机：</label>
+					<span>{$member.phone}</span>
+				</div>
+				<div class="box">
+					<label>手机验证码：</label>
+					<input type="text" name="" id="first_code">
+					<button type="button" class="obtain" onclick="sendemail(parseInt({$member.phone}))">获取验证码</button>
+				</div>
+				<div class="box">
+					<label>图形验证码：</label>
+					<input type="text" name="" id="first_verify">
+					<img src="{:captcha_src()}" onclick="changeImage(this)">
+				</div>
+				<div class="operating">
+					<a href="javascript:;" id="vs" onclick="nextChange(parseInt({$member.phone}));">下一步</a>
+					<a href="javascript:;" class="close">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="operating_pop new_phone">
+		<div class="pop_content">
+			<div class="title">修改手机号码<a href="javascript:;" class="close"><img src="/assets/index/images/close02.png"></a></div>
+			<div class="content">
+				<div class="box">
+					<label>新手机号码：</label>
+					<input type="text" name="" id="new_phone">
+				</div>
+				<div class="box">
+					<label>手机验证码：</label>
+					<input type="text" name="" id="code">
+					<button type="button" class="obtain2" onclick="sendemail2()">获取验证码</button>
+				</div>
+				<div class="box">
+					<label>图形验证码：</label>
+					<input type="text" name="" id="verify">
+					<img src="{:captcha_src()}" id="nvs" onclick="changeImage(this)">
+				</div>
+				<div class="operating">
+					<a href="javascript:;" onclick="toChangePhone();">提交</a>
+					<a href="javascript:;" class="close">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="operating_pop modify_pwd">
+		<div class="pop_content">
+			<div class="title">修改账号密码<a href="javascript:;" class="close"><img src="/assets/index/images/close02.png"></a></div>
+			<div class="content">
+				<div class="box">
+					<label>原登录密码：</label>
+					<input type="password" id="old_password">
+				</div>
+				<div class="box">
+					<label>新登录密码：</label>
+					<input type="password" id="new_password">
+				</div>
+				<div class="box">
+					<label>确认新密码：</label>
+					<input type="password" id="con_password">
+				</div>
+				<div class="operating">
+					<a href="javascript:;" onclick="toChangePass();">提交</a>
+					<a href="javascript:;" class="close">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		/*修改手机*/
+		$(".safety .tel").click(function(){
+			changeImage($('#vs'));
+			$(".modify_phone").show();
+		});
+
+		/*下一步*/
+		function nextChange(phone){
+			$.ajax({
+		  		url:"{:url('Member/checkuser')}", 
+		  		data:{"phone":phone,'code':$('#first_code').val(),'verify':$("#first_verify").val()}, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code){
+			  			$(".modify_phone").hide();
+						$(".new_phone").show();
+						changeImage($('#nvs'));
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		}
+
+		function toChangePhone(){
+			var phone = $('#new_phone').val();
+			if(phone.length != 11){
+				return false;
+			}
+			$.ajax({
+		  		url:"{:url('Member/mysafe')}", 
+		  		data:{"phone":phone,'code':$('#code').val(),'verify':$("#verify").val(),'type':'phone'}, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code){
+			  			alert('已修改，请用新手机号重新登录');
+			  			history.go(0);
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		}
+
+		/*修改密码*/
+		$(".safety .pwd").click(function(){
+			$(".modify_pwd").show();
+		});
+
+		function toChangePass(){
+			var old_password = $('#old_password').val();
+			var new_password = $('#new_password').val();
+			var con_password = $('#con_password').val();
+			if(!old_password || !new_password || !con_password){
+				return false;
+			}
+			if(new_password != con_password){
+				return false;
+			}
+			$.ajax({
+		  		url:"{:url('Member/mysafe')}", 
+		  		data:{"old_password":old_password,'new_password':new_password,'type':'pass'}, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code){
+			  			alert('已修改，请重新登录');
+			  			history.go(0);
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		}
+
+		/*关闭弹窗*/
+		$(".operating_pop .close").click(function(){
+			$(".operating_pop").hide();
+			history.go(0);
+		});
+	</script>
+
+	<!-- 验证码倒计时 -->
+	<script type="text/javascript">
+		var countdown=60; 
+		function sendemail(phone){
+			if(!phone){
+				return false;
+			}
+			$.ajax({
+				url:'{:url("Index/sendSms")}', 
+				data:{'phone':phone,'type':1},
+				dataType:'json',
+				type:'post', 
+				success:function (e){
+					if(e.code){
+			    		var obj = $(".obtain");
+			    		settime(obj);
+			    	}else{
+			    		alert(e.msg);
+			    	}
+			    }
+		    })
+		}
+		function sendemail2(){
+			var phone = $('#new_phone').val();
+			if(phone.length != 11){
+				return false;
+			}
+			$.ajax({
+				url:'{:url("Index/sendSms")}', 
+				data:{'phone':phone,'type':1},
+				dataType:'json',
+				type:'post', 
+				success:function (e){
+					if(e.code){
+			    		var obj = $(".obtain2");
+			    		settime(obj);
+			    	}else{
+			    		alert(e.msg);
+			    	}
+			    }
+		    })
+		}
+		function settime(obj) { //发送验证码倒计时
+		    if (countdown == 0) { 
+		        obj.attr('disabled',false);
+		        obj.text("获取验证码");
+		        countdown = 60; 
+		        obj.css("background","");
+		        return;
+		    } else { 
+		        obj.attr('disabled',true);
+		        obj.text("重新发送(" + countdown + ")");
+		        countdown--; 
+		    } 
+		setTimeout(function() { 
+		    settime(obj) }
+		    ,1000) 
+		}
+		function changeImage(obj) {
+	        var url = "{:captcha_src()}";
+	        if(url.indexOf('?')>-1){
+	            url = url+'&m='+Math.random()
+	        }else{
+	            url = url+'?m='+Math.random()
+	        }
+	        $(obj).attr('src',url);
+	    }
+	</script>
+{/block}

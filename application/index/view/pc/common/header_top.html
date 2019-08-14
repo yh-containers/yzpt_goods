@@ -1,0 +1,31 @@
+<div class="header_top">
+    <div class="w1200 clearfix">
+        <div class="header_top_left fl">
+            <div class="header_login">
+                <a href="/">返回首页</a>
+                {if condition="$Think.session.uid"}
+                <a href="personal.html">{$Think.session.userinfo.uname}</a>
+                <a href="{:url('Index/loginout')}" class="reg">退出</a>
+                {else/}
+                <a href="{:url('Index/login')}">请登录</a>
+                <a href="{:url('Index/register')}" class="reg">免费注册</a>
+                {/if}
+            </div>
+        </div>
+        <div class="header_top_right fr">
+            <ul class="clearfix">
+                <li>
+                    <a href="{:url('Member/index')}">我的养众</a>
+                    <!--<ul class="sub">
+                        <li><a href="release_product.html">发布商品</a></li>
+                        <li><a href="product_management.html">商品管理</a></li>
+                        <li><a href="order_management.html">订单管理</a></li>
+                        <li><a href="credit_card.html">信用卡</a></li>
+                    </ul>-->
+                </li>
+                <li><a href="{:url('Order/cart')}">购物车{if($cart_count)}（{$cart_count}）{/if}</a></li>
+                <li><a href="javascript:;">在线客服</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

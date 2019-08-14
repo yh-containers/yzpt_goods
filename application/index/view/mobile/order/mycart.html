@@ -1,0 +1,130 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header">
+		<div class="header_title">购物车</div>
+		<a href="javascript:;" class="header_right edit">编辑</a>
+	</header>
+
+	<main class="main mgtop wrapper">
+		<div class="air" {if condition="$cart_count gt 0"}style="display: none;"{/if}>
+			<p><img src="/assets/index/mobile/images/air06.png"></p>
+			<p>亲，您的购物车还没有商品哦~</p>
+			<a href="products.html">去购物</a>
+		</div>
+		<div class="shopping">
+			{if($cart_count)}
+			<div class="shop-group-item">
+				<ul>
+					{volist name="cart_list" id="cart" key="k"}
+					<li class="shop-info">
+						<input type="checkbox" class="check goods-check goodsCheck" value="{$cart.id}">
+						<a href="{:url('Goods/detail',['id'=>$cart['gid']])}">
+							<div class="shop-info-img"><img src="{$cart.goods_image}" /></div>
+							<div class="shop-info-text">
+								<h4>{$cart.goods_name}</h4>
+								<p>{$cart.spec_name}</p>
+							</div>
+						</a>
+						<div class="shop-price">
+							<div class="shop-pices">￥<b class="price">{$cart.price}</b></div>
+							<div class="shop-arithmetic" data-id="{$cart.id}">
+								<a href="javascript:;" class="minus">-</a>
+								<span class="num" >{$cart.num}</span>
+								<a href="javascript:;" class="plus">+</a>
+							</div>
+						</div>
+					</li>
+					{/volist}
+				</ul>
+				<div class="shopPrice" style="display:none;"><span class="shop-total-amount ShopTotal">0.00</span></div>
+			</div>
+			<div class="payment-bar">
+				<div class="all-checkbox"><input type="checkbox" class="check goods-check" id="AllCheck"><label for="AllCheck">全选</label></div>
+				<div class="shop-total">
+					<strong>总价：<i class="total" id="AllTotal">0.00</i></strong>
+				</div>
+				<a href="javascript:;" class="settlement" id="gotoorder">结算</a>
+			</div>
+			<div class="operating_pro">
+				<div class="all-checkbox"><input type="checkbox" class="check goods-check" id="AllCheck1"><label for="AllCheck1">全选</label></div>
+				<a href="javascript:;" class="delete">删除</a>
+				<a href="javascript:;" class="move_in">移入收藏</a>
+			</div>
+			{/if}
+			<div class="products">
+				<div class="title">猜你喜欢</div>
+				<ul class="clearfix">
+					<li>
+						<a href="products_det.html">
+							<div class="img"><img src="/assets/index/mobile/images/pro01.jpg"></div>
+							<div class="text">
+								<h2>迪巧维D钙</h2>
+								<p>￥169<s>￥220</s></p>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</main>
+
+	<!--取消订单弹窗-->
+	<div class="move_pop tip_popup">
+		<div class="content">
+			<div class="text">
+				<h3>温馨提示</h3>
+				<p>您确定要将选中的商品移入收藏夹吗？</p>
+			</div>
+			<div class="operating">
+				<a href="javascript:;" class="close">我再想想</a>
+				<a href="javascript:;" class="determine" id="cancle">确定取消</a>
+			</div>
+		</div>
+	</div>
+
+	<!--删除订单弹窗-->
+	<div class="del_pop tip_popup">
+		<div class="content">
+			<div class="text">
+				<h3>温馨提示</h3>
+				<p>您确定要删除选中的商品吗？</p>
+			</div>
+			<div class="operating">
+				<a href="javascript:;" class="close">我再想想</a>
+				<a href="javascript:;" class="determine" id="delorder">确定删除</a>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="/assets/index/mobile/js/shopping.js"></script>
+	<script type="text/javascript">
+		/*编辑产品*/
+		$(".header .edit").click(function(){
+			if ($(this).text() == "编辑") {
+				$(this).text("完成");
+			} else if ($(this).text() == "完成") {
+				$(this).text("编辑");
+			}
+			$(".operating_pro").toggle();
+			$(".payment-bar").toggle();
+		});
+
+		/*取消订单*/
+		$(".operating_pro .move_in").click(function(){
+			$(".move_pop").show();
+		});
+
+		/*删除订单*/
+		$(".operating_pro .delete").click(function(){
+			$(".del_pop").show();
+		});
+
+		$(".tip_popup .close").click(function(){
+			$(".move_pop").hide();
+			$(".del_pop").hide();
+		});
+		
+	</script>
+{/block}
+{block name="is_active"}3{/block}

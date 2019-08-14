@@ -1,0 +1,53 @@
+{extend name="public" /}
+
+{block name="content"}
+<div class="main inside_main">
+		<div class="products">
+			<div class="bread_crumbs w1200 clearfix">
+				<a href="/">首页</a>
+				{volist name="bread" id="bread_nav"}
+				<span>&gt;</span><a href="{$bread_nav.url}">{$bread_nav.name}</a>
+				{/volist}
+			</div>
+			<div class="products_list w1200">
+				<div class="filter">
+					<span>排序：</span>
+					<a href="{$auto_url}" {if condition="$sort eq 'sort'"}class="cur"{/if}>默认</a>
+					<a href="{$auto_url}&sort=sales&lift={$lift}" {if condition="$sort eq 'sales'"}class="cur"{/if}>销量<img src="/assets/index/images/xia.png"></a>
+					<a href="{$auto_url}&sort=price&lift={$lift}" {if condition="$sort eq 'price'"}class="cur"{/if}>价格<img src="/assets/index/images/xia.png"</a>
+				</div>
+				<ul class="clearfix">
+					{volist name="goods_list" id="goods"}
+					<li>
+						<a href="{:url('Goods/detail',['id'=>$goods['id']])}">
+							<div class="img"><img src="{$goods.goods_image}"></div>
+							<div class="text">
+								<h2>{$goods.goods_name}</h2>
+								<p>￥{$goods.price}<s>￥{$goods.original_price}</s></p>
+							</div>
+						</a>
+						<div class="operating">
+							<a href="javascript:;" onclick="addColloct({$goods.id});" class="add">收藏</a>
+							<a href="javascript:;" onclick="addToCart({$goods.id});" class="join"><img src="/assets/index/images/icon13.png">加入购物车</a>
+						</div>
+					</li>
+					{/volist}
+				</ul>
+				<div class="page">
+					{$page}
+					<!--<div class="page_num clearfix">
+						<a href="" class="prev">&lt;</a>
+	                    <a href="" class="cur">1</a>
+	                    <a href="">2</a>
+	                    <a href="">3</a>
+	                    <a href="">4</a>
+	                    <a href="javascript:;">...</a>
+	                    <a href="">50</a>
+	                    <a href="" class="next">&gt;</a>
+	                </div>
+	                <div class="jump"><span>共50页，跳转到：</span><input type="text" name="" class="jump_kuan"><input type="submit" value="确定" name="" class="jump_btn"></div>-->
+				</div>
+			</div>
+		</div>
+	</div>
+{/block}
