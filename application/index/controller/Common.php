@@ -1,14 +1,22 @@
 <?php
 namespace app\index\controller;
 
+use think\App;
 use think\Controller;
 
 class Common extends Controller
 {
     protected $uid = 0;
+
+
     public function initialize()
     {
-
+        // 支持事先使用静态方法设置Request对象和Config对象
+        if(isMobile()){
+            $this->view->config('view_path', \think\facade\Env::get('app_path').'index/view/mobile/');
+        }else{
+            $this->view->config('view_path', \think\facade\Env::get('app_path').'index/view/pc/');
+        }
     }
     //分类
     protected function getCate(){
