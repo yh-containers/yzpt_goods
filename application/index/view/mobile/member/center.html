@@ -1,0 +1,131 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">个人信息</div>
+	</header>
+
+	<main class="main mgtop">
+		<div class="personal">
+			<div class="personal_avatar">
+				<label>头像</label>
+				<div class="modify_avatar">
+					<img id="preview" src="{$member.face}">
+					<input id="file" type="file" name="file" accept=""/>
+					<input type="hidden" id="uploadFace" value="{$member.face}"/>
+				</div>
+			</div>
+			<div class="personal_list">
+				<ul>
+					<li><a href="{:url('Member/mysafe',['modify'=>'phone'])}"><label>手机号</label><input type="text" name="" value="{$member.phone}" disabled="disabled"></a></li>
+					<li><a href="javascript:;"><label>昵　称</label><input type="text" name="name" value="{$member.name}"></a></li>
+					<li>
+                        <a href="javascript:;">
+    						<label>性　别</label>
+    						<div class="gender_select">
+    							<div class="gender2 {if condition="$member['sex'] eq 1"}on_radio{/if}">
+    								<input type="radio" name="sex" value="1" id="male"><label for="male">男</label>
+    							</div>
+    							<div class="gender2 {if condition="$member['sex'] eq 0"}on_radio{/if}">
+    								<input type="radio" name="sex" value="0" id="female"><label for="female">女</label>
+    							</div>
+    						</div>
+                        </a>
+					</li>
+                    <li>
+                        <a href="{:url('Member/mysafe',['modify'=>'pass'])}">
+                            <label>修改密码</label>
+                        </a>
+                    </li>
+				</ul>
+			</div>
+            <div class="drop_out"><button type="button" onclick="window.location.href='/index/loginout'">退出登录</button></div>
+		</div>
+	</main>
+
+
+    <div id="clipArea">
+        <div class="clipwrap">
+            <button id="clipBtn">完成</button>
+            <button id="clipClose">取消</button>
+        </div>
+    </div>
+	<script>
+		$(".gender_select .gender2").on("click",function(){
+			$(this).addClass("on_radio").siblings().removeClass("on_radio");
+		});
+	</script>
+    <script src="/assets/index/mobile/js/hammer.min.js"></script>
+    <script src="/assets/index/mobile/js/lrz.all.bundle.js"></script>
+    <script src="/assets/index/mobile/js/iscroll-zoom-min.js"></script>
+    <script src="/assets/index/mobile/js/PhotoClip.js"></script>
+    <script>
+        document.addEventListener('touchmove', function (e) {
+            e.preventDefault();
+        }, false);
+        var clipArea = new PhotoClip("#clipArea", {
+            size: [280, 280],
+            outputSize: [640, 640],
+            file: "#file",
+            view: "#view",
+            ok: "#clipBtn",
+            loadComplete: function () {
+                $("#clipArea").css("display", "block");
+            },
+            done: function (dataURL) {
+                $("#preview").attr("src", dataURL);
+                $(".image").val(dataURL);
+                $("#clipArea").css("display", "none");
+            }
+        });
+        $("#clipClose").click(function () {
+            $("#clipArea").css("display", "none");
+        })
+        $("#changeImage").click(function () {
+            $("#file").click();
+        });
+        $("#clipBtn").click(function(){
+			condata();
+		});
+        function condata(){
+			var uri = "{:url('upload/upload',['type'=>'member_face'])}";
+			var fd = new FormData();
+				fd.append('file',$('#file')[0].files[0]);
+			$.ajax({  
+			     url : uri,  
+			     type : "POST",  
+			     data : fd, 
+			     dataType:'json',
+			     processData:false,   
+			     contentType:false, 
+			     success : function(e) {
+			     	if(e.path){
+			     		$('#uploadFace').val('');
+			     		$('#uploadFace').val(e.path);
+			     	}
+			     }
+			});
+			setTimeout(function(){
+				sendAjax("{:url('Member/center')}",{'face':$('#uploadFace').val()},1);
+			},500);
+			
+		}
+		function sendAjax(ajaxUrl,ajaxData,isre){
+			$.ajax({
+		  		url:ajaxUrl, 
+		  		data:ajaxData, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code && isre){
+			  			history.go(0);
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		}
+    </script>
+{/block}
+{block name="footer"}{/block}

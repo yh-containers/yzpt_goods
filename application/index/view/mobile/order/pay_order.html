@@ -1,0 +1,22 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header about_header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">支付成功</div>
+	</header>
+	<main class="main mgtop">
+		<div class="payment_success">
+			<div class="payment_title">
+				<p>订单支付成功<br />我们会尽快安排发货哦！</p>
+				<img src="/assets/index/mobile/images/wait03.png">
+			</div>
+			<dl>
+				<dd><span>订单编号：</span>{$order.no}</dd>
+				<dd><span>支付金额：</span>￥{$order.money}</dd>
+				<dd><span>支付方式：</span>支付宝</dd>
+			</dl>
+		</div>
+	</main>
+{/block}
+{block name="footer"}{/block}

@@ -34,6 +34,18 @@ class Goods extends Common
         }
         return view('goods_list',['goods_list'=>$goods_list,'bread'=>$bread['bread'],'page'=>$page,'auto_url'=>$tz_url,'lift'=>$lift,'sort'=>$sort]);
     }
+    //分类
+    public function cate(){
+        $cate_model = new \app\common\model\GoodsCategory();
+        $list = $cate_model->where(['status'=>1,'pid'=>0])->field('id,cate_name')->order('sort asc')->select();
+        $cate_id  = $this->request->param('cate_id');
+        if(!$cate_id) $cate_id = $list[0]['id'];
+        $child_cate = $cate_model->with(['linkChildCate'=>function($query){
+            return $query->where(['status'=>1])->field('id,cate_name,pid')->with('linkChildCate');
+        }])->where(['id'=>$cate_id])->field('id')->find();
+        //print_r($child_cate);
+        return view('cate',['cate_list'=>$list,'child_cate'=>$child_cate['link_child_cate'],'cate_id'=>$cate_id]);
+    }
     //商品详情
     public function detail(){
         $id  = $this->request->param('id');

@@ -14,10 +14,28 @@ class Order extends BaseModel
         ['name'=>'收货流程','field'=>'is_receive'],
         ['name'=>'交易已完成','field'=>'status']
     ];
+    public static $fields_mobile_step = [
+        [
+            'name'=>'待支付',
+            'handle'=>'<a href="javascript:;" class="cancel">取消订单</a><a href="/order/payorder/order_id/{order_id}" class="red">立即付款</a>'
+        ],
+        [
+            'name'=>'待发货',
+            'handle'=>'<a href="javascript:;" class="cancel">取消订单</a><a href="javascript:;" class="red">提醒发货</a>'
+        ],
+        [
+            'name'=>'待收货',
+            'handle'=>'<a href="refund_reason.html">申请退款</a><a href="javascript:;" class="red">确认收货</a>'
+        ],
+        [
+            'name'=>'已完成,待评价',
+            'handle'=>'<a href="refund_reason.html">申请退款</a><a href="evaluation.html" class="red">评价</a>'
+        ]
+    ];
     protected $table = 'gd_order';
     public function ownGoods()
     {
-        return $this->hasMany('OrderGoods','oid')->field('id,oid,name,img')->order('id asc');
+        return $this->hasMany('OrderGoods','oid')->field('id,oid,name,img,price,extra,num')->order('id asc');
     }
     public function getOrderSn(){
         return date('YmdHis').mt_rand(1000,9999).self::count();

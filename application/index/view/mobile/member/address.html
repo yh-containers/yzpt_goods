@@ -1,0 +1,186 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">管理收货地址</div>
+	</header>
+
+	<main class="main mgtop">
+		<div class="air" {if(count($addr_list))}style="display: none;"{/if}>
+			<p><img src="/assets/index/mobile/images/air02.png"></p>
+			<p>亲，您还没有收货地址哦~</p>
+		</div>
+		{if(count($addr_list))}
+		<div class="address">
+			<ul>
+				{volist name="addr_list" id="addr"}
+				<li {if($from)}onclick="window.location.href='/Order/detail?aid={$addr.id}'"{/if}>
+					<a href="javascript:;">
+						<div class="address_text">
+							<p>{$addr.username}<span>{$addr.phone}</span></p>
+							<p>{$addr.addr} {$addr.addr_extra} </p>
+						</div>
+					</a>
+					<div class="address_btn">
+						<div class="address_btn_left fl">
+							{if($addr['is_default'])}
+							<input type="radio" name="default" class="default"><label>默认地址</label>
+							{else/}
+							<input type="radio" name="default" onclick="DefaultIt({$addr.id});"><label>设为默认</label>
+							{/if}							
+						</div>
+						<div class="address_btn_right fr">
+							<a href="javascript:;" data-id="{$addr.id}" data-username="{$addr.username}" data-zip_code="{$addr.zip_code}" data-phone="{$addr.phone}" data-addr_extra="{$addr.addr_extra}" onclick="addrEdit(this);" class="edit">编辑</a>
+							<a href="javascript:;" onclick="addrDel({$addr.id});" class="del">删除</a>
+						</div>
+					</div>
+				</li>
+				{/volist}
+			</ul>
+		</div>
+		{/if}
+	</main>
+	<footer class="address_footer">
+		<a href="javascript:;">添加新地址</a>
+	</footer>
+
+	<!-- 新建地址 -->
+	<div class="new_address">
+		<header class="header">
+			<a href="javascript:window.history.back()" class="header_left close"><i class="icon iconfont icon-down"></i></a>
+			<div class="header_title">管理收货地址</div>
+			<a href="javascript:;" class="save" style="border-left:none;" onclick="toSubmit();">保存</a>
+		</header>
+
+		<main class="main mgtop">
+			<div class="add_address">
+				<form id="toForm" action="{:url('Member/myaddress')}">
+					<input type="hidden" id="form_id" name="id" value="">
+					<p>
+						<label>收货人</label>
+						<input type="text" class="requires" id="form_username" name="username" placeholder="请输入收货人姓名" autofocus="autofocus" style="width:auto;">
+					</p>
+					<p>
+						<label>联系电话</label>
+						<input type="text" class="requires" id="form_phone" name="phone" placeholder="请输入收货人联系电话" style="width:auto;">
+					</p>
+					<p class="cell-input">
+						<label>所在地区</label>
+						<input type="text" class="requires" name="addr" readonly id="J_Address" placeholder="请选择地址" style="width:auto;">
+					</p>
+					<p>
+						<label>详细地址</label>
+						<input type="text" class="requires" id="form_addr_extra" name="addr_extra" placeholder="请输入详细地址" style="width:auto;">
+					</p>
+					<p class="default"><label>设为默认</label><input type="checkbox" name="is_default"></p>
+				</form>
+			</div>
+		</main>
+	</div>
+
+	<script type="text/javascript">
+		/*设置默认地址*/
+		$(".address_btn_left").on("click",function(){	
+			$(this).children("input").addClass("default").prop("checked",true);
+			$(this).parents("li").siblings().find("input").removeClass("default").prop("checked",false);
+		});
+
+		$(".add_address .default").on("click",function(){	
+			$(this).children("input").toggleClass("set");
+		});
+
+		/*选择收货地址*/
+		$(".orders_address").on("click",function(){	
+			$(".select_address").show();
+		});
+
+		$(".address ul li > a").on("click",function(){	
+			$(".orders_address_info").html($(this).children().html());
+			$(".select_address").hide();
+		});
+
+		/*删除地址*/
+		// $(".address_btn_right .del").on("click",function(){	
+		// 	$(this).parents("li").remove();
+		// });
+		function addrEdit(Obj){
+			$('#form_id').val($(Obj).attr('data-id'));
+			$('#form_username').val($(Obj).attr('data-username'));
+			$('#form_phone').val($(Obj).attr('data-phone'));
+			$('#form_zip_code').val($(Obj).attr('data-zip_code'));
+			$('#form_addr_extra').val($(Obj).attr('data-addr_extra'));
+			$(".new_address").show();
+		}
+		/*新增地址*/
+		$(".address_footer a").on("click",function(){
+			$('#form_id').val('');
+			$(".new_address").show();
+		});
+
+		$(".new_address .header .save,.header .close").on("click",function(){	
+			$(".new_address").hide();
+		});
+		function toSubmit(){
+  			var flag = true;
+			$('#toForm .requires').each(function (k, v){
+			    if($(this).val() == ''){				    
+			      flag = false;
+			      $(this).focus();
+			    }
+		  	});
+		  	if(!flag){
+		    	return false;
+		  	}
+		  	var url = $("#toForm").attr('action');
+		  	var data = $("#toForm").serialize();
+		  	sendAjax(url,data,1);
+		  	return false;
+		}
+		function addrDel(aid){
+			sendAjax("{:url('Member/addrchange')}",{'id':aid,'type':'del'},1);
+		}
+		function DefaultIt(aid){
+			sendAjax("{:url('Member/addrchange')}",{'id':aid,'is_default':1,'type':'default'},1);
+		}
+		function sendAjax(ajaxUrl,ajaxData,isre){
+			$.ajax({
+		  		url:ajaxUrl, 
+		  		data:ajaxData, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code && isre){
+			  			history.go(0);
+			  		}else if(!re.code){
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		}
+
+	</script>
+
+	<link rel="stylesheet" href="/assets/index/mobile/css/ydui.css?rev=@@hash">
+	<script type="text/javascript" src="/assets/index/mobile/js/ydui.citys.js"></script>
+	<script type="text/javascript" src="/assets/index/mobile/js/ydui.js"></script>
+	<script type="text/javascript">
+		!function () {
+			var $target = $('#J_Address');
+
+			$target.citySelect();
+
+			$target.on('click', function (event) {
+				event.stopPropagation();
+				$target.citySelect('open');
+			});
+
+			$target.on('done.ydui.cityselect', function (ret) {
+				$(this).val(ret.provance + ' ' + ret.city + ' ' + ret.area);
+			});
+		}();
+
+	</script>
+
+{/block}
+{block name="footer"}{/block}

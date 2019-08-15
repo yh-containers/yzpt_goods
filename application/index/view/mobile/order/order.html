@@ -1,0 +1,106 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">填写订单</div>
+	</header>
+
+	<main class="main mgtop">
+		<div class="orders_fill">
+			<form id="createForm" action="{:url('Order/createorder')}">
+			{if($addr_default)}
+			<a href="{:url('member/myaddress',['from'=>1])}">
+				<div class="orders_address">
+					<i class="icon iconfont icon-dizhi"></i>
+					<input type="hidden" name="address" value="{$addr_default.id}">
+					<div class="orders_address_info">
+						<p>{$addr_default.username}<span>{$addr_default.phone}</span></p>
+						<p>{$addr_default.addr} {$addr_default.addr_extra}</p>
+					</div>
+				</div>
+			</a>
+			{else/}
+			<a href="{:url('member/myaddress',['from'=>1])}"><div class="orders_address">
+				<p>新建收货地址以确保商品正常派送哦~</p>
+			</div></a>
+			{/if}
+			<div class="orders_pro">
+				<ul>
+					{volist name="goods_list" id="goods"}
+					<li>
+						<div class="img"><img src="{$goods.goods_image}"></div>
+						<div class="text" style="width:35%;">
+							<h2>{$goods.goods_name}</h2>
+							<p>{$goods.spec_name}</p>
+						</div>
+						<div class="price">
+							<h3>￥{$goods.price}</h3>
+							<p>×{$goods.num}</p>
+						</div>
+					</li>
+					{/volist}
+				</ul>
+			</div>
+			<div class="orders_info">
+				<ul>
+					<li>金额<span>￥{$total}</span></li>
+					<li>运费<span>￥0.00</span></li>
+					<li>积分<span>无</span></li>
+				</ul>
+			</div>
+			<div class="pay_method">
+				<ul>
+					<li class="selected">
+						<i class="icon iconfont icon-weixinzhifu"></i>
+						<span>微信支付</span>
+						<input type="radio" name="pay" value="wechat" checked="true">
+					</li>
+					<li>
+						<i class="icon iconfont icon-zhifubaozhifu"></i>
+						<span>支付宝支付</span>
+						<input type="radio" name="pay" value="alipay">
+					</li>
+					<!-- <li>
+						<i class="icon iconfont icon-zhifupingtai-yinlian"></i>
+						<span>银联支付</span>
+						<input type="radio" name="pay">
+					</li> -->
+				</ul>
+			</div>
+			<input type="hidden" name="remark" value="">
+			</form>
+		</div>
+	</main>
+
+	<footer class="orders_footer">
+		<p>应付金额：<span>￥{$total}</span></p>
+		<a href="javascript:;" onclick="toCreateOrder();">提交订单</a>
+	</footer>
+	<script type="text/javascript">
+		/*选择支付方式*/
+		$(".pay_method ul li").click(function(){
+			$(this).addClass('selected').find('input').prop("checked",true);
+			$(this).siblings().removeClass('selected').find('input').prop("checked",false);
+		});
+
+		function toCreateOrder(){
+			var ajaxUrl = $("#createForm").attr('action');
+		  	var ajaxData = $("#createForm").serialize();
+		  	$.ajax({
+		  		url:ajaxUrl, 
+		  		data:ajaxData, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+					if(re.code){
+						window.location.href = "{:url('Order/payorder')}?order_id="+re.order_id
+					}else{
+						alert(re.msg);
+					}
+				}
+			})
+		}
+	</script>
+{/block}
+{block name="footer"}{/block}
