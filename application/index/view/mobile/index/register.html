@@ -1,0 +1,160 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="bg"}{/block}
+{block name="center"}	
+	<main class="main">
+		<div class="login">
+			<div class="logo"><img src="/assets/index/mobile/images/logo.png"></div>
+			<div class="login_box">
+				<form id="toForm" action="{:url('Index/mobile_register')}" tz_url="{:url('Member/user')}">
+				<div class="box">
+					<span class="num">+86</span>
+					<input type="text" class="requires" name="phone" placeholder="请输入手机号">
+				</div>
+				<div class="box">
+					<span></span>
+					<input type="text" name="code" class="code requires" placeholder="请输入短信验证码">
+					<button type="button" class="obtain" onclick="sendemail()">获取验证码</button>
+				</div>
+				<div class="box">
+					<span></span>
+					<input type="password" name="password" class="code requires" placeholder="请输入密码">
+				</div>
+				<div class="link" style="margin:10px 0 -20px;">
+					<a href="{:url('Index/login')}" class="switch">返回登录&gt;</a>
+				</div>
+				<div class="btn"><input type="submit" name="" value="注册"></div>
+				</form>
+				<div class="protocol">
+					<p><input type="checkbox" name="" id="agree" class="cur"><label for="agree">注册就代表您已同意</label><a href="javascript:;">《养众平台用户使用协议》</a></p>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<div class="code_pop">
+		<div class="slidercaptcha card">
+			<div class="card-body"><div id="captcha"></div></div>
+		</div>
+	</div>
+
+	<div class="protocol_pop">
+		<header class="header">
+			<a href="javascript:;" class="header_left" style="color:#fff;"><span class="icon iconfont icon-zuojiantou"></span>返回</a>
+			<div class="header_title">用户协议</div>
+		</header>
+		<div class="content">
+			{$content|raw}
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		/*点击用户协议*/
+		$(".login .protocol a").click(function(){
+			$(".protocol_pop").fadeIn();
+		});
+
+		$(".login .protocol input").click(function(){
+			$(this).toggleClass("cur");
+		});
+
+		$(".protocol_pop .header_left").click(function(){
+			$(".protocol_pop").fadeOut();
+		});
+
+		/*点击滑块验证码*/
+		$(".login .btn").click(function(){
+			$(".code_pop").fadeIn();
+		});
+
+	</script>
+
+	<!-- 验证码倒计时 -->
+	<script type="text/javascript">
+		var countdown=60; 
+		function sendemail(){
+		    var phone = $('input[name=phone]').val();
+			if(phone.length != 11){
+				return false;
+			}
+			$.ajax({
+				url:'{:url("Index/sendSms")}', 
+				data:{'phone':phone,'type':2},
+				dataType:'json',
+				type:'post', 
+				success:function (e){
+					if(e.code){
+			    		var obj = $(".obtain");
+			    		settime(obj);
+			    	}else{
+			    		alert(e.msg);
+			    	}
+			    }
+		    })
+		}
+		function settime(obj) { //发送验证码倒计时
+		    if (countdown == 0) { 
+		        obj.attr('disabled',false); 
+		        obj.text("获取验证码");
+		        countdown = 60; 
+		        obj.css("background","");
+		        return;
+		    } else { 
+		        obj.attr('disabled',true);
+		        obj.text("重新发送(" + countdown + ")");
+		        countdown--; 
+		        obj.css("background","#666");
+		    } 
+			setTimeout(function() { 
+		    	settime(obj) }
+		    ,1000) 
+		}
+		$("#toForm").submit(function(){
+			var _this = $(this);
+				var flag = true;
+			$('form .requires').each(function (k, v){
+			    if($(this).val() == ''){				    
+			      flag = false;
+			      $(this).focus();
+			    }
+		  	});
+		  	if(!flag){
+		    	return false;
+		  	}
+		  	var url = _this.attr('action');
+		  	var tz_url = _this.attr('tz_url');
+		  	var data = _this.serialize();
+		  	$.ajax({
+		  		url:url, 
+		  		data:data, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code){
+			  			window.location.href= tz_url;
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		  	return false;
+		})
+	</script>
+
+	<!--图标样式-->
+	<link href="https://cdn.bootcss.com/font-awesome/5.7.2/css/all.min.css" rel="stylesheet">
+	<!-- <script src="/assets/index/moblie/js/longbow.slidercaptcha.js"></script> -->
+	<script>
+		// $('#captcha').sliderCaptcha({
+		// 	repeatIcon: 'fa fa-redo',
+		// 	setSrc: function () {
+		// 		return 'http://images.sdgxgz.com/Pic' + Math.round(Math.random() * 136) + '.jpg';
+		// 	},
+		// 	onSuccess: function () {
+
+		// 		alert('验证通过!');
+		// 	}
+		// });
+	</script>
+{/block}
+{block name="footer"}{/block}

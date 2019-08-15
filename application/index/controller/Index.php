@@ -44,7 +44,8 @@ class Index extends Common
             }
             session('userinfo',[
                 'uid' => $model['id'],
-                'uname' => $model['name']
+                'uname' => $model['name'],
+                'face' => $model['face']
             ]);
             session('uid',$model['id']);
             $res['err'] = 0;
@@ -81,7 +82,7 @@ class Index extends Common
             echo json_encode($res);
             die;
         }
-        return view('register',['step'=>1]);
+        return view('register',['step'=>1,'content' =>\app\common\model\SysSetting::getContent('reg_protocol')]);
     }
     public function register2(){
         if(session('step') != 2){
@@ -102,7 +103,8 @@ class Index extends Common
             }
             session('userinfo',[
                 'uid' => $model['id'],
-                'uname' => $model['name']
+                'uname' => $model['name'],
+                'face' => $model['face']
             ]);
             session('uid',$model['id']);
             session('reg_info',null);
@@ -119,6 +121,33 @@ class Index extends Common
         }
         session('step',null);
         return view('register',['step'=>3]);
+    }
+    public function mobile_register(){
+        if($this->request->isAjax()) {
+            $res = ['code' => 0, 'msg' => ''];
+            $code =  $this->request->param('code');
+            $phone =  $this->request->param('phone');
+            try{
+                \app\common\model\Sms::validVerify(2,$phone,$code);
+                $php_input = $this->request->param();
+                //$validate =new \app\common\validate\Users();
+                //$validate->scene('web_reg');
+                $user_model = new \app\common\model\Users();
+                $model = $user_model->handleReg($php_input);
+            } catch (\Exception $e) {
+                $res['msg'] = $e->getMessage();
+                echo json_encode($res);
+                die;
+            }
+            session('userinfo',[
+                'uid' => $model['id'],
+                'uname' => $model['name'],
+                'face' => $model['face']
+            ]);
+            session('uid',$model['id']);
+            $res['code'] = 1;
+            echo json_encode($res);die;
+        }
     }
     //发送短信
     public function sendSms()

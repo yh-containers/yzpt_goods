@@ -12,6 +12,7 @@ class Member extends Common
 {
     public function initialize()
     {
+        parent::initialize();
         $this->checklogin();
     }
     public function index(){
@@ -21,24 +22,71 @@ class Member extends Common
     //我的订单列表
     public function orderlist(){
         $sql_where = 'uid='.session('uid');
-        $status = $this->request->param('status');
-        if($status){
-
+        $step = $this->request->param('step');
+        switch (intval($step)){
+            case 4:
+                $sql_where .= ' and step_flow=0';
+                break;
+            case 1:
+                $sql_where .= ' and step_flow=1';
+                break;
+            case 2:
+                $sql_where .= ' and step_flow=2';
+                break;
+            case 3:
+                $sql_where .= ' and step_flow=3';
+                break;
+            default:
+                $step = 'default';
+                break;
         }
         $order_model = new \app\common\model\Order();
+        $sku_model = new \app\common\model\GoodsSpecStock();
+        $spec_model = new \app\common\model\GoodsSpecValue();
         $order_list = $order_model->field('id,no,money,pay_time,cancel_time,complete_time,send_start_time,receive_start_time,create_time,step_flow,status,is_send,is_receive')->with('ownGoods')->where($sql_where)->paginate();
         $page = $order_list->render();
         foreach ($order_list as &$order){
-            $order_model->getPropInfo('fields_step',$order['step_flow']);
+            $state = $order_model->getPropInfo('fields_mobile_step',$order['step_flow']);
+            $order['status'] = $state['name'];
+            $order['handle'] = $state['handle'];
+            $order['number'] = 0;
+            foreach ($order['own_goods'] as &$goods){
+                $order['number'] += $goods['num'];
+                $extra = explode(':',$goods['extra']);
+                if($extra[1]){
+                    $sku = $sku_model->where(['id'=>$extra[1]])->field('price,sv_ids')->find();
+                    $spec = $spec_model->where('id in('.$sku['sv_ids'].')')->field('value_name')->select();
+                    $goods['spec_name'] = ' ';
+                    foreach ($spec as $spv){
+                        $goods['spec_name'] .= $spv['value_name'].' + ';
+                    }
+                    $goods['spec_name'] = trim($goods['spec_name'],' + ');
+                }else{
+                    $goods['spec_name'] = '';
+                }
+            }
         }
-        return view('myorder',['active'=>'order','order_list'=>$order_list,'status'=>$status,'page'=>$page]);
+        //print_r($order_list);
+        return view('myorder',['active'=>'order','order_list'=>$order_list,'status'=>$step,'page'=>$page]);
     }
     //我的收藏
     public function collect(){
         $col_model = new \app\common\model\Collect();
-        $col_list = $col_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid'))->field('c.*,g.goods_name,g.goods_image,g.price')->paginate();
+        $col_list = $col_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid'))->field('c.*,g.goods_name,g.goods_image,g.price,g.original_price')->paginate();
         $page = $col_list->render();
         return view('mycollect',['col_list'=>$col_list,'page'=>$page,'active'=>'col']);
+    }
+    //移除收藏
+    public function del_collect(){
+        if($this->request->isAjax()) {
+            $res = ['code' => 0, 'msg' => ''];
+            $col_model = new \app\common\model\Collect();
+            $ids = $this->request->param('ids');
+            $col_model->actionDel(['id'=>['in',$ids]]);
+            $res['msg'] = '已移除收藏';
+            $res['code'] = 1;
+            echo json_encode($res);die;
+        }
     }
     //我的评论
     public function mycomment(){
@@ -47,6 +95,23 @@ class Member extends Common
     //我的退款单
     public function myretreat(){
         return view('myretreat',['active'=>'ret']);
+    }
+    //我的首页
+    public function user(){
+        $order_model = new \app\common\model\Order();
+        $where['uid'] = session('uid');
+        //待付款
+        $where['step_flow'] = 0;
+        $order_count['pay'] = $order_model->where($where)->count();
+        //待发货
+        $where['step_flow'] = 1;
+        $order_count['send'] = $order_model->where($where)->count();
+        //待评价
+        $where['step_flow'] = 3;
+        $order_count['com'] = $order_model->where($where)->count();
+        //退货退款
+
+        return view('user',['order_count'=>$order_count]);
     }
     //我的基本信息
     public function center(){
@@ -74,11 +139,14 @@ class Member extends Common
         if($this->request->isAjax()) {
             $res = ['code' => 0, 'msg' => ''];
             $php_input = $this->request->param();
+            $verify = $this->request->param('verify');
             try {
                 if($php_input['type'] == 'phone'){
-                    if (!captcha_check($php_input['verify'])) {
-                        $res['msg'] = '验证码错误';
-                        echo json_encode($res);die;
+                    if($verify){
+                        if (!captcha_check($verify)) {
+                            $res['msg'] = '验证码错误';
+                            echo json_encode($res);die;
+                        }
                     }
                     \app\common\model\Sms::validVerify(1,$php_input['phone'],$php_input['code']);
                     $user_model->where(['id'=>session('uid')])->update(['phone'=>$php_input['phone']]);
@@ -101,17 +169,20 @@ class Member extends Common
             $res['code'] = 1;
             echo json_encode($res);die;
         }
-        return view('mysafe',['member'=>$member,'active'=>'safe']);
+        return view('mysafe',['member'=>$member,'active'=>'safe','type'=>$this->request->param('modify')]);
     }
     //账户验证
     public function checkuser(){
         if($this->request->isAjax()) {
             $res = ['code' => 0, 'msg' => ''];
             $php_input = $this->request->param();
-            if (!captcha_check($php_input['verify'])) {
-                $res['msg'] = '验证码错误';
-                echo json_encode($res);die;
-            };
+            $verify = $this->request->param('verify');
+            if($verify){
+                if (!captcha_check($verify)) {
+                    $res['msg'] = '验证码错误';
+                    echo json_encode($res);die;
+                }
+            }
             try {
                 \app\common\model\Sms::validVerify(1,$php_input['phone'],$php_input['code']);
             } catch (\Exception $e) {
@@ -130,7 +201,13 @@ class Member extends Common
         if($this->request->isAjax()) {
             $res = ['code' => 0, 'msg' => ''];
             $php_input = $this->request->param();
-            $php_input['addr'] = $php_input['province'].'-'.$php_input['city'].'-'.$php_input['town'];
+            $addr = $this->request->param('addr');
+            $province = $this->request->param('province');
+            $city = $this->request->param('city');
+            $town = $this->request->param('town');
+            if(!$addr){
+                $php_input['addr'] = $php_input['province'].'-'.$php_input['city'].'-'.$php_input['town'];
+            }
             unset($php_input['province']);
             unset($php_input['city']);
             unset($php_input['town']);
@@ -147,7 +224,8 @@ class Member extends Common
             echo json_encode($res);die;
         }
         $addr_list = $addr_model->where(['uid'=>session('uid')])->select();
-        return view('address',['addr_list'=>$addr_list,'active'=>'addr']);
+        $from = $this->request->param('from');
+        return view('address',['addr_list'=>$addr_list,'active'=>'addr','from'=>$from]);
     }
     //地址删除、默认
     public function addrchange(){

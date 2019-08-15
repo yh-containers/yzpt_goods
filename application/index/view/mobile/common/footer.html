@@ -1,6 +1,6 @@
 	<footer class="footer-nav clearfix">
         <a href="/" {if condition="$is_active eq 1"}class="cur"{/if}><i class="icon iconfont icon-shouyeshouye"></i><span>首页</span></a>
-        <a href="{:url('Goods/')}" {if condition="$is_active eq 2"}class="cur"{/if}><i class="icon iconfont icon-classify_icon"></i><span>分类</span></a>
+        <a href="{:url('Goods/cate')}" {if condition="$is_active eq 2"}class="cur"{/if}><i class="icon iconfont icon-classify_icon"></i><span>分类</span></a>
         <a href="{:url('Order/cart')}" {if condition="$is_active eq 3"}class="cur"{/if}><i class="icon iconfont icon-gouwuche"></i><span>购物车</span></a>
         <a href="{:url('Member/user')}" {if condition="$is_active eq 4"}class="cur"{/if}><i class="icon iconfont icon-xiaolian"></i><span>我的</span></a>
     </footer>

@@ -1,0 +1,31 @@
+{extend name="base" /}
+{block name="center"}
+	<main class="main mgtop wrapper">
+		<div class="products_sort clearfix">
+			<div class="products_nav">
+				<ul>
+					{volist name="cate_list" id="cate"}
+					<li {if condition="$cate['id'] eq $cate_id"}class="cur"{/if}><a href="{:url('Goods/cate',['cate_id'=>$cate['id']])}">{$cate.cate_name}</a></li>
+					{/volist}
+				</ul>
+			</div>
+			<div class="products_list">
+				<div class="sort_img"><img src="/assets/index/mobile/images/sort.jpg"></div>
+				{volist name="child_cate" id="ca"}
+				<div class="title">{$ca.cate_name}</div>
+				<ul class="clearfix">
+					{volist name="ca.link_child_cate" id="v"}
+					<li>
+						<a href="{:url('Goods/goods_list',['cate_id'=>$v['id']])}">
+							<div class="products_img"><img src="{$v.image}"></div>
+							<div class="products_name">{$v.cate_name}</div>
+						</a>
+					</li>
+					{/volist}
+				</ul>
+				{/volist}
+			</div>
+		</div>
+	</main>
+{/block}
+{block name="is_active"}2{/block}

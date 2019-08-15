@@ -1,0 +1,88 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="bg"}{/block}
+{block name="center"}
+	<main class="main wrapper">
+		<div class="account">
+			{if condition="$Think.session.uid"}
+			<div class="avatar">
+				<p><img src="{$Think.session.userinfo.face}"></p>
+				<h3>{$Think.session.userinfo.uname}</h3>
+			</div>
+			{else/}
+			<div class="login_btn" style="display:none;">
+				<a href="login.html">登录</a>
+				<a href="registered.html">注册</a>
+			</div>
+			{/if}
+			<div class="account_order">
+				<div class="title"><a href="{:url('Member/orderlist')}">全部订单</a></div>
+				<ul class="clearfix">
+					<li>
+						<a href="orders.html">
+							<i><img src="/assets/index/mobile/images/icon07.png"></i>
+							<p>待付款</p>
+							{if($order_count['pay'])}<span>{$order_count.pay}</span>{/if}
+						</a>
+					</li>
+					<li>
+						<a href="orders.html">
+							<i><img src="/assets/index/mobile/images/icon08.png"></i>
+							<p>待发货</p>
+							{if($order_count['send'])}<span>{$order_count.send}</span>{/if}
+						</a>
+					</li>
+					<li>
+						<a href="orders.html">
+							<i><img src="/assets/index/mobile/images/icon09.png"></i>
+							<p>待评价</p>
+							{if($order_count['com'])}<span>{$order_count.com}</span>{/if}
+						</a>
+					</li>
+					<li>
+						<a href="orders.html">
+							<i><img src="/assets/index/mobile/images/icon15.png"></i>
+							<p>退货退款</p>
+							<!-- <span></span> -->
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="account_list">
+				<ul>
+					<li>
+						<a href="{:url('Member/center')}">
+							<i><img src="/assets/index/mobile/images/icon14.png"></i>
+							<span>个人信息</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i><img src="/assets/index/mobile/images/icon09.png"></i>
+							<span>我的消息</span>
+						</a>
+					</li>
+					<li>
+						<a href="{:url('Member/collect')}">
+							<i><img src="/assets/index/mobile/images/icon10.png"></i>
+							<span>我的收藏</span>
+						</a>
+					</li>
+					<li>
+						<a href="{:url('Member/myaddress')}">
+							<i><img src="/assets/index/mobile/images/icon11.png"></i>
+							<span>我的地址</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i><img src="/assets/index/mobile/images/icon12.png"></i>
+							<span>我的养分</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</main>
+{/block}
+{block name="is_active"}4{/block}

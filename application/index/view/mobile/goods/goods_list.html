@@ -1,0 +1,47 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">产品列表</div>
+	</header>
+	<main class="main mgtop">
+		<div class="pro_search">
+			<a href="search.html" class="box"><i class="icon iconfont icon-search"></i>搜名称 关键字</a>
+			<a href="message.html" class="msg"><i class="icon iconfont icon-xiaoxi"></i><span></span></a>
+		</div>
+		<div class="filter_top">
+			<a href="{$auto_url}" {if condition="$sort eq 'sort'"}class="cur"{/if}>默认</a>
+			<a href="{$auto_url}">人气</a>
+			<a href="{$auto_url}">销量</a>
+			<a href="{$auto_url}?sort=price&lift={$lift}" class="jiage {if condition="$sort eq 'price'"}cur{/if}"><span>价格</span></a>
+		</div>
+		<div class="products list">
+			<ul class="clearfix">
+				{volist name="goods_list" id="goods"}
+				<li>
+					<a href="{:url('Goods/detail',['id'=>$goods['id']])}">
+						<div class="img"><img src="{$goods.goods_image}"></div>
+						<div class="text">
+							<h2>{$goods.goods_name}</h2>
+							<p>￥{$goods.price}<s>￥{$goods.original_price}</s></p>
+						</div>
+					</a>
+				</li>
+				{/volist}
+			</ul>
+		</div>
+	</main>
+
+	<script>
+		$(".filter_top a").on("click",function(){
+			$(this).addClass("cur").siblings().removeClass("cur");
+		});
+		$(".filter_top .jiage").on("click",function(){
+		   $(this).toggleClass( "cur2" );
+		});
+		$(".filter_list li").on("click",function(){
+		   $(this).toggleClass( "on_select" );
+		});
+	</script>
+{/block}

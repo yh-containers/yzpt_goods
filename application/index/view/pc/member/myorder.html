@@ -4,7 +4,7 @@
 				<h2>我的订单</h2>
 				<div class="orders">
 					<div class="orders_sort clearfix">
-						<a href="" {if($status)}{else}class="cur"{/if}>所有订单</a>
+						<a href="" {if($status=='default')}class="cur"{/if}>所有订单</a>
 						<a href="">待付款</a>
 						<a href="">待发货</a>
 						<a href="">待收货</a>
@@ -20,9 +20,7 @@
 						<div class="status">订单状态</div>
 						<div class="operating">交易操作</div>
 					</div>
-					<div class="orders_air" style="display: none;">
-						<img src="/assets/index/images/air01.jpg"><span>您还没有购买任何产品，快去挑选合适的产品吧~</span>
-					</div>
+					{if(count($order_list))}
 					<ul>
 						{volist name="order_list" id="order"}
 						<li>
@@ -41,18 +39,10 @@
 								<div class="yuan">￥{$order.money}</div>
 								<div class="status">
 									<p>
-									{if condition="!$order.pay_time"}
-									等待付款
-									{elseif condition="!$order.send_start_time"}
-									已付款，待发货
-									{elseif condition="!$order.receive_start_time"}
-									已发货，待收货
-									{elseif condition="!$order.complete_time"}
-									待评价
-									{elseif condition="$order.cancel_time"}
+									{if condition="$order.cancel_time"}
 									已取消
 									{else/}
-									已完成
+									{$order.status}
 									{/if}
 									</p>
 									<a href="orders_det.html">订单详情</a>
@@ -60,7 +50,7 @@
 								<div class="operating">
 									<div class="operating_content">
 										{if condition="!$order.pay_time"}
-											<a href="/Order/payorder?order_id={$orer.id}" class="fukuan orange">立即付款</a>
+											<a href="/Order/payorder?order_id={$order.id}" class="fukuan orange">立即付款</a>
 											<a href="javascript:;" class="cancel_order">取消订单</a>
 										{elseif condition="!$order.send_start_time"}
 											<a href="javascript:;" class="tixing orange_bg">提醒发货</a>
@@ -76,6 +66,11 @@
 						</li>
 						{/volist}
 					</ul>
+					{else/}
+					<div class="orders_air">
+						<img src="/assets/index/images/air01.jpg"><span>您还没有购买任何产品，快去挑选合适的产品吧~</span>
+					</div>
+					{/if}
 					<div class="page">
 						<div class="page_num clearfix">
 							{$page}

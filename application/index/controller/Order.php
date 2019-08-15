@@ -12,6 +12,7 @@ class Order extends Common
 {
     public function initialize()
     {
+        parent::initialize();
         $this->checklogin();
     }
     //购物车
@@ -52,7 +53,9 @@ class Order extends Common
             $cart['is_collect'] = $collect_model->where(['gid'=>$cart['gid'],'uid'=>session('uid')])->count();
         }
         //print_r($cart_list);
-        return view('mycart',['cart_list'=>$cart_list,'cart_count'=>count($cart_list),'isCart'=>1]);
+        //mobile 推荐
+        $tuijian = \app\common\model\Goods::where(['status'=>1,'is_hot'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(2)->select();
+        return view('mycart',['cart_list'=>$cart_list,'cart_count'=>count($cart_list),'isCart'=>1,'tuijian'=>$tuijian]);
     }
     //改变购物车
     public function changecart(){
@@ -106,20 +109,37 @@ class Order extends Common
                 $sku = $sku_model->where(['id'=>$cart['sid']])->field('price,sv_ids')->find();
                 $cart['price'] = $sku['price'];
                 $spec = $spec_model->where('id in('.$sku['sv_ids'].')')->field('value_name')->select();
-                $cart['goods_name'] .= ' [ ';
+                $cart['spec_name'] = ' [ ';
                 foreach ($spec as $spv){
-                    $cart['goods_name'] .= $spv['value_name'].',';
+                    $cart['spec_name'] .= $spv['value_name'].',';
                 }
-                $cart['goods_name'] = trim($cart['goods_name'],',');
-                $cart['goods_name'] .= ' ]';
+                $cart['spec_name'] = trim($cart['spec_name'],',');
+                $cart['spec_name'] .= ' ]';
+            }else{
+                $cart['spec_name'] = '';
             }
             if($cart['status'] != 1){
                 $this->error('购物车中存在下架的商品');
             }
             $total += $cart['price'] * $cart['num'];
         }
-        $addr_list =\app\common\model\UserAddress::where(['uid'=>session('uid')])->select();
-        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'total'=>$total]);
+        $aid = $this->request->param('aid');
+        $addr_default = '';
+        $addr_list = '';
+        if($aid){
+            $addr_default = \app\common\model\UserAddress::where(['id'=>$aid])->find();
+        }else{
+            $addr_list =\app\common\model\UserAddress::where(['uid'=>session('uid')])->select();
+            if(count($addr_list)){
+                foreach ($addr_list as $adv){
+                    if($adv['is_default']==1){
+                        $addr_default = $adv;
+                    }
+                }
+                if(!$addr_default) $addr_default = $addr_list[0];
+            }
+        }
+        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'addr_default'=>$addr_default,'total'=>$total]);
     }
     //创建订单
     public function createorder(){

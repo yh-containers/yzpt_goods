@@ -55,15 +55,17 @@
 			<div class="products">
 				<div class="title">猜你喜欢</div>
 				<ul class="clearfix">
+					{volist name="tuijian" id="goods"}
 					<li>
-						<a href="products_det.html">
-							<div class="img"><img src="/assets/index/mobile/images/pro01.jpg"></div>
+						<a href="/goods/detail/id/{$goods.id}">
+							<div class="img"><img src="{$goods.goods_image}"></div>
 							<div class="text">
-								<h2>迪巧维D钙</h2>
-								<p>￥169<s>￥220</s></p>
+								<h2>{$goods.goods_name}</h2>
+								<p>￥{$goods.price}<s>￥{$goods.original_price}</s></p>
 							</div>
 						</a>
 					</li>
+					{/volist}
 				</ul>
 			</div>
 		</div>

@@ -1,0 +1,153 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">我的收藏</div>
+		{if(count($col_list))}<a href="javascript:;" class="header_right button">编辑</a>{/if}
+	</header>
+
+	<main class="main mgtop">
+		<div class="collection">
+			{if(count($col_list))}
+			<ul class="clearfix" id="j_tb">
+				{volist name="col_list" id="col"}
+				<li>
+					<a href="/goods/detail/id/{$col.gid}">
+						<div class="img"><img src="{$col.goods_image}"></div>
+						<div class="text">
+							<h3>{$col.goods_name}</h3>
+							<p>￥{$col.price}<s>￥{$col.original_price}</s></p>
+						</div>
+					</a>
+					<div class="select">
+						<label></label>
+						<input type="checkbox" name="items" value="{$col.id}">
+					</div>
+				</li>
+				{/volist}
+			</ul>
+			{else/}
+				<div style="text-align: center;color:#686868;">暂无收藏</div>
+			{/if}
+		</div>
+	</main>
+
+	<div class="footer_operating">
+		<input type="checkbox" name="" id="j_cbAll"><label for="j_cbAll">全选</label>
+		<a href="javascript:;" onclick="delCollect();">删除</a>
+	</div>
+
+	<script type="text/javascript">
+		$(".header .button").click(function(){
+			if ($(this).text() == "编辑") {
+				$(".collection ul li .select,.footer_operating").show();
+				$(this).text("完成");
+				$(".collection").css("padding-bottom","60px");
+			} else if ($(this).text() == "完成") {
+				$(".collection ul li .select,.footer_operating").hide();
+				$(this).text("编辑");
+				$(".collection").css("padding-bottom","");
+			}
+		});
+
+		$(".footer_operating input").on("click",function(){
+			if(!$(this).hasClass("checkbox_on")){
+				$(this).addClass("checkbox_on");
+				$(".collection ul li .select label").addClass("checkbox_on");
+			}else{
+				$(this).removeClass("checkbox_on");
+				$(".collection ul li .select label").removeClass("checkbox_on");
+			}
+	    });
+
+	    $("body").on("click",".collection ul li .select input",function(){
+	      	$(this).siblings("label").toggleClass("checkbox_on");
+	  		if($(".collection ul li .select label").length==$(".collection ul li .select label.checkbox_on").length){
+	         	$(".footer_operating input").addClass("checkbox_on");
+			 }else{
+			 	$(".footer_operating input").removeClass("checkbox_on");
+			 }
+	    });
+
+	</script>
+
+	<!-- 全选 -->
+	<script>
+		var del_ids = '';
+    	var idsArr = new Array();
+		 var all = document.getElementById("j_cbAll");
+		 var tbody = document.getElementById("j_tb");
+		 var checkboxs = tbody.getElementsByTagName("input");
+		 all.onclick = function() {
+		     for (var i = 0; i < checkboxs.length; i++) {
+		         var checkbox = checkboxs[i];
+		         checkbox.checked = this.checked;
+		         if(this.checked){
+		         	changeIds(checkbox.value,1);
+		         }else{
+		         	del_ids = '';
+		         	idsArr = new Array();
+		         }
+		     }
+		 };
+		 for (var i = 0; i < checkboxs.length; i++) {
+		     checkboxs[i].onclick = function() {
+		         var isCheckedAll = true;
+		         for (var i = 0; i < checkboxs.length; i++) {
+		             if (!checkboxs[i].checked) {
+		             	changeIds(checkboxs[i].value,2);
+		             }else{
+		             	changeIds(checkboxs[i].value,1);
+		             }
+		         }
+		         for (var i = 0; i < checkboxs.length; i++) {
+		             if (!checkboxs[i].checked) {
+		                 isCheckedAll = false;
+		                 break;
+		             }
+		         }
+		         all.checked = isCheckedAll;
+		     };
+		 }
+		 function delCollect(){
+		 	if(del_ids){
+		 		$.ajax({
+	                url:"{:url('Member/del_collect')}",
+	                data:{'ids':del_ids},
+	                dataType:'json',
+	                type:'post',
+	                success:function(e){                    
+	                    if(e.code){
+	                    	history.go(0);
+	                    }else{
+	                    	alert(e.msg);
+	                    }
+	                }
+	            });
+		 	}
+		 }
+		 function changeIds(val,k){
+			if(k == 2){
+				if(idsArr.length == 0)
+					return;
+				for(var i in idsArr){
+					if(idsArr[i] == val){
+						idsArr.splice(i,1);
+					}
+				}
+			}else if(k==1){
+				var isre = 1;
+				for(var i in idsArr){
+					if(idsArr[i] == val){
+						isre = 0;
+					}
+				}
+				if(isre)
+					idsArr[idsArr.length] = val;
+			}
+			del_ids = idsArr.join(',');
+		}
+	</script>
+{/block}
+{block name="footer"}{/block}

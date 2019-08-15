@@ -1,0 +1,106 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">我的订单</div>
+	</header>
+
+	<main class="main mgtop">
+		<div class="orders_nav">
+			<ul>
+				<li><a href="{:url('Member/orderlist')}" {if condition="$status eq 'default'"}class="cur"{/if}>全部</a></li>
+				<li><a href="{:url('Member/orderlist',['step'=>4])}" {if condition="$status eq 4"}class="cur"{/if}>待付款</a></li>
+				<li><a href="{:url('Member/orderlist',['step'=>1])}" {if condition="$status eq 1"}class="cur"{/if}>待发货</a></li>
+				<li><a href="{:url('Member/orderlist',['step'=>2])}" {if condition="$status eq 2"}class="cur"{/if}>待收货</a></li>
+				<li><a href="{:url('Member/orderlist',['step'=>3])}" {if condition="$status eq 3"}class="cur"{/if}>待评价</a></li>
+			</ul>
+		</div>
+		{if(count($order_list))}
+		<div class="orders_list">
+			<ul>
+				{volist name="order_list" id="order"}
+				<li>
+					<div class="orders_list_top">
+						<p>{:$order.create_time}<span>{$order.status}</span></p>
+					</div>
+					<div class="orders_list_content clearfix">
+						{volist name="order.own_goods" id="child"}
+						<a href="{:url('Order/order_detail',['id'=>$order['id']])}">
+							<div class="orders_img"><img src="{$child.img}"></div>
+							<div class="orders_title">
+								<p>{$child.name}</p>
+								<span>{$child.spec_name}</span>
+							</div>
+							<div class="orders_price">
+								<p>￥{$child.price}</p>
+								<p>×{$child.num}</p>
+							</div>
+						</a>
+						{/volist}
+					</div>
+					<div class="orders_list_bottom clearfix">
+						<p>共{$order.number}件商品，合计：￥{$order.money} 含运费（0.00）</p>
+						<div class="orders_status">
+							{$order.handle|raw}
+						</div>
+					</div>
+				</li>
+				{/volist}
+			</ul>
+		</div>
+		{else}
+		<div class="air">
+			<p><img src="/assets/index/mobile/images/air05.png"></p>
+			<p>亲，您还没有相关订单哦~</p>
+		</div>
+		{/if}
+	</main>
+
+	<!--取消订单弹窗-->
+	<div class="cancel_pop tip_popup">
+		<div class="content">
+			<div class="text">
+				<h3>温馨提示</h3>
+				<p>取消订单将不能恢复，确定要取消吗？</p>
+			</div>
+			<div class="operating">
+				<a href="javascript:;" class="close">我再想想</a>
+				<a href="javascript:;" class="determine">确定取消</a>
+			</div>
+		</div>
+	</div>
+
+	<!--删除订单弹窗-->
+	<div class="del_pop tip_popup">
+		<div class="content">
+			<div class="text">
+				<h3>温馨提示</h3>
+				<p>删除订单将不能恢复，确定要删除吗？</p>
+			</div>
+			<div class="operating">
+				<a href="javascript:;" class="close">我再想想</a>
+				<a href="javascript:;" class="determine">确定删除</a>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+		/*取消订单*/
+		$(".orders_list_bottom .cancel").click(function(){
+			$(".cancel_pop").show();
+		});
+
+		/*删除订单*/
+		$(".orders_list_bottom .del").click(function(){
+			$(".del_pop").show();
+		});
+
+		$(".tip_popup .close").click(function(){
+			$(".cancel_pop").hide();
+			$(".del_pop").hide();
+		});
+	</script>
+{/block}
+{block name="footer"}{/block}
