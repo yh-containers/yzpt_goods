@@ -3,7 +3,7 @@ namespace app\common\validate;
 
 use think\Validate;
 
-class DyVideo extends Validate
+class Video extends Validate
 {
     protected $rule = [
         'file'  => 'require',

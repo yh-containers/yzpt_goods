@@ -191,4 +191,20 @@ class Article extends Common
         return $model->actionDel(['id'=>$id]);
     }
 
+    public function video()
+    {
+        $keyword = input('keyword','','trim');
+        $where=[];
+        !empty($keyword) && $where[]=['title','like','%'.$keyword.'%'];
+        $list = \app\common\model\Video::where($where)->paginate();
+        //dump($list);die;
+        // 获取分页显示
+        $page = $list->render();
+        return view('video',[
+            'keyword' => $keyword,
+            'list' => $list,
+            'page'=>$page
+        ]);
+    }
+
 }

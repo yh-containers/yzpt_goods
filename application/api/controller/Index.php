@@ -147,7 +147,60 @@ class Index extends Common
                     'duration'=>$item['duration'],
                 ]);
             });
-        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        $data = ['list'=>$list,'total'=>$info->total()];
         return $this->_resData(1,'获取成功',$data);
     }
+
+    //查看用信息
+    public function userInfo()
+    {
+        $id = input('id',0,'intval');
+        $on_praise_num = input('on_praise_num',0,'intval');
+        $on_user_body = input('on_user_body',0,'intval');
+        $on_user_label = input('on_user_label',0,'intval');
+        //用户信息
+        $user_model = \app\common\model\Users::get($id);
+
+        $data=[];
+        //用户资料
+        $data['info']=[
+            'id' => $user_model['id'],
+            'num' => (string)$user_model['num'],
+            'name' => (string)$user_model['name'],
+            'face' => (string)$user_model['face'],
+            'sex' => (string)$user_model['sex'],
+            'sex_name' => empty($user_model)?'':\app\common\model\Users::getPropInfo('fields_sex',$user_model['sex']),
+            'intro' => (string)$user_model['intro'],
+            'address' => (string)$user_model['address'],
+            'birthday' => empty($user_model)?'':$user_model->birthday,
+        ];
+
+        //用户点赞
+        if($on_praise_num){
+            //粉丝
+            $fans_num = (int)\app\common\model\UsersFollow::where(['f_uid'=>$this->user_id])->count();
+            //关注对象
+            $follow_num = (int)\app\common\model\UsersFollow::where(['uid'=>$this->user_id])->count();
+            $data['praise']=['num'=>(int)$user_model['praise_num'],'follow'=>$follow_num,'fans'=>$fans_num];
+        }
+        //身体状态
+        if($on_user_body){
+            $data['body']=['star'=>0];
+        }
+        //身体状态
+        if($on_user_label){
+            $label = $user_model['label'];
+            $label_data = [];
+            foreach ($label as $key=>$vo){
+                $label_data[] = [
+                    'index' => $key,
+                    'name' => $vo,
+                ];
+            }
+            $data['label']=$label_data;
+        }
+        return $this->_resData(1,'获取成功',$data);
+
+    }
+
 }

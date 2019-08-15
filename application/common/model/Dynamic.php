@@ -114,6 +114,7 @@ class Dynamic extends BaseModel
         $model->uid = $user_model->id;
         $model->dy_id = $data['id'];
         $model->to_uid = empty($data['to_uid'])?0:$data['to_uid'];
+        $model->pid = empty($data['pid'])?0:$data['pid'];
         $model->content = $data['content'];
         $model->save();
         return $model;
@@ -130,6 +131,9 @@ class Dynamic extends BaseModel
     public static function praise(Users $user_model,array $data=[])
     {
         empty($data['id']) && exception('对象异常:id');
+        $dy_model = self::get($data['id']);
+        empty($dy_model) && exception('动态异常');
+
         $model = DyPraise::where(['uid'=>$user_model->id,'dy_id'=>$data['id']])->find();
         if(empty($model)){
             $model = new DyPraise();
@@ -139,6 +143,9 @@ class Dynamic extends BaseModel
         $model->dy_id = $data['id'];
         $model->praise_date = empty($model->praise_date)?date('Y-m-d H:i:s'):null;
         $model->save();
+        //点赞次数增加
+        $model->praise_date?$dy_model->setInc('praise_times'):$dy_model->setDec('praise_times');
+
         return $model;
     }
 

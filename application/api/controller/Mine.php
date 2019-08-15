@@ -27,6 +27,7 @@ class Mine extends Common
         $on_user_money = input('on_user_money',0,'intval');
         $on_user_label = input('on_user_label',0,'intval');
         $off_user_info = input('off_user_info',0,'intval');//关闭用户基本信息
+
         $data=[];
         if(empty($off_user_info)){
             //用户资料
@@ -84,7 +85,7 @@ class Mine extends Common
         }catch (\Exception $e){
             return $this->_resData(0,$e->getMessage());
         }
-        return $this->_resData(1,$model->follow_time?'关注成功':'已取消关注');
+        return $this->_resData(1,$model->follow_time?'关注成功':'已取消关注',['state'=>$model['follow_time']?1:0]);
     }
 
     //好友申请
