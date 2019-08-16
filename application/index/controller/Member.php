@@ -24,17 +24,23 @@ class Member extends Common
         $sql_where = 'uid='.session('uid');
         $step = $this->request->param('step');
         switch (intval($step)){
-            case 4:
-                $sql_where .= ' and step_flow=0';
+            case 1://待发货
+                $sql_where .= ' and step_flow=1 and status=1';
                 break;
-            case 1:
-                $sql_where .= ' and step_flow=1';
-                break;
-            case 2:
+            case 2://待收货
                 $sql_where .= ' and step_flow=2';
                 break;
-            case 3:
-                $sql_where .= ' and step_flow=3';
+            case 3://待评价
+                $sql_where .= ' and step_flow=3 and status=3';
+                break;
+            case 4://待付款
+                $sql_where .= ' and step_flow=0 and status=0';
+                break;
+            case 5://已完成
+                $sql_where .= ' and step_flow=3 and status=4';
+                break;
+            case 6://已取消
+                $sql_where .= ' and step_flow=0 and status=2';
                 break;
             default:
                 $step = 'default';
@@ -46,9 +52,14 @@ class Member extends Common
         $order_list = $order_model->field('id,no,money,pay_time,cancel_time,complete_time,send_start_time,receive_start_time,create_time,step_flow,status,is_send,is_receive')->with('ownGoods')->where($sql_where)->paginate();
         $page = $order_list->render();
         foreach ($order_list as &$order){
-            $state = $order_model->getPropInfo('fields_mobile_step',$order['step_flow']);
-            $order['status'] = $state['name'];
-            $order['handle'] = $state['handle'];
+            $state = $order_model->getPropInfo('fields_mobile_step', $order['step_flow']);
+            if(isMobile()) {
+                $order['handle'] = is_array($state['handle']) ? $state['handle'][$order['status']] : $state['handle'];
+            }else{
+                $order['handle'] = is_array($state['w_handle']) ? $state['w_handle'][$order['status']] : $state['w_handle'];
+            }
+            $order['handle'] = str_replace('{order_id}',$order['id'],$order['handle']);
+            $order['status'] = is_array($state['name']) ? $state['name'][$order['status']] : $state['name'];
             $order['number'] = 0;
             foreach ($order['own_goods'] as &$goods){
                 $order['number'] += $goods['num'];
@@ -68,6 +79,35 @@ class Member extends Common
         }
         //print_r($order_list);
         return view('myorder',['active'=>'order','order_list'=>$order_list,'status'=>$step,'page'=>$page]);
+    }
+    //订单操作
+    public function handleorder(){
+        if($this->request->isAjax()) {
+            $res = ['code' => 0, 'msg' => ''];
+            $oid = $this->request->param('order_id');
+            $handle = $this->request->param('handle');
+            $order_model = new \app\common\model\Order();
+            try{
+                \think\Db::startTrans();
+                if($handle == 'cancel'){//取消订单
+                    $order_model->cancelOrder(session('uid'),$oid);
+                    $res['msg'] = '已取消';
+                }else if($handle == 'remind'){//提醒发货
+                    $order_model->orderRemind(session('uid'),$oid);
+                    $res['msg'] = '已提醒';
+                }else if($handle == 'receive'){//收货
+                    $order_model->orderReceive(session('uid'),$oid);
+                    $res['msg'] = '已确认';
+                }
+                \think\Db::commit();
+            }catch (\Exception $e){
+                \think\Db::rollback();
+                $res['msg'] = $e->getMessage();
+                echo json_encode($res);die;
+            }
+            $res['code'] = 1;
+            echo json_encode($res);die;
+        }
     }
     //我的收藏
     public function collect(){
@@ -92,6 +132,34 @@ class Member extends Common
     public function mycomment(){
         return view('mycom',['active'=>'com']);
     }
+    //商品评价展示
+    public function comment(){
+        $order_id = $this->request->param('order_id');
+        $order_model = new \app\common\model\Order();
+        $sku_model = new \app\common\model\GoodsSpecStock();
+        $spec_model = new \app\common\model\GoodsSpecValue();
+        $order = $order_model->field('id,no')->with('ownGoods')->where(['id'=>$order_id])->find();
+        foreach ($order['own_goods'] as &$goods){
+            $extra = explode(':',$goods['extra']);
+            if($extra[1]){
+                $sku = $sku_model->where(['id'=>$extra[1]])->field('price,sv_ids')->find();
+                $spec = $spec_model->where('id in('.$sku['sv_ids'].')')->field('value_name')->select();
+                $goods['spec_name'] = ' ';
+                foreach ($spec as $spv){
+                    $goods['spec_name'] .= $spv['value_name'].' + ';
+                }
+                $goods['spec_name'] = trim($goods['spec_name'],' + ');
+            }else{
+                $goods['spec_name'] = '';
+            }
+        }
+        //print_r($order['own_goods']);
+        return view('handlecomment',['active'=>'order','goods_list'=>$order['own_goods']]);
+    }
+    //商品评价操作
+    public function handlecomment(){
+
+    }
     //我的退款单
     public function myretreat(){
         return view('myretreat',['active'=>'ret']);
@@ -102,7 +170,9 @@ class Member extends Common
         $where['uid'] = session('uid');
         //待付款
         $where['step_flow'] = 0;
+        $where['status'] = 0;
         $order_count['pay'] = $order_model->where($where)->count();
+        unset($where['status']);
         //待发货
         $where['step_flow'] = 1;
         $order_count['send'] = $order_model->where($where)->count();
