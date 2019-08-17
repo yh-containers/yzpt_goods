@@ -29,6 +29,18 @@ class Upload extends Common
 
     }
 
+    //获取上传凭证
+    public function authorization()
+    {
+        try{
+            $data=$this->uploadSer->handleVideoImg('/qn_image/20190726/10_5d3aa05fb7297.mp4');
+        }catch (\Exception $e){
+            return '';
+        }
+        return json_encode($data);
+
+    }
+
     //上传
     public function upload($type='image')
     {

@@ -36,7 +36,12 @@ $.common={
         //执行实例
         var uploadInst =  upload.render({
             elem: elem //绑定元素
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
             ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+
                 //上传完毕回调
                 var item = this.item;
                 var res_data = res.hasOwnProperty('data')?res.data:{};
@@ -63,6 +68,7 @@ $.common={
                 }
             }
             ,error: function(){
+                layer.closeAll('loading'); //关闭loading
                 //请求异常回调
                 layui.layer.msg('上传异常!  ')
             }

@@ -1,0 +1,106 @@
+{extend name="base" /}
+
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <!--<h3 class="box-title">Quick Example</h3>-->
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body">
+                <form id="form" action="" class="form-horizontal">
+                    <input type="hidden" name="id" value="{$model['id']}"/>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">标题</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="标题" name="title" value="{$model['title']}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">上传视频</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" name="size" value="{$model['size']}" />
+                            <input type="hidden" name="ext" value="{$model['ext']}" />
+                            <input type="hidden" name="mime_type" value="{$model['mime_type']}" />
+                            <input type="hidden" name="duration" value="{$model['duration']}" />
+                            <input type="hidden" name="file" value="{$model['file']}" />
+                            <button type="button" class="layui-btn upload-video-img" lay-data='{:action('upload/info',['type'=>'video','accept'=>'video'])}'>
+                                <i class="layui-icon">&#xe67c;</i>上传视频
+                            </button>
+                            <a href="{:empty($model['file'])?'javascript:;':$model['file']}" target="_blank">{:empty($model['file'])?'暂未上传':'查看资源'}</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">视频封面图</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" name="img" value="{$model['img']}" />
+                            <button type="button" class="layui-btn upload-img" lay-data='{:action('upload/info',['type'=>'video_cover'])}'>
+                                <i class="layui-icon">&#xe67c;</i>视频封面图
+                            </button>
+                            <img width="80" height="80" src="{$model['img']}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-10">
+                            <label>
+                                <input type="radio" name="status" value="1" {:$model['status']!=2?'checked':''} />
+                                正常
+                            </label>
+                            <label>
+                                <input type="radio" name="status" value="2" {:$model['status']==2?'checked':''}>
+                                关闭
+                            </label>
+                        </div>
+                    </div>
+
+
+
+                </form>
+
+            </div>
+            <!-- /.box-body -->
+
+        <div class="box-footer">
+            <button type="button" onclick="$.common.submitForm()" class="col-sm-offset-2 btn  btn-info">保存</button>
+        </div>
+    </div>
+
+{/block}
+
+
+{block name="script"}
+<script>
+    //引用上传组件
+    layui.use(['upload'],function(){
+        var upload = layui.upload;
+        $.common.fileUpload(upload,'.upload-img')
+        $.common.fileUpload(upload,'.upload-video-img',(res_data,query_select)=>{
+            // console.log(query_select.parents().html())
+            var path = res_data.hasOwnProperty('key')?res_data.key:'';
+            var preview_domain = res_data.hasOwnProperty('preview_domain')?res_data.preview_domain:'';
+
+            query_select.prev().val(path)
+            query_select.parent().find('a').attr('href',preview_domain+path).text('查看资源')
+            //视频其它信息
+            var avinfo = res_data.hasOwnProperty('avinfo')?res_data.avinfo:{};
+            var duration = avinfo.hasOwnProperty('duration')?avinfo.duration:0;
+            var ext = res_data.hasOwnProperty('ext')?res_data.ext:'';
+            var fsize = res_data.hasOwnProperty('fsize')?res_data.fsize:0;
+            var mime_type = res_data.hasOwnProperty('mime_type')?res_data.mime_type:'';
+
+            query_select.parent().find("input[name='duration']").val(duration)
+            query_select.parent().find("input[name='ext']").val(ext)
+            query_select.parent().find("input[name='size']").val(fsize)
+            query_select.parent().find("input[name='mime_type']").val(mime_type)
+
+
+        })
+
+    })
+</script>
+{/block}

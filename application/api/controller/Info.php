@@ -4,7 +4,7 @@ namespace app\api\controller;
 class Info extends Common
 {
     protected $need_login=true;
-    protected $ignore_action = ['dynamic','dydetail','activity','video'];
+    protected $ignore_action = ['dynamic','dydetail','dycomlist','activity','video','videocomlist'];
 
     /**
      * @var \app\common\model\Users
@@ -210,6 +210,8 @@ class Info extends Common
                     'face'=>$item['link_users']['face'],
                     'user_name'=>$item['link_users']['name'],
                     'release_date'=>$item['releaseDate'],
+                    'title'=>$item['title'],
+                    'addr'=>'',
                     'file'=>$item['fileGroup'],
                     'share_times'=>$item['share_times'],
                     'praise_times'=>$item['praise_times'],
@@ -240,6 +242,81 @@ class Info extends Common
 
         return $this->_resData(1,'发布成功');
     }
+
+    //-点赞
+    public function videoPraise()
+    {
+        $php_input = input();
+        try{
+            $model = \app\common\model\Video::praise($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+
+        return $this->_resData(1,$model->praise_date?'点赞成功':'已取消点赞',['state'=>$model->praise_date?1:0]);
+    }
+
+    //评论--
+    public function videoComment()
+    {
+        $php_input = input();
+        try{
+            $model = \app\common\model\Video::addComment($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+
+        return $this->_resData(1,'评论成功',['comment'=>$model->structInfo()]);
+    }
+
+
+    //评论点赞
+    public function videoComPraise()
+    {
+        $php_input = input();
+        try{
+            $model = \app\common\model\VideoComment::praise($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+
+        return $this->_resData(1,$model->praise_date?'点赞成功':'已取消点赞',['state'=>$model->praise_date?1:0]);
+    }
+
+    //评论列表
+    public function videoComList()
+    {
+        $id = input('id',0,'intval');
+        $where = [];
+        $where[]= ['vid','=',$id];
+        $where[]= ['pid','=',0];
+        $where[]= ['status','=',1];
+        $list =[];
+        $user_id = $this->user_id;
+        $info = \app\common\model\VideoComment::with(['linkUsers','linkToUsers','linkPraise'
+            ,'linkChild'=>function($query)use($user_id){
+                $query->with(['linkUsers','linkToUsers','linkPraise','linkIsPraise'=>function($query)use($user_id){
+                    $query->where('uid','=',$user_id);
+                }]);
+            }
+            ,'linkIsPraise'=>function($query)use($user_id){
+                $query->where('uid','=',$user_id);
+            }
+        ])->where($where)->paginate()->each(function($item,$index)use(&$list){
+            $child_comment = [];
+            foreach ($item['link_child'] as $vo){
+                array_push($child_comment, $vo->structInfo());
+            }
+
+            array_push($list,array_merge($item->structInfo($child_comment),['child'=>$child_comment]));
+        });
+
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
+
+
 
     //活动
     public function activity()
@@ -317,6 +394,18 @@ class Info extends Common
         return $this->_resData(1,$model->praise_date?'点赞成功':'已取消点赞');
     }
 
+    //喜欢
+    public function love()
+    {
+        $uid = input('user_id',0,'intval');
+        $user_id = $this->user_id;
+        $where = [];
+        !empty($uid) && $where[] = ['uid','=',$uid];
+        $list =[];
+
+        $data = ['list'=>$list,'total_page'=>0];
+        return $this->_resData(1,'获取成功',$data);
+    }
 
 
     //好友列表

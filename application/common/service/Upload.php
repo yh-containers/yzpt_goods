@@ -1,6 +1,8 @@
 <?php
 namespace app\common\service;
+use app\common\HttpCurl;
 use Qiniu\Auth;
+use function Qiniu\base64_urlSafeEncode;
 
 class Upload
 {
@@ -28,7 +30,13 @@ class Upload
         // 初始化签权对象
         if(!empty(config('qiniu.is_use'))){
             $auth = new Auth(config('qiniu.ak'), config('qiniu.sk'));
-            $upload_token = $auth->uploadToken(config('qiniu.bucket'),null,config('qiniu.expires'),[
+            //视频获取封面图
+//            if($type=='video'){
+//
+//            }
+
+
+            $police = [
                 'saveKey' => config('qiniu.file_prefix').$type.'/'.date('Ymd').'/'.uniqid($this->user_id.'_'.'$(sec)_$(x:up_index)'.'_').'$(ext)',
                 'forceSaveKey' => true,
                 'fsizeLimit' => $this->fsizeLimit,
@@ -44,9 +52,10 @@ class Upload
                     'fsize' => '$(fsize)',
                     'ext' => '$(ext)',//上传资源的后缀名，通过自动检测的 mimeType 或者$(fname)的后缀来获取。
                     'mime_type' => '$(mimeType)',
-                    'preview_domain' => config('qiniu.url'),
+                    'preview_domain' => config('qiniu.preview_domain'),
                 ]])
-            ]);
+            ];
+            $upload_token = $auth->uploadToken(config('qiniu.bucket'),null,config('qiniu.expires'),$police);
 
             $data['token'] =$upload_token;
             $data['url'] =config('qiniu.url');
@@ -55,6 +64,69 @@ class Upload
 
     }
 
+    /**
+     * 处理视频封面图
+     * @param string $path 路径
+     * @throws
+     * @return
+     * */
+    public function handleVideoImg($path)
+    {
+        empty($path) && exception('路径异常');
+        $auth = new Auth(config('qiniu.ak'), config('qiniu.sk'));
+        $url = 'http://api.qiniu.com/pfop/';
+        $saveas = config('qiniu.bucket').':'.self::_handleVideoCoverImgPath($path);
+        $body = 'bucket='.config('qiniu.bucket').'&key='.$path.'&fops=vframe%2Fjpg%2Foffset%2F1%2Fw%2F480%2Fh%2F360';
+        $body .= '|saveas/'.base64_urlSafeEncode($saveas);
+        $auth_header = $auth->authorization($url, $body, 'application/x-www-form-urlencoded');
+        $header = ['Content-Type:application/x-www-form-urlencoded'];
+        foreach ($auth_header as $key=>$vo){
+            $header = array_merge($header,[$key.':'.$vo]);
+        }
+        //直接处理
+        $result = HttpCurl::req($url,$body,'post',$header,true);
+        $result = json_decode($result,true);
+        if(isset($result['error'])){
+            exception($result['error']);
+        }
+
+        $persistentId = $result['persistentId'];
+
+        //查询任务
+        //执行几次
+        $times=6;
+        $wait_result = ['code'=>0,'path'=>$saveas,'persistent_id'=>$persistentId];
+        do{
+            $handle_result = file_get_contents('http://api.qiniu.com/status/get/prefop?id='.$persistentId);
+            $handle_result = json_decode($handle_result,true);
+            if(isset($handle_result['error'])){
+                exception($handle_result['error']);
+                break;
+            }
+            $wait_result['code'] = $handle_result['code'];
+            if($handle_result['code']==1 ||$handle_result['code']==2){
+                //等待处理
+
+            }elseif ($handle_result['code']==3 || $handle_result['code']==4){
+                exception($handle_result['desc']);
+                break;
+            }elseif(empty($handle_result['code'])){
+                //处理成功
+                $wait_result['persistent_id'] = '';
+                break;
+            }
+
+            $times--;
+            sleep(1);
+        }while($times>0);
+        return $wait_result;
+    }
+
+    //处理视频封面图路径
+    public static function _handleVideoCoverImgPath($path)
+    {
+        return str_replace('.','_',$path).'/cover_img.png'; //保存数据;
+    }
 
     //上传
     public function upload($type='image')

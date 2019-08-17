@@ -200,7 +200,11 @@ class Index extends Common
             $data['label']=$label_data;
         }
         return $this->_resData(1,'获取成功',$data);
+    }
 
+    public function video()
+    {
+        return action('info/video');
     }
 
 }

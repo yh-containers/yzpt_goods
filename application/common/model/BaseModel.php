@@ -87,8 +87,8 @@ class BaseModel extends Model
 
         if(empty($file)) return '';
         //当前模块
-        $module = request()->module();
-        if($module=='api'){
+//        $module = request()->module();
+//        if($module=='api'){
             //api模块增加域名前缀
             $qiniu_prefix = str_replace('/','\\/',config('qiniu.file_prefix'));
             if(preg_match('/^'.$qiniu_prefix.'/',$file)){
@@ -98,7 +98,7 @@ class BaseModel extends Model
                 //当前服务器的域名
                 $file = request()->domain().$file;
             }
-        }
+//        }
         return $file;
 
 

@@ -1,17 +1,17 @@
 <?php
 namespace app\common\model;
 
-class DyComment extends BaseModel
+class VideoComment extends BaseModel
 {
 
-    protected $name='dy_comment';
+    protected $name='video_comment';
 
     /**
-     * 评论
+     * 评论点赞
      * @param Users $user_model;
      * @param array $data;
      * @throws
-     * @return DyComPraise
+     * @return VideoComPraise
      * */
     public static function praise(Users $user_model,array $data=[])
     {
@@ -19,13 +19,12 @@ class DyComment extends BaseModel
         $com_model = self::get($data['id']);
         empty($com_model) && exception('评论信息异常');
 
-        $model = DyComPraise::where(['uid'=>$user_model->id,'com_id'=>$data['id']])->find();
+        $model = VideoComPraise::where(['uid'=>$user_model->id,'com_id'=>$data['id']])->find();
         if(empty($model)){
-            $model = new DyComPraise();
+            $model = new VideoComPraise();
         }
-
         $model->uid = $user_model->id;
-        $model->dy_id = $com_model['dy_id'];
+        $model->vid = $com_model['vid'];
         $model->com_id = $data['id'];
         $model->praise_date = empty($model->praise_date)?date('Y-m-d H:i:s'):null;
         $model->save();
@@ -57,6 +56,7 @@ class DyComment extends BaseModel
         }
         try{
             $link_is_praise = $this->getData('link_is_praise');
+
         }catch (\Exception $e){
             $link_is_praise = 0;
         }
@@ -78,21 +78,23 @@ class DyComment extends BaseModel
     }
 
 
+
+
     //是否点过赞
     public function linkIsPraise()
     {
-        return $this->hasOne('DyComPraise','com_id')->whereNotNull('praise_date');
+        return $this->hasOne('VideoComPraise','com_id')->whereNotNull('praise_date');
     }
-
-    //动态评论用户
+//
+//    //评论用户
     public function linkPraise()
     {
-        return $this->hasOne('DyComPraise','com_id')->whereNotNull('praise_date')->field('com_id,count(*) as comment_count')->group('com_id');
+        return $this->hasOne('VideoComPraise','com_id')->whereNotNull('praise_date')->field('com_id,count(*) as comment_count')->group('com_id');
     }
     //动态评论用户
     public function linkChild()
     {
-        return $this->hasMany('DyComment','pid');
+        return $this->hasMany('VideoComment','pid');
     }
     //动态评论用户
     public function linkUsers()

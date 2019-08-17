@@ -112,7 +112,7 @@ class Article extends Common
         $keyword = input('keyword','','trim');
         $where=[];
         !empty($keyword) && $where[]=['content','like','%'.$keyword.'%'];
-        $list = \app\common\model\Dynamic::with(['linkUsers'])->where($where)->paginate();
+        $list = \app\common\model\Dynamic::with(['linkUsers'])->where($where)->order('update_time desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
@@ -196,7 +196,7 @@ class Article extends Common
         $keyword = input('keyword','','trim');
         $where=[];
         !empty($keyword) && $where[]=['title','like','%'.$keyword.'%'];
-        $list = \app\common\model\Video::where($where)->paginate();
+        $list = \app\common\model\Video::where($where)->order('update_time desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
@@ -205,6 +205,37 @@ class Article extends Common
             'list' => $list,
             'page'=>$page
         ]);
+    }
+
+    public function videoAdd()
+    {
+        $id  = $this->request->param('id');
+        $model = new \app\common\model\Video();
+        //表单提交
+        if($this->request->isAjax()){
+            $php_input = $this->request->param();//获取当前请求的参数
+            $validate = new \app\common\validate\Video();
+            try{
+
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
+        }
+        $model = $model->get($id);
+
+        return view('videoAdd',[
+            'model'=>$model,
+        ]);
+    }
+
+    //删除数据
+    public function videoDel()
+    {
+        $id = $this->request->param('id',0,'int');
+        $model = new \app\common\model\Video();
+        return $model->actionDel(['id'=>$id]);
     }
 
 }
