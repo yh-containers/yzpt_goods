@@ -4,13 +4,13 @@
 				<h2>我的订单</h2>
 				<div class="orders">
 					<div class="orders_sort clearfix">
-						<a href="" {if($status=='default')}class="cur"{/if}>所有订单</a>
-						<a href="">待付款</a>
-						<a href="">待发货</a>
-						<a href="">待收货</a>
-						<a href="">待评价</a>
-						<a href="">已完成</a>
-						<a href="">已取消</a>
+						<a href="{:url('Member/orderlist')}" {if condition="$status eq 'default'"}class="cur"{/if}>所有订单</a>
+						<a href="{:url('Member/orderlist',['step'=>4])}" {if condition="$status eq 4"}class="cur"{/if}>待付款</a>
+						<a href="{:url('Member/orderlist',['step'=>1])}" {if condition="$status eq 1"}class="cur"{/if}>待发货</a>
+						<a href="{:url('Member/orderlist',['step'=>2])}" {if condition="$status eq 2"}class="cur"{/if}>待收货</a>
+						<a href="{:url('Member/orderlist',['step'=>3])}" {if condition="$status eq 3"}class="cur"{/if}>待评价</a>
+						<a href="{:url('Member/orderlist',['step'=>5])}" {if condition="$status eq 5"}class="cur"{/if}>已完成</a>
+						<a href="{:url('Member/orderlist',['step'=>6])}" {if condition="$status eq 6"}class="cur"{/if}>已取消</a>
 					</div>
 					<div class="orders_title clearfix">
 						<div class="det">商品详情</div>
@@ -38,28 +38,12 @@
 								<div class="num">X1</div>
 								<div class="yuan">￥{$order.money}</div>
 								<div class="status">
-									<p>
-									{if condition="$order.cancel_time"}
-									已取消
-									{else/}
-									{$order.status}
-									{/if}
-									</p>
+									<p>{$order.status}</p>
 									<a href="orders_det.html">订单详情</a>
 								</div>
 								<div class="operating">
 									<div class="operating_content">
-										{if condition="!$order.pay_time"}
-											<a href="/Order/payorder?order_id={$order.id}" class="fukuan orange">立即付款</a>
-											<a href="javascript:;" class="cancel_order">取消订单</a>
-										{elseif condition="!$order.send_start_time"}
-											<a href="javascript:;" class="tixing orange_bg">提醒发货</a>
-										{elseif condition="!$order.receive_start_time"}
-											<a href="javascript:;" class="confirm orange_bg">确认收货</a>
-											<a href="javascript:;" class="sqth">申请退货</a>
-										{elseif condition="!$order.complete_time"}	
-											<a href="evaluation.html" class="orange">去评价</a>
-										{/if}
+										{$order.handle|raw}
 									</div>
 								</div>
 							</div>

@@ -1,0 +1,64 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="bg"}{/block}
+{block name="center"}
+	<script src="/assets/index/mobile/js/imgUp.js"></script>
+	<script type="text/javascript" src="/assets/index/mobile/js/startScore.js"></script>
+
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">商品评论</div>
+	</header>
+
+	<main class="main mgtop wrapper">
+		{volist name="goods_list" id="goods" key="k"}
+		<div class="evaluation">
+			<div class="orders_list_content clearfix">
+				<a href="javascript:;">
+					<div class="orders_img"><img src="{$goods.img}"></div>
+					<div class="orders_title">
+						<p>{$goods.name}</p>
+						<span>{$goods.spec_name}</span>
+					</div>
+					<div class="orders_price">
+						<p>￥{$goods.price}</p>
+						<p>×{$goods.num}</p>
+					</div>
+				</a>
+			</div>
+			<input type="hidden" name="gid[{$k}]" value="{$goods.gid}">
+			<input type="hidden" name="oid[{$k}]" value="{$goods.oid}">
+			<div class="textarea">
+				<textarea type="textarea" name="content[{$k}]" class="text" placeholder="宝贝满足您的期待吗？说说它的优点和美中不足吧.."></textarea>
+				<div class="z_photo upimg-div clearfix">
+					<section class="z_file fl">
+						<img src="/assets/index/mobile/images/file02.jpg" class="add-img">
+						<input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
+					</section>
+				</div>
+			</div>
+			<div id="starttwo{$goods.id}" class="block clearfix" style="margin-bottom: 15px;">
+		        <span>描述相符：</span><div  class="star_score" data-id="{$goods.id}"></div>
+		        <input type="hidden" name="star[{$k}]" id="star_input{$goods.id}">
+		    </div>
+		    <script>
+		     	scoreFun($("#starttwo{$goods.id}"),{
+		           fen_d:30,//每一个a的宽度
+		           ScoreGrade:5//a的个数 10或者
+		         });
+		    </script>
+		</div>
+		{/volist}
+	</main>
+
+	<div class="evaluation_footer"><input type="submit" name=""></div>
+	<!-- 提示框 -->
+	<div class="mask works-mask">
+		<div class="mask-content">
+			<p class="del-p ">您确定要删除图片吗？</p>
+			<p class="check-p"><span class="del-com wsdel-ok">确定</span><span class="wsdel-no">取消</span></p>
+		</div>
+	</div>
+	
+{/block}
+{block name="footer"}{/block}

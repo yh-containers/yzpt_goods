@@ -151,8 +151,13 @@ class Order extends Common
             $og_model = new \app\common\model\OrderGoods();
             $od_model = new \app\common\model\OrderAddr();
             try{
+                \think\Db::startTrans();
                 //检查购物车商品状态及库存
                 $goods_info = $cart_model->checkCartGoods();
+                /*if(!empty($php_input['address'])){
+                    $res['msg'] = '未选择收货地址';
+                    echo json_encode($res);die;
+                }*/
                 $inserts = array();
                 $inserts['no'] = $order_model->getOrderSn();
                 $inserts['uid'] = session('uid');
@@ -164,7 +169,9 @@ class Order extends Common
                 $og_model->createOrderGoods($goods_info['goods_list'],$order_model->id);
                 $od_model->createOrderAddr($php_input['address'],$order_model->id);
                 $res['order_id'] = $order_model->id;
+                \think\Db::commit();
             } catch (\Exception $e){
+                \think\Db::rollback();
                 $res['msg'] = $e->getMessage();
                 echo json_encode($res);die;
             }
