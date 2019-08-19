@@ -15,5 +15,9 @@ class Ad extends BaseModel
         ['name'=>'引导页'],
         ['name'=>'首页banner'],
     ];
+    protected function getImgAttr($value)
+    {
+        return self::handleFile($value);
+    }
 
 }

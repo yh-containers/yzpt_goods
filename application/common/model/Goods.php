@@ -16,6 +16,16 @@ class Goods extends BaseModel
     public static $fields_special = ['','是','否'];
     //数据库表名
     protected $table = 'gd_goods';
+    public function getGoodsImageAttr($value){
+        return self::handleFile($value);
+    }
+    public function getImageArrAttr($value){
+        $list = empty($value)?[]:explode(',',$value);
+        foreach ($list as &$vo){
+            $vo = self::handleFile($vo);
+        }
+        return $list;
+    }
     public function ownSpecValue()
     {
         return $this->hasMany('GoodsSpecValue','goods_id')->order('id asc');

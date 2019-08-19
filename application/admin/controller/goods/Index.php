@@ -21,6 +21,7 @@ class Index extends Common
         $id  = $this->request->param('id');
         $model = new \app\common\model\Goods();
         $data = $model->with('ownSpecValue')->get($id);
+        //dump($data);exit;
         if($id){
             $isok = 0;
             foreach ($data['own_spec_value'] as $v){
@@ -92,7 +93,7 @@ class Index extends Common
             }
             return json(['code'=>1,'msg'=>'操作成功']);
         }
-        if($data['image_arr']) $data['image_arr'] = explode(',',$data['image_arr']);
+        //if($data['image_arr']) $data['image_arr'] = explode(',',$data['image_arr']);
         //分类
         $cate_list = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
             return $query->where(['status'=>1])->with('linkChildCate');

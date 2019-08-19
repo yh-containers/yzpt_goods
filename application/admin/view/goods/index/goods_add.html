@@ -78,7 +78,7 @@
                             {volist name="model.image_arr" id="iv" key="k"}
                                 <div class="item">
                                     <i class="fa fa-fw fa-close"></i>
-                                    <img src="{:\\app\\common\\model\\Goods::handleFile($iv)}" width="100" height="100">
+                                    <img src="{$iv}" width="100" height="100">
                                     <input value="{$iv}" name="image_arr[]" type="hidden">
                                 </div>
                             {/volist}
