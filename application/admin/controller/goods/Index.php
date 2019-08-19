@@ -22,7 +22,7 @@ class Index extends Common
         $model = new \app\common\model\Goods();
         $data = $model->with('ownSpecValue')->get($id);
         //dump($data);exit;
-        if($id){
+        if(!empty($data)){
             $isok = 0;
             foreach ($data['own_spec_value'] as $v){
                 if($v) $isok = 1;
@@ -35,9 +35,9 @@ class Index extends Common
             $image_arr = $this->request->param('image_arr');
             $sku = $this->request->param('sku');
             $new_sku = $this->request->param('new_sku');
-            if(empty($php_input['goods_image']) && $php_input['image_arr']){
-                $php_input['goods_image'] = $php_input['image_arr'][0];
-            }
+//            if(empty($php_input['goods_image']) && $php_input['image_arr']){
+            $php_input['goods_image'] = isset($image_arr[0])?$image_arr[0]:'';
+//            }
             $php_input['image_arr'] = implode(',',$php_input['image_arr']);
             $validate = new \app\common\validate\Goods();
             //商品属性
@@ -96,7 +96,10 @@ class Index extends Common
             }
             return json(['code'=>1,'msg'=>'操作成功']);
         }
-        //if($data['image_arr']) $data['image_arr'] = explode(',',$data['image_arr']);
+//        if(empty($data['image_arr'])) $data['image_arr'] = explode(',',$data['image_arr']);
+        $image_arr_str = !empty($data) ?$data->getData('image_arr'):'';
+        $image_arr = empty($image_arr_str)?[]:explode(',',$image_arr_str);
+
         //分类
         $cate_list = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
             return $query->where(['status'=>1])->with('linkChildCate');
@@ -122,6 +125,7 @@ class Index extends Common
         }
         return view('goods_add',[
             'model'=>$data,
+            'image_arr'=>$image_arr,
             'cate'=>$cate_list,
             'spec'=>$spec_list,
             'sku'=>$sku_list
