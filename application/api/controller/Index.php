@@ -216,7 +216,7 @@ class Index extends Common
         \app\common\model\Ad::where(['status'=>1,'type'=>$type])->order('sort asc')->select()->each(function($model,$index)use(&$list){
             array_push($list,[
                 'title'=>$model['title'],
-                'img'=>\app\common\model\Ad::handleFile($model['img']),
+                'img'=>$model['img'],
                 'url'=>$model['url'],
             ]);
         });

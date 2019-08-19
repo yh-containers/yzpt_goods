@@ -4,7 +4,7 @@ namespace app\api\controller;
 class Info extends Common
 {
     protected $need_login=true;
-    protected $ignore_action = ['dynamic','dydetail','dycomlist','activity','video','videocomlist'];
+    protected $ignore_action = ['dynamic','dydetail','dycomlist','activity','video','videodetail','videocomlist','welfare','welfareDetail'];
 
     /**
      * @var \app\common\model\Users
@@ -224,6 +224,47 @@ class Info extends Common
         $data = ['list'=>$list,'total_page'=>$info->lastPage()];
         return $this->_resData(1,'获取成功',$data);
     }
+
+
+    //视频详情
+    public function videoDetail()
+    {
+        $id = input('id',0,'intval');
+        $user_id = $this->user_id;
+
+        $where[] = ['id','=',$id];
+        $model=\app\common\model\Video::with(['linkCommentCount'
+            //点赞
+            ,'linkIsPraise'=>function($query)use($user_id){
+                $query->where('uid','=',$user_id);
+            }
+            //用户
+            ,'linkUsers'=>function($query)use($user_id){
+                $query->with(['linkHasFollow'=>function($query)use($user_id){
+                    $query->where('uid','=',$user_id);
+                }]);
+            }])->where($where)
+            ->order('id desc')->find();
+            $info = [
+                    'id'=>$model['id'],
+                    'uid'=>$model['uid'],
+                    'face'=>$model['link_users']['face'],
+                    'user_name'=>$model['link_users']['name'],
+                    'release_date'=>$model['releaseDate'],
+                    'title'=>$model['title'],
+                    'addr'=>'',
+                    'file'=>$model['fileGroup'],
+                    'share_times'=>$model['share_times'],
+                    'praise_times'=>$model['praise_times'],
+                    'views'=>$model['views'],
+                    'comment_times'=> isset($model['link_comment_count']['comment_count'])?$model['link_comment_count']['comment_count']:0,
+                    'is_follow'=>empty($model['link_users']['link_has_follow'])?0:1,
+                    'is_praise'=>empty($model['link_is_praise'])?0:1,
+                ];
+        $data = ['info'=>$info];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
 
     //发布视频
     public function videoRelease()
@@ -471,9 +512,46 @@ class Info extends Common
     }
 
 
-    //好友列表
-    public function friend()
+    //福利列表
+    public function welfare()
     {
-
+        $list = [];
+        $info=\app\common\model\Welfare::where(['status'=>1])
+            ->order('sort desc')->paginate()
+            ->each(function($item,$index)use(&$list){
+//                dump($item);exit;
+                array_push($list,[
+                    'id'=>$item['id'],
+                    'title'=>$item['title'],
+                    'img'=>$item['img'],
+                    'times'=>$item['times'],
+                    'num_intro'=>'已有'.$item['times'].'人体验过',
+                ]);
+            });
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
     }
+
+    //福利列表
+    public function welfareDetail()
+    {
+        $id = input('id',0,'intval');
+
+        $model=\app\common\model\Welfare::where(['status'=>1])
+            ->order('sort desc')->get($id);
+        empty($model) && exception('福利已丢失');
+
+        $info=[
+            'id'=>$model['id'],
+            'title'=>$model['title'],
+            'img'=>$model['img'],
+            'times'=>$model['times'],
+            'num_intro'=>'已有'.$model['times'].'人体验过',
+            'content'=>$model['content'],
+        ];
+
+        return $this->_resData(1,'获取成功',$info);
+    }
+
+
 }
