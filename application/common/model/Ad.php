@@ -14,6 +14,8 @@ class Ad extends BaseModel
         ['name'=>'启动图'],
         ['name'=>'引导页'],
         ['name'=>'首页banner'],
+        ['name'=>'活动推荐轮播'],
+        ['name'=>'福利拓展'],
     ];
 
 }

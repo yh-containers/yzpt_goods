@@ -324,9 +324,8 @@ class Info extends Common
         $user_id = $this->user_id;
         $where = [];
         $list =[];
-        $info=\app\common\model\Activity::with(['linkCommentCount','linkJoinCount','linkUsers'
-            //点赞
-            ,'linkIsPraise'=>function($query)use($user_id){
+        $info=\app\common\model\Activity::with(['linkJoinCount','linkUsers'
+            ,'linkIsJoin'=>function($query)use($user_id){
                 $query->where('uid','=',$user_id);
             }
             ])->where($where)
@@ -340,11 +339,18 @@ class Info extends Common
                     'user_name'=>$item['link_users']['name'],
                     'title'=>$item['title'],
                     'img'=>$item['img'],
+                    'content'=>$item['content'],
                     'share_times'=>$item['share_times'],
                     'praise_times'=>$item['praise_times'],
+                    'join_num' => empty($item['link_join_count']) ? 0 : $item['link_join_count']['join_count'],
                     'views'=>$item['views'],
-                    'comment_times'=> isset($item['link_comment_count']['comment_count'])?$item['link_comment_count']['comment_count']:0,
-                    'is_praise'=>empty($item['link_is_praise'])?0:1,
+                    'comment_times'=> 0,
+                    'start_date'=> $item['start_date'],
+                    'end_date'=> $item['end_date'],
+                    'date_str'=> $item['end_date'].'至'.$item['end_date'],
+                    'addr'=> $item['addr'],
+                    'addr_extra'=> $item['addr_extra'],
+                    'is_join'=>empty($item['link_is_join'])?0:1,
                 ]);
             });
         $data = ['list'=>$list,'total_page'=>$info->lastPage()];
@@ -368,6 +374,48 @@ class Info extends Common
         return $this->_resData(1,'发布成功');
     }
 
+    //活动详情
+    public function actDetail()
+    {
+        $id = input('id',0,'intval');
+        $user_id = $this->user_id;
+
+        $model=\app\common\model\Activity::with(['linkJoinCount','linkUsers'
+            ,'linkIsJoin'=>function($query)use($user_id){
+                $query->where('uid','=',$user_id);
+            }
+        ])->where(['status'=>1,'id'=>$id])
+            ->order('id desc')->find();
+        empty($model) && exception('活动不存在');
+
+
+        $info=[
+            'id'=>$model['id'],
+            'uid'=>$model['uid'],
+            'face'=>$model['link_users']['face'],
+            'user_name'=>$model['link_users']['name'],
+            'title'=>$model['title'],
+            'online'=>$model['online'],
+            'user_num'=>$model['user_num'],
+            'user_num_str'=>$model['user_num_str'],
+            'img'=>$model['img'],
+            'content'=>$model['content'],
+            'share_times'=>$model['share_times'],
+            'praise_times'=>$model['praise_times'],
+            'join_num' => empty($model['link_join_count']) ? 0 : $model['link_join_count']['join_count'],
+            'views'=>$model['views'],
+            'comment_times'=> 0,
+            'start_date'=> (string)$model['start_date'],
+            'end_date'=> (string)$model['end_date'],
+            'date_str'=> $model['end_date'].'至'.$model['end_date'],
+            'addr'=> $model['addr'],
+            'addr_extra'=> $model['addr_extra'],
+            'is_join'=>empty($model['link_is_join'])?0:1,
+        ];
+        return $this->_resData(1,'获取成功',$info);
+    }
+
+
 
     //评论--
     public function actComment()
@@ -381,6 +429,21 @@ class Info extends Common
 
         return $this->_resData(1,'评论成功');
     }
+
+    //报名活动
+    public function actJoin()
+    {
+        $php_input = input();
+        try{
+            \app\common\model\Activity::joinUs($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+
+        return $this->_resData(1,'加入成功');
+    }
+
+
     //-点赞
     public function actPraise()
     {

@@ -8,7 +8,8 @@ class Activity extends Validate
     protected $rule = [
         'title'  => 'max:100',
         'phone'  => 'validPhone',
-        'date'  => 'date|checkDate',
+        'start_date'  => 'date|checkDate',
+        'end_date'  => 'checkEndDate',
     ];
 
     protected $message  =   [
@@ -16,7 +17,7 @@ class Activity extends Validate
         'title.require' => '请输入标题',
         'content.require' => '活动详情必须输入',
         'date.require' => '活动日期必须传入',
-        'date.date' => '活动时间格式异常:',
+        'start_date.date' => '活动时间格式异常:',
 
         'user_num.require' => '请输入活动人数',
         'addr.require' => '请选择活动地址',
@@ -28,10 +29,10 @@ class Activity extends Validate
     //api忘记密码
     public function sceneApi_release()
     {
-        return $this->only(['title','content','date','user_num','addr','addr_extra','phone'])
+        return $this->only(['title','content','start_date','end_date','user_num','addr','addr_extra','phone'])
             ->append('title','require')
             ->append('content','require')
-            ->append('date','require')
+            ->append('start_date','require')
             ->append('user_num','require')
             ->append('addr','require')
             ->append('addr_extra','require')
@@ -51,6 +52,13 @@ class Activity extends Validate
     {
         if($value<date('Y-m-d')){
             return '活动不能低于当前时间';
+        }
+        return true;
+    }
+    protected function checkEndDate($value,$rule,$data=[])
+    {
+        if(isset($data['start_date']) && $value<$data['start_date']){
+            return '活动结束时间不得低于开始时间';
         }
         return true;
     }

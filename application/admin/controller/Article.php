@@ -238,4 +238,51 @@ class Article extends Common
         return $model->actionDel(['id'=>$id]);
     }
 
+    public function welfare()
+    {
+        $keyword = input('keyword','','trim');
+        $where=[];
+        !empty($keyword) && $where[]=['title','like','%'.$keyword.'%'];
+        $list = \app\common\model\Welfare::where($where)->order('update_time desc')->paginate();
+        //dump($list);die;
+        // 获取分页显示
+        $page = $list->render();
+        return view('welfare',[
+            'keyword' => $keyword,
+            'list' => $list,
+            'page'=>$page
+        ]);
+    }
+
+    public function welfareAdd()
+    {
+        $id  = $this->request->param('id');
+        $model = new \app\common\model\Welfare();
+        //表单提交
+        if($this->request->isAjax()){
+            $php_input = $this->request->param();//获取当前请求的参数
+            $validate = new \app\common\validate\Welfare();
+            try{
+
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
+        }
+        $model = $model->get($id);
+
+        return view('welfareAdd',[
+            'model'=>$model,
+        ]);
+    }
+
+    //删除数据
+    public function welfareDel()
+    {
+        $id = $this->request->param('id',0,'int');
+        $model = new \app\common\model\Welfare();
+        return $model->actionDel(['id'=>$id]);
+    }
+
 }
