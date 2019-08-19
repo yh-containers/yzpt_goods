@@ -8,7 +8,10 @@ namespace app\common\model;
 class OrderGoods extends BaseModel
 {
     protected $table = 'gd_order_goods';
-
+    protected function getImgAttr($value)
+    {
+        return self::handleFile($value);
+    }
     public function createOrderGoods($goods_list,$order_id){
         empty($order_id) && exception('订单不存在');
         empty($goods_list) && exception('商品不存在');

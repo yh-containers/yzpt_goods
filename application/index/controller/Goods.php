@@ -60,7 +60,7 @@ class Goods extends Common
         }
         if($isok == 0) $data['own_spec_value']=0;
 
-        $data['image_arr'] = explode(',',$data['image_arr']);
+        //$data['image_arr'] = explode(',',$data['image_arr']);
         $bread = $this->breadcrumbs($data['cate_id']);
         //猜你喜欢
         $sql_where = 'status=1 and id not in('.$id.')';

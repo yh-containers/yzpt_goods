@@ -17,5 +17,9 @@ class Ad extends BaseModel
         ['name'=>'活动推荐轮播'],
         ['name'=>'福利拓展'],
     ];
+    protected function getImgAttr($value)
+    {
+        return self::handleFile($value);
+    }
 
 }
