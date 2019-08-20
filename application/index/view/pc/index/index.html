@@ -17,17 +17,22 @@
 
 <div class="main">
     <div class="advertising w1200 clearfix">
-        <div class="img"><a href="products.html"><img src="/assets/index/images/adv01.jpg"></a></div>
+        {if($goods['bg'])}<div class="img"><a href="{:url('Goods/detail',['id'=>$goods['bg'][0]['id']])}"><img src="{$goods['bg'][0]['goods_image']}"></a></div>{/if}
         <ul class="clearfix">
-            <li><a href="products.html"><img src="/assets/index/images/adv02.jpg"></a></li>
-            <li><a href="products.html"><img src="/assets/index/images/adv03.jpg"></a></li>
-            <li><a href="products.html"><img src="/assets/index/images/adv04.jpg"></a></li>
-            <li><a href="products.html"><img src="/assets/index/images/adv05.jpg"></a></li>
-            <li><a href="products.html"><img src="/assets/index/images/adv06.jpg"></a></li>
+            {php}unset($goods['bg'][0]);{/php}
+            {volist name="goods.bg" id="bg_goods" key="bk"}
+            {if condition="$bk elt 5"}
+            <li><a href="{:url('Goods/detail',['id'=>$bg_goods['id']])}"><img src="{$bg_goods.goods_image}"></a></li>
+            {/if}
+            {/volist}
             <li>
-                <a href="javascript:;"><img src="/assets/index/images/adv07.jpg"></a>
-                <a href="javascript:;"><img src="/assets/index/images/adv08.jpg"></a>
+                {volist name="goods.bg" id="bg_good" key="bks"}
+                {if condition="$bks egt 6"}
+                <a href="{:url('Goods/detail',['id'=>$bg_good['id']])}"><img src="{$bg_good.goods_image}"></a>
+                {/if}
+                {/volist}
             </li>
+
         </ul>
     </div>
     <div class="see_today w1200">
@@ -75,67 +80,54 @@
 
         </div><!-- parBd End -->
     </div>
+    {volist name="cate_goods" id="cg" key="k"}
     <div class="index_pro w1200">
         <div class="title">
-            <h2>中药/滋补</h2>
-            <p>标本同治,副作用小</p>
+            <h2>{$cg.cate_name}</h2>
+            <p>{$cg.desc}</p>
         </div>
         <div class="content clearfix">
+            {if condition="$k%2"}
             <div class="left">
-                <a href="products.html"><img src="/assets/index/images/1-1.jpg"></a>
-                <a href="products.html"><img src="/assets/index/images/1-2.jpg"></a>
+                {volist name="cg.goods_list" id="lg" key="lk"}
+                {if condition="$lk elt 2"}
+                <a href="{:url('Goods/detail',['id'=>$lg['id']])}"><img src="{$lg.goods_image}"></a>
+                {/if}
+                {/volist}
             </div>
             <div class="right">
-                <p><a href="products.html"><img src="/assets/index/images/1-3.jpg"></a></p>
+                {if($cg['goods_list'][2])}<p><a href="{:url('Goods/detail',['id'=>$cg['goods_list'][2]['id']])}"><img src="{$cg['goods_list'][2]['goods_image']}"></a></p>{/if}
                 <ul>
-                    <li><a href="products.html"><img src="/assets/index/images/1-4.jpg"></a></li>
-                    <li><a href="products.html"><img src="/assets/index/images/1-5.jpg"></a></li>
-                    <li><a href="products.html"><img src="/assets/index/images/1-6.jpg"></a></li>
+                    {volist name="cg.goods_list" id="rg" key="rk"}
+                    {if condition="$lk egt 4"}
+                    <li><a href="{:url('Goods/detail',['id'=>$rg['id']])}"><img src="{$rg.goods_image}"></a></li>
+                    {/if}
+                    {/volist}
                 </ul>
             </div>
-        </div>
-    </div>
-    <div class="index_pro two w1200">
-        <div class="title">
-            <h2>营养保健</h2>
-            <p>维持及增进健康的关键</p>
-        </div>
-        <div class="content clearfix">
+            {else/}
             <div class="right">
-                <p><a href="products.html"><img src="/assets/index/images/2-1.jpg"></a></p>
+                {if($cg['goods_list'][0])}<p><a href="{:url('Goods/detail',['id'=>$cg['goods_list'][0]['id']])}"><img src="{$cg['goods_list'][0]['goods_image']}"></a></p>{/if}
+                {php}unset($cg['goods_list'][0]);{/php}
                 <ul>
-                    <li><a href="products.html"><img src="/assets/index/images/2-2.jpg"></a></li>
-                    <li><a href="products.html"><img src="/assets/index/images/2-3.jpg"></a></li>
-                    <li><a href="products.html"><img src="/assets/index/images/2-4.jpg"></a></li>
+                    {volist name="cg.goods_list" id="rgs" key="rks"}
+                    {if condition="$rks elt 3"}
+                    <li><a href="{:url('Goods/detail',['id'=>$rgs['id']])}"><img src="{$rgs.goods_image}"></a></li>
+                    {/if}
+                    {/volist}
                 </ul>
             </div>
             <div class="left">
-                <a href="products.html"><img src="/assets/index/images/2-5.jpg"></a>
-                <a href="products.html"><img src="/assets/index/images/2-6.jpg"></a>
+                {volist name="cg.goods_list" id="lgs" key="lks"}
+                {if condition="$lks egt 4"}
+                <a href="{:url('Goods/detail',['id'=>$lgs['id']])}"><img src="{$lgs.goods_image}"></a>
+                {/if}
+                {/volist}
             </div>
-
+            {/if}
         </div>
     </div>
-    <div class="index_pro w1200">
-        <div class="title">
-            <h2>中药/滋补</h2>
-            <p>标本同治,副作用小</p>
-        </div>
-        <div class="content clearfix">
-            <div class="left">
-                <a href="products.html"><img src="/assets/index/images/1-1.jpg"></a>
-                <a href="products.html"><img src="/assets/index/images/1-2.jpg"></a>
-            </div>
-            <div class="right">
-                <p><a href="products.html"><img src="/assets/index/images/1-3.jpg"></a></p>
-                <ul>
-                    <li><a href="products.html"><img src="/assets/index/images/1-4.jpg"></a></li>
-                    <li><a href="products.html"><img src="/assets/index/images/1-5.jpg"></a></li>
-                    <li><a href="products.html"><img src="/assets/index/images/1-6.jpg"></a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    {/volist}
 </div>
     <script type="text/javascript">
         /* 调用SuperSlide */

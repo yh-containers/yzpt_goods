@@ -12,17 +12,35 @@ class Index extends Common
         $et = strtotime(date('Y-m-d').' 23:59:59');
         $st = strtotime(date('Y-m-d').' 00:00:00');
         $today_where = 'status=1 and is_special=1 and update_time between '.$st.' and '.$et;
-        $goods['today'] = $goods_model->where($today_where)->field('id,goods_image')->select();
+        $goods['today'] = $goods_model->where($today_where)->field('id,goods_image')->limit(10)->select();
         //新品推荐
-        $goods['new'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,goods_image')->select();
+        $goods['new'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(10)->select();
+        //banner下产品
+        $goods['bg'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(8)->select();
         //特价
-        $goods['special'] = $goods_model->where(['status'=>1,'is_special'=>1])->field('id,goods_image')->select();
+        $goods['special'] = $goods_model->where(['status'=>1,'is_special'=>1])->field('id,goods_image')->limit(10)->select();
         //人气
-        $goods['hot'] = $goods_model->where(['status'=>1,'is_hot'=>1])->field('id,goods_image')->select();
+        $goods['hot'] = $goods_model->where(['status'=>1,'is_hot'=>1])->field('id,goods_image')->limit(10)->select();
         //print_r($today_where);
         //首页banner
         $banner = \app\common\model\Ad::where('type=2 and status=1')->field('url,img')->select();
-        return view('index',['goods'=>$goods,'banner'=>$banner,'isIndex'=>1]);
+        //分类下商品
+        $cate_lists = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
+            return $query->where(['status'=>1])->field('id,pid')->with('linkChildCate');
+        }])->where(['status'=>1,'pid'=>0])->field('id,cate_name,desc,pid')->order('sort asc')->limit(3)->select();
+        foreach ($cate_lists as &$val){
+            $val['inids'] = $val['id'];
+            foreach ($val['link_child_cate'] as $cvl){
+                $val['inids'] .= ','.$cvl['id'];
+                foreach ($cvl['link_child_cate'] as $ccvl){
+                    $val['inids'] .= ','.$ccvl['id'];
+                }
+            }
+            unset($val['link_child_cate']);
+            $val['goods_list'] = $goods_model->where('status=1 and cate_id in('.$val['inids'].')')->field('id,goods_image,goods_name')->limit(6)->select();
+        }
+        //print_r($cate_lists);
+        return view('index',['goods'=>$goods,'banner'=>$banner,'isIndex'=>1,'cate_goods'=>$cate_lists]);
     }
 //登录登出
     public function login(){

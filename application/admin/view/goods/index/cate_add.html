@@ -43,7 +43,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">分类图</label>
                 <div class="col-sm-10">
-                    <input type="hidden" name="image" value="{:empty($model)?'':$model->getData('img')}" />
+                    <input type="hidden" name="image" value="{:empty($model)?'':$model->getData('image')}" />
                     <button type="button" class="layui-btn upload-img" lay-data='{:action('upload/info',['type'=>'gd_category'])}'>
                         <i class="layui-icon">&#xe67c;</i>分类图
                     </button>
