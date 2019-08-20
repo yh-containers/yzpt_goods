@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone = no" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="深圳市深正互联网络有限公司" />
+    <link rel="stylesheet" type="text/css" href="/assets/index/mobile/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/index/mobile/font/iconfont.css">
+    <script type="text/javascript" src="/assets/index/mobile/js/jquery-1.11.0.min.js"></script>
+</head>
+<body style="background:#fff;">
+    <main class="main">
+        <div class="products_det">
+            <div class="product_description">
+                <div class="bd">
+                    <!-- 评价 -->
+                    <div class="con evaluation">
+                        <div class="inHd">
+                            <ul class="clearfix">
+                                <li {if condition="$step"}{else/}class="on"{/if}><a href="{:url('Goods/comment',['id'=>$gid])}">全部评价{$comment_count}</a></li>
+
+                                <li {if condition="$step eq 2"}class="on"{/if}><a href="{:url('Goods/comment',['id'=>$gid,'state'=>2])}">好评{$pjnum.best}</a></li>
+
+                                <li {if condition="$step eq 3"}class="on"{/if}><a href="{:url('Goods/comment',['id'=>$gid,'state'=>3])}">中评{$pjnum.normal}</a></li>
+
+                                <li {if condition="$step eq 4"}class="on"{/if}><a href="{:url('Goods/comment',['id'=>$gid,'state'=>4])}">差评{$pjnum.bad}</a></li>
+
+                                <li {if condition="$step eq 1"}class="on"{/if}><a href="{:url('Goods/comment',['id'=>$gid,'state'=>1])}">有图评价{$pjnum.img}</a></li>
+                            </ul>
+                        </div>
+                        <div class="inBd">
+                            {if condition="count($com_list)"}
+                            <div class="con">
+                                <ul class="clearfix">
+                                    {volist name="com_list" id="com"}
+                                    <li>
+                                        <div class="evaluation_top">
+                                            <div class="score">
+                                                {php}
+                                                for($i=0;$i<=$com['grade'];$i++){
+                                                    echo '<span class="cur"></span>';
+                                                }
+                                                {/php}
+                                            </div>
+                                            <div class="evaluation_right">
+                                                <span>{$com['user']['name']}</span>
+                                            </div>
+                                        </div>
+                                        <div class="evaluation_text">{$com.content}</div>
+                                        <div class="evaluation_img">
+                                            {volist name="com.imgs" id="img"}
+                                            <div class="thumbnail">
+                                                <a class="lightbox" href="{$img}">
+                                                    <img src="{$img}" alt="Park">
+                                                </a>
+                                            </div>
+                                            {/volist}
+                                        </div>
+                                        <div class="evaluation_time">{:$com.create_time}</div>
+                                    </li>
+                                    {/volist}
+                                </ul>
+                            </div>
+                            {else/}
+                            <div class="con">
+                                <div class="air">暂无相关评价~</div>
+                            </div>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

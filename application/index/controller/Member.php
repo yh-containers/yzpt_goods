@@ -130,7 +130,11 @@ class Member extends Common
     }
     //我的评论
     public function mycomment(){
-        return view('mycom',['active'=>'com']);
+        $com_model = new \app\common\model\Comment();
+        $com_list = $com_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->field('c.gid,c.create_time,c.content,g.goods_image,g.goods_name')->where('c.uid='.session('uid').' and c.status=1')->paginate();
+        $page = $com_list->render();
+        //print_r($com_list);
+        return view('mycom',['active'=>'com','com_list'=>$com_list,'page'=>$page]);
     }
     //商品评价展示
     public function comment(){
@@ -138,7 +142,7 @@ class Member extends Common
         $order_model = new \app\common\model\Order();
         $sku_model = new \app\common\model\GoodsSpecStock();
         $spec_model = new \app\common\model\GoodsSpecValue();
-        $order = $order_model->field('id,no')->with('ownGoods')->where(['id'=>$order_id])->find();
+        $order = $order_model->field('id,no,create_time')->with('ownGoods')->where(['id'=>$order_id])->find();
         foreach ($order['own_goods'] as &$goods){
             $extra = explode(':',$goods['extra']);
             if($extra[1]){
@@ -153,18 +157,46 @@ class Member extends Common
                 $goods['spec_name'] = '';
             }
         }
-        //print_r($order['own_goods']);
-        return view('handlecomment',['active'=>'order','goods_list'=>$order['own_goods']]);
+        //print_r($order);
+        return view('handlecomment',['active'=>'order','goods_list'=>$order['own_goods'],'order_sn'=>$order['no'],'create_time'=>$order['create_time']]);
     }
     //商品评价操作
     public function handlecomment(){
-
+        if($this->request->isAjax()) {
+            $res = ['code' => 0, 'msg' => ''];
+            $php_input = $this->request->param();
+            $img = $this->request->param('img');
+            $order_model = new \app\common\model\Order();
+            try{
+                foreach ($php_input['gid'] as $k=>$val){
+                    $com_model = new \app\common\model\Comment();
+                    $addInfo = array();
+                    $addInfo['gid'] = $val;
+                    $addInfo['uid'] = session('uid');
+                    $addInfo['oid'] = $php_input['oid'][$k];
+                    if($com_model->where($addInfo)->count()){
+                        continue;
+                    }
+                    $addInfo['content'] = $php_input['content'][$k];
+                    $addInfo['grade'] = $php_input['star'][$k];
+                    if($img[$k]) $addInfo['imgs'] = implode(',',$img[$k]);
+                    $com_model->actionAdd($addInfo);
+                }
+                $order_model->where(['id'=>$php_input['oid'][1]])->update(['status'=>4]);
+            } catch (\Exception $e) {
+                $res['msg'] = $e->getMessage();
+                echo json_encode($res);
+                die;
+            }
+            $res['code'] = 1;
+            echo json_encode($res);die;
+        }
     }
     //我的退款单
     public function myretreat(){
         return view('myretreat',['active'=>'ret']);
     }
-    //我的首页
+    //我的首页 mobile
     public function user(){
         $order_model = new \app\common\model\Order();
         $where['uid'] = session('uid');
@@ -178,6 +210,7 @@ class Member extends Common
         $order_count['send'] = $order_model->where($where)->count();
         //待评价
         $where['step_flow'] = 3;
+        $where['status'] = 3;
         $order_count['com'] = $order_model->where($where)->count();
         //退货退款
 

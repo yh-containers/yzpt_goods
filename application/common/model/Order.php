@@ -45,6 +45,10 @@ class Order extends BaseModel
     {
         return $this->hasMany('OrderGoods','oid')->field('id,gid,oid,name,img,price,extra,num')->order('id asc');
     }
+    public function ownAddr()
+    {
+        return $this->hasMany('OrderAddr','oid')->order('id asc');
+    }
     public function getOrderSn(){
         return date('YmdHis').mt_rand(1000,9999).self::count();
     }

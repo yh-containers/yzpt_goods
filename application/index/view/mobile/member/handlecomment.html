@@ -2,14 +2,14 @@
 {block name="header_search"}{/block}
 {block name="bg"}{/block}
 {block name="center"}
-	<script src="/assets/index/mobile/js/imgUp.js"></script>
+	<script src="/assets/index/js/imgUp.js"></script>
 	<script type="text/javascript" src="/assets/index/mobile/js/startScore.js"></script>
 
 	<header class="header">
 		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
 		<div class="header_title">商品评论</div>
 	</header>
-
+	<form id="toForm" action="{:url('member/handlecomment')}" method="post">
 	<main class="main mgtop wrapper">
 		{volist name="goods_list" id="goods" key="k"}
 		<div class="evaluation">
@@ -33,13 +33,14 @@
 				<div class="z_photo upimg-div clearfix">
 					<section class="z_file fl">
 						<img src="/assets/index/mobile/images/file02.jpg" class="add-img">
-						<input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
+						<input type="file" id="file{$goods.id}" data-key="{$k}" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
+						<input name='img[{$k}][]' value='' type='hidden'/>
 					</section>
 				</div>
 			</div>
 			<div id="starttwo{$goods.id}" class="block clearfix" style="margin-bottom: 15px;">
 		        <span>描述相符：</span><div  class="star_score" data-id="{$goods.id}"></div>
-		        <input type="hidden" name="star[{$k}]" id="star_input{$goods.id}">
+		        <input type="hidden" name="star[{$k}]" id="star_input{$goods.id}" value="1">
 		    </div>
 		    <script>
 		     	scoreFun($("#starttwo{$goods.id}"),{
@@ -52,6 +53,7 @@
 	</main>
 
 	<div class="evaluation_footer"><input type="submit" name=""></div>
+	</form>
 	<!-- 提示框 -->
 	<div class="mask works-mask">
 		<div class="mask-content">
@@ -59,6 +61,28 @@
 			<p class="check-p"><span class="del-com wsdel-ok">确定</span><span class="wsdel-no">取消</span></p>
 		</div>
 	</div>
+	<script type="text/javascript">
+		$(function(){
+			$('#toForm').submit(function(){
+				var ajaxUrl = $(this).attr('action');
+			  	var ajaxData = $(this).serialize();
+			  	$.ajax({
+			  		url:ajaxUrl, 
+			  		data:ajaxData, 
+					dataType:'json',
+					type:'post', 
+					success:function (re){
+				  		if(re.code){
+				  			window.location.href="/";
+				  		}else if(!re.code){
+				  			alert(re.msg);
+				  		}
+				  	}	
+			  	})
+			  	return false;
+			});
+		})
+	</script>
 	
 {/block}
 {block name="footer"}{/block}

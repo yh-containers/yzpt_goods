@@ -1,6 +1,36 @@
 {extend name="member" /}
 {block name="member_content"}
-
+			<div class="personal_content">
+				<h2>我的评论</h2>
+				<div class="my_comment">
+					<div class="title">
+						<div class="det">商品详情</div>
+						<div class="text">评论内容</div>
+						<div class="time">时间</div>
+					</div>
+					<div class="list">
+						<ul>
+							{volist name="com_list" id="com"}
+							<li>
+								<div class="det">
+									<a href="/goods/detail/id/{$com.gid}">
+										<div class="img"><img src="{$com.goods_image}"></div>
+										<div class="name">{$com.goods_name}</div>
+									</a>
+								</div>
+								<div class="text">{$com.content}</div>
+								<div class="time">{:$com.create_time}</div>
+							</li>
+							{/volist}
+						</ul>
+						<div class="page">
+							<div class="page_num clearfix">
+								{$page}
+			                </div>
+						</div>
+					</div>
+				</div>
+			</div>
 {/block}
 {block name="member_footer"}
 {/block}

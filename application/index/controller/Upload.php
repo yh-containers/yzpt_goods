@@ -36,4 +36,9 @@ class Upload extends Common
 
     }
 
+    public function delimg(){
+        $imgpath = $this->request->param('imgpath');
+        unlink($this->root_path.$imgpath);
+        echo 1;
+    }
 }

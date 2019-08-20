@@ -28,18 +28,18 @@
 							<div class="orders_content clearfix">
 								<div class="det">
 									{volist name="order.own_goods" id="child"}
-									<a href="products_det.html">
+									<a href="/goods/detail/id/{$child.gid}">
 										<div class="pro_img"><img src="{$child.img}"></div>
 										<div class="pro_name">{$child.name}</div>
 									</a>
 									{/volist}
 								</div>
-								<div class="receiver">容景</div>
-								<div class="num">X1</div>
+								<div class="receiver"></div>
+								<div class="num">X{$order.number}</div>
 								<div class="yuan">￥{$order.money}</div>
 								<div class="status">
 									<p>{$order.status}</p>
-									<a href="orders_det.html">订单详情</a>
+									<a href="{:url('Order/order_detail',['id'=>$order['id']])}">订单详情</a>
 								</div>
 								<div class="operating">
 									<div class="operating_content">
@@ -70,7 +70,7 @@
 		<div class="tips_content"><img src="/assets/index/images/icon25.jpg"><span>您确定要取消订单吗？</span></div>
 		<div class="tips_bottom clearfix">
 			<a href="javascript:;" class="quxiao tips_close">取消</a>
-			<a href="orders.html" class="define">确定</a>
+			<a href="orders.html" class="define" onclick="handleCancel(this);">确定</a>
 		</div>
 	</div>
 
@@ -88,7 +88,7 @@
 		<div class="tips_content"><img src="/assets/index/images/icon25.jpg"><span>您确定要确认收货吗？</span></div>
 		<div class="tips_bottom clearfix">
 			<a href="javascript:;" class="quxiao tips_close">取消</a>
-			<a href="orders.html" class="define">确定</a>
+			<a href="orders.html" class="define" onclick="handleReceive(this);">确定</a>
 		</div>
 	</div>
 
@@ -104,29 +104,57 @@
 	<script type="text/javascript">
 	    $(function(){
 
-	    	/*取消订单*/
+	    	/*取消订单
 	        $('.orders .cancel_order').click(function(){
 	            $('.cancel_popup').show();
 	            $("body").append("<div class='tips_bg'></div>");
-	        });
-
+	        });*/
+	        function orderCancel(order_id){
+				$(".cancel_popup").find('.define').attr('data-id',order_id);
+				$(".cancel_popup").show();
+				$("body").append("<div class='tips_bg'></div>");
+			}
+			function handleCancel(obj){
+				var oid = $(obj).attr('data-id');
+				if(oid){
+					sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'cancel'},1);
+				}
+			}
 	        /*申请退货*/
 	        $('.orders .sqth').click(function(){
 	            $('.return_popup').show();
 	            $("body").append("<div class='tips_bg'></div>");
 	        });
 
-	        /*确认收货*/
+	        /*确认收货
 	        $('.orders .confirm').click(function(){
 	            $('.confirm_popup').show();
 	            $("body").append("<div class='tips_bg'></div>");
-	        });
+	        });*/
+	        function receiveOrder(oid){
+				if(oid){
+					$('.confirm_popup').find('.define').attr('data-id',oid);
+					$('.confirm_popup').show();
+	            	$("body").append("<div class='tips_bg'></div>");
+				}
+			}
+			function handleReceive(obj){
+				var oid = $(obj).attr('data-id');
+				if(oid){
+					sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'receive'},1);
+				}
+			}
 
-	        /*提醒发货*/
+	        /*提醒发货
 	        $('.orders .tixing').click(function(){
 	            $('.remind_popup').show();
 	            $("body").append("<div class='tips_bg'></div>");
-	        });
+	        });*/
+	        function remindOrder(oid){
+				if(oid){
+					sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'remind'},1);
+				}
+			}
 	        
 	        /*关闭弹窗*/
 	        $('.tips_close').click(function(){
@@ -137,7 +165,20 @@
 	            $(".tips_bg").remove();
 	        });
 
-	    	
+	    	function sendAjax(ajaxUrl,ajaxData,isre){
+				$.ajax({
+			  		url:ajaxUrl, 
+			  		data:ajaxData, 
+					dataType:'json',
+					type:'post', 
+					success:function (re){
+						alert(re.msg);
+				  		if(re.code && isre){
+				  			history.go(0);
+				  		}
+				  	}	
+			  	})
+			}
 	    });
 
 	</script>

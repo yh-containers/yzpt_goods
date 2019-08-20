@@ -186,5 +186,46 @@ class Order extends Common
         $order = $order_model->field('no,money')->get($id);
         return view('pay_order',['order'=>$order]);
     }
+    //订单详情
+    public function order_detail(){
+        $id = $this->request->param('id');
+        $order_model = new \app\common\model\Order();
+        $sku_model = new \app\common\model\GoodsSpecStock();
+        $spec_model = new \app\common\model\GoodsSpecValue();
 
+        $order = $order_model->with('ownGoods,ownAddr')->get($id);
+        if(empty($order)) $this->error('订单不存在');
+        $state = $order_model->getPropInfo('fields_mobile_step', $order['step_flow']);
+        if(isMobile()) {
+            $order['handle'] = is_array($state['handle']) ? $state['handle'][$order['status']] : $state['handle'];
+        }else{
+            $order['handle'] = is_array($state['w_handle']) ? $state['w_handle'][$order['status']] : $state['w_handle'];
+        }
+        $order['handle'] = str_replace('{order_id}',$order['id'],$order['handle']);
+        $order['state'] = is_array($state['name']) ? $state['name'][$order['status']] : $state['name'];
+        if($order['status'] == 0) $order['step'] = 1;
+        if($order['status'] == 1) $order['step'] = 2;
+        if($order['step_flow'] == 1) $order['step'] = 3;
+        if($order['step_flow'] == 2) $order['step'] = 4;
+        if($order['status'] == 4) $order['step'] = 5;
+        $order['number'] = 0;
+        foreach ($order['own_goods'] as &$goods) {
+            $order['number'] += $goods['num'];
+            $extra = explode(':',$goods['extra']);
+            if($extra[1]){
+                $sku = $sku_model->where(['id'=>$extra[1]])->field('price,sv_ids')->find();
+                $spec = $spec_model->where('id in('.$sku['sv_ids'].')')->field('value_name')->select();
+                $goods['spec_name'] = ' ';
+                foreach ($spec as $spv){
+                    $goods['spec_name'] .= $spv['value_name'].' + ';
+                }
+                $goods['spec_name'] = trim($goods['spec_name'],' + ');
+            }else{
+                $goods['spec_name'] = '';
+            }
+        }
+        //print_r($order['own_addr']);
+
+        return view('order_detail',['active'=>'order','order'=>$order]);
+    }
 }

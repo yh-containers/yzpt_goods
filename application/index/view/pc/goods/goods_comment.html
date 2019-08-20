@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" type="text/css" href="/assets/index/font/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/index/css/css.css"/>
+    <meta name="author" content="深圳市深正互联网络有限公司" />
+</head>
+<body>
+    <div class="main">
+        <div class="products">
+            <div class="products_det w1200">
+                <div class="product_det_bottom clearfix">
+                    <!-- 商品详情 -->
+                    <div class="product_description">                        
+                        <div class="bd">
+                            <!-- 商品评价 -->
+                            <div class="con evaluation">
+                                <div class="praise">
+                                    <h3>好评度</h3>
+                                    <div class="percentage">{$pjnum.best_pro}<span>%</span></div>
+                                    <p>评价总数：<span>{$comment_count}</span></p>
+                                </div>
+                                <div class="inHd">
+                                    <ul class="clearfix">
+                                        <a href="{:url('Goods/comment',['id'=>$gid])}"><li>全部<span>（{$comment_count}）</span></li></a>
+                                        <a href="{:url('Goods/comment',['id'=>$gid,'state'=>1])}"><li>晒图<span>（{$pjnum.img}）</span></li></a>
+                                        <a href="{:url('Goods/comment',['id'=>$gid,'state'=>2])}"><li>好评<span>（{$pjnum.best}）</span></li></a>
+                                        <a href="{:url('Goods/comment',['id'=>$gid,'state'=>3])}"><li>中评<span>（{$pjnum.normal}）</span></li></a>
+                                        <a href="{:url('Goods/comment',['id'=>$gid,'state'=>4])}"><li>差评<span>（{$pjnum.bad}）</span></li></a>
+                                    </ul>
+                                </div>
+                                <div class="inBd">
+                                    <!-- 全部 -->
+                                    {if condition="count($com_list)"}
+                                    <div class="con">
+                                        <ul class="clearfix">
+                                            {volist name="com_list" id="com"}
+                                            <li>
+                                                <div class="eva_avatar">
+                                                    <p><img src="{$com['user']['face']}"></p>
+                                                    <p>{$com['user']['name']}</p>
+                                                </div>
+                                                <div class="eva_content">
+                                                    <div class="eva_star"><span>星级：</span><em class="star{$com.grade}"></em></div>
+                                                    <p>{$com.content}</p>
+                                                    <ul class="clearfix tz-gallery">
+                                                        {volist name="com.imgs" id="img"}
+                                                        <li class="thumbnail">
+                                                            <a class="lightbox" href="{$img}">
+                                                                <img src="{$img}">
+                                                            </a>
+                                                        </li>
+                                                        {/volist}
+                                                    </ul>
+                                                    <div class="package_info"><span>{:$com.create_time}</span></div>
+                                                </div>
+                                            </li>
+                                            {/volist}
+                                        </ul>
+                                        <div class="page">
+                                            <div class="page_num clearfix">
+                                                {$page}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {else/}
+                                    <div class="con">
+                                        <div class="eva_air">
+                                            暂无相关评价
+                                        </div>
+                                    </div>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>    

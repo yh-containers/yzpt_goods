@@ -1,0 +1,52 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">订单详情</div>
+	</header>
+
+	<main class="main mgtop wrapper">
+		<div class="orders_det">
+			<div class="orders_address">
+				<i class="icon iconfont icon-dizhi"></i>
+				<div class="orders_address_info">
+					<p>{$order['own_addr'][0]['username']}<span>{$order['own_addr'][0]['phone']}</span></p>
+					<p>{$order['own_addr'][0]['addr']} {$order['own_addr'][0]['addr_extra']}</p>
+				</div>
+			</div>
+			<div class="orders_list">
+				<div class="orders_list_content clearfix">
+					{volist name="order.own_goods" id='goods'}
+					<a href="{:url('Goods/detail',['id'=>$goods['gid']])}">
+						<div class="orders_img"><img src="{$goods.img}"></div>
+						<div class="orders_title">
+							<p>{$goods.name}</p>
+							<span>{$goods.spec_name}</span>
+						</div>
+						<div class="orders_price">
+							<p>￥{$goods.price}</p>
+							<p>×{$goods.num}</p>
+						</div>
+					</a>
+					{/volist}
+				</div>
+				<div class="orders_list_bottom clearfix">
+					<p>共1件商品，合计：￥{$order.money} 含运费（0.00）</p>
+				</div>
+			</div>
+			<div class="order_time">
+				<p>订单编号：{$order.no}</p>
+				<p>下单时间：{:$order.create_time}</p>
+				<p>付款时间：{:$order.pay_time}</p>
+				<p>发货时间：{:$order.send_end_time}</p>
+			</div>
+		</div>
+	</main>
+	<div class="orders_det_footer">
+		<div class="orders_status">
+			{$order['handle']|raw}
+		</div>
+	</div>
+{/block}
+{block name="footer"}{/block}

@@ -19,28 +19,28 @@
 				<div class="title"><a href="{:url('Member/orderlist')}">全部订单</a></div>
 				<ul class="clearfix">
 					<li>
-						<a href="orders.html">
+						<a href="{:url('Member/orderlist',['step'=>4])}">
 							<i><img src="/assets/index/mobile/images/icon07.png"></i>
 							<p>待付款</p>
 							{if($order_count['pay'])}<span>{$order_count.pay}</span>{/if}
 						</a>
 					</li>
 					<li>
-						<a href="orders.html">
+						<a href="{:url('Member/orderlist',['step'=>1])}">
 							<i><img src="/assets/index/mobile/images/icon08.png"></i>
 							<p>待发货</p>
 							{if($order_count['send'])}<span>{$order_count.send}</span>{/if}
 						</a>
 					</li>
 					<li>
-						<a href="orders.html">
+						<a href="{:url('Member/orderlist',['step'=>3])}">
 							<i><img src="/assets/index/mobile/images/icon09.png"></i>
 							<p>待评价</p>
 							{if($order_count['com'])}<span>{$order_count.com}</span>{/if}
 						</a>
 					</li>
 					<li>
-						<a href="orders.html">
+						<a href="{:url('Member/orderlist')}">
 							<i><img src="/assets/index/mobile/images/icon15.png"></i>
 							<p>退货退款</p>
 							<!-- <span></span> -->

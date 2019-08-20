@@ -33,6 +33,9 @@ function scoreFun(object, opts) {
         });
         $(this).mouseenter(function () {
             show(index, $(this))
+            var star = $(this).attr('star');
+            var cid = $(this).parent().attr('data-id');
+            $("#star_input"+cid).val(star)
         });
         $(this).mouseleave(function () {
             if (now_cli >= 0) {

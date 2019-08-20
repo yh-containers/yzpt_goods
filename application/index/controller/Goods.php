@@ -87,7 +87,9 @@ class Goods extends Common
         //收藏
         $collect_model = new \app\common\model\Collect();
         $collect_count = $collect_model->where(['gid'=>$id])->count();
-        return view('goods_detail',['goods'=>$data,'bread'=>$bread['bread'],'like_list'=>$goods_list,'sku_arr'=>$sku,'collect_count'=>$collect_count]);
+        //总评价
+        $comment_count = \app\common\model\Comment::where(['gid'=>$id])->count();
+        return view('goods_detail',['goods'=>$data,'bread'=>$bread['bread'],'like_list'=>$goods_list,'sku_arr'=>$sku,'collect_count'=>$collect_count,'comment_count'=>$comment_count]);
     }
     //查询属性价格库存
     public function search_sku(){
@@ -115,6 +117,53 @@ class Goods extends Common
             }
             echo json_encode($res);die;
         }
+    }
+    //商品评价
+    public function comment(){
+        $gid = $this->request->param('id');
+        $com_model = new \app\common\model\Comment();
+        $where = ['gid'=>$gid];
+        //总评
+        $comment_count = $com_model->where($where)->count();
+        //好评
+        $where['grade'] = ['in','4,5'];
+        $count['best'] = $com_model->where($where)->count();
+        //好评率
+        $count['best_pro'] = round($count['best']/$comment_count,2)*100;
+        //中评
+        $where['grade'] = 3;
+        $count['normal'] = $com_model->where($where)->count();
+        //差评
+        $where['grade'] = ['in','1,2'];
+        $count['bad'] = $com_model->where($where)->count();
+        //晒图
+        unset($where['grade']);
+        $where = 'gid='.$gid.' and imgs is not null and imgs != " "';
+        $count['img'] = $com_model->where($where)->count();
+
+        $sql_where = 'gid='.$gid;
+        $state = $this->request->param('state');
+        switch ($state){
+            case 1:
+                $sql_where .= ' and imgs is not null and imgs != " "';
+                break;
+            case 2:
+                $sql_where .= ' and grade in(4,5)';
+                break;
+            case 3:
+                $sql_where .= ' and grade in(3)';
+                break;
+            case 4:
+                $sql_where .= ' and grade in(1,2)';
+                break;
+        }
+        $com_list = $com_model->where($sql_where)->paginate();
+        $user_model = new \app\common\model\Users();
+        foreach ($com_list as &$com){
+            $com['user'] = $user_model->field('name,face')->find($com['uid']);
+        }
+        $page = $com_list->render();
+        return view('goods_comment',['com_list'=>$com_list,'comment_count'=>$comment_count,'pjnum'=>$count,'gid'=>$gid,'page'=>$page,'step'=>$state]);
     }
     //加入收藏
     public function collect(){

@@ -1,0 +1,211 @@
+{extend name="member" /}
+{block name="member_content"}
+			<div class="personal_content">
+				<h2>我的订单</h2>
+				<div class="orders_det">
+						<div class="orders_det_top">
+							<div class="orders_det_num clearfix">
+								<div class="det_number"><span>订单编号：{$order.no}</span><span><strong>状态：</strong>{$order['state']}</span></div>
+								<div class="det_operate">
+									{$order['handle']|raw}
+								</div>
+							</div>
+							<!-- <p>提示：尊敬的客户，我们还未收到该订单的款项，请您尽快付款该订单会为您保留24小时，24小时之后如果还未付款，系统将自动取消。</p> -->
+						</div>
+						<div class="order_schedule">
+							<ul class="clearfix">
+								<li {if condition="$order['step'] egt 1"}class="cur"{/if}>
+									<span>1</span>
+									<em></em>
+									<p>提交订单<br />{:$order.create_time}</p>
+								</li>
+								<li {if condition="$order['step'] egt 2"}class="cur"{/if}>
+									<span>2</span>
+									<em></em>
+									<p>付款成功</p>
+								</li>
+								<li {if condition="$order['step'] egt 3"}class="cur"{/if}>
+									<span>3</span>
+									<em></em>
+									<p>正在配货</p>
+								</li>
+								<li {if condition="$order['step'] egt 4"}class="cur"{/if}>
+									<span>4</span>
+									<em></em>
+									<p>等待收货</p>
+								</li>
+								<li {if condition="$order['step'] eq 5"}class="cur"{/if}>
+									<span>5</span>
+									<em></em>
+									<p>完成</p>
+								</li>
+							</ul>
+						</div>
+						<div class="orders_det_info">
+							<div class="receipt_info">收货信息</div>
+							<div class="receipt_content clearfix">
+								<dl class="det_info">
+									<dt>基本信息</dt>
+									<dd>姓名：{$order['own_addr'][0]['username']}</dd>
+									<dd>收货地址：{$order['own_addr'][0]['addr']} {$order['own_addr'][0]['addr_extra']}</dd>
+									<dd>联系电话：{$order['own_addr'][0]['phone']}</dd>
+								</dl>
+								<dl class="kuaidi_info" style="display: none">
+									<dt>快递信息</dt>
+									<dd>物流公司：无</dd>
+									<dd>物流单号：无</dd>
+								</dl>
+							</div>
+						</div>
+						<div class="orders_det_inventory">
+							<div class="inventory">商品清单</div>
+							<div class="inventory_list">
+								<div class="inventory_list_title clearfix">
+									<div class="name">商品名称</div>
+									<div class="price">商品单价</div>
+									<div class="num">商品数量</div>
+									<div class="total">合计</div>
+								</div>
+								<ul>
+									{volist name="order.own_goods" id='goods'}
+									<li>
+										<div class="name">
+											<div class="img"><img src="{$goods.img}"></div>
+											<div class="title">{$goods.name}</div>
+										</div>
+										<div class="price">￥{$goods.price}</div>
+										<div class="num">X1{$goods.num}</div>
+										<div class="total">￥{$goods.num*$goods.price}</div>
+									</li>
+									{/volist}
+								</ul>
+							</div>
+						</div>
+						<div class="orders_price">
+							<p><span>{$order.number}件商品，总商品金额：</span><em>￥{$order.money}</em></p>
+							<p><span>运费：</span><em>￥0.00</em></p>
+							<p><span>优惠：</span><em>￥0.00</em></p>
+							<p><span>应付金额：</span><strong>￥{$order.money}</strong></p>
+						</div>
+					</div>
+			</div>
+{/block}
+{block name="member_footer"}
+	<div class="tips cancel_popup">
+		<div class="tips_title"><strong>温馨提示</strong><span class="tips_close"><i class="icon iconfont icon-cuo"></i></span></div>
+		<div class="tips_content"><img src="/assets/index/images/icon25.jpg"><span>您确定要取消订单吗？</span></div>
+		<div class="tips_bottom clearfix">
+			<a href="javascript:;" class="quxiao tips_close">取消</a>
+			<a href="orders.html" class="define" onclick="handleCancel(this);">确定</a>
+		</div>
+	</div>
+
+	<div class="tips return_popup">
+		<div class="tips_title"><strong>温馨提示</strong><span class="tips_close"><i class="icon iconfont icon-cuo"></i></span></div>
+		<div class="tips_content"><img src="/assets/index/images/icon25.jpg"><span>您确定要申请退货吗？</span></div>
+		<div class="tips_bottom clearfix">
+			<a href="javascript:;" class="quxiao tips_close">取消</a>
+			<a href="javascript:;" class="define tips_close">确定</a>
+		</div>
+	</div>
+
+	<div class="tips confirm_popup">
+		<div class="tips_title"><strong>温馨提示</strong><span class="tips_close"><i class="icon iconfont icon-cuo"></i></span></div>
+		<div class="tips_content"><img src="/assets/index/images/icon25.jpg"><span>您确定要确认收货吗？</span></div>
+		<div class="tips_bottom clearfix">
+			<a href="javascript:;" class="quxiao tips_close">取消</a>
+			<a href="orders.html" class="define" onclick="handleReceive(this);">确定</a>
+		</div>
+	</div>
+
+	<div class="tips remind_popup">
+		<div class="tips_title"><strong>温馨提示</strong><span class="tips_close"><i class="icon iconfont icon-cuo"></i></span></div>
+		<div class="tips_content"><img src="/assets/index/images/icon16.jpg"><span>提醒发货成功</span></div>
+		<div class="tips_bottom clearfix">
+			<a href="javascript:;" class="define tips_close">确定</a>
+		</div>
+	</div>
+
+	<!-- 弹框提示 -->
+	<script type="text/javascript">
+	    $(function(){
+
+	    	/*取消订单
+	        $('.orders .cancel_order').click(function(){
+	            $('.cancel_popup').show();
+	            $("body").append("<div class='tips_bg'></div>");
+	        });*/
+	        function orderCancel(order_id){
+				$(".cancel_popup").find('.define').attr('data-id',order_id);
+				$(".cancel_popup").show();
+				$("body").append("<div class='tips_bg'></div>");
+			}
+			function handleCancel(obj){
+				var oid = $(obj).attr('data-id');
+				if(oid){
+					sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'cancel'},1);
+				}
+			}
+	        /*申请退货*/
+	        $('.orders .sqth').click(function(){
+	            $('.return_popup').show();
+	            $("body").append("<div class='tips_bg'></div>");
+	        });
+
+	        /*确认收货
+	        $('.orders .confirm').click(function(){
+	            $('.confirm_popup').show();
+	            $("body").append("<div class='tips_bg'></div>");
+	        });*/
+	        function receiveOrder(oid){
+				if(oid){
+					$('.confirm_popup').find('.define').attr('data-id',oid);
+					$('.confirm_popup').show();
+	            	$("body").append("<div class='tips_bg'></div>");
+				}
+			}
+			function handleReceive(obj){
+				var oid = $(obj).attr('data-id');
+				if(oid){
+					sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'receive'},1);
+				}
+			}
+
+	        /*提醒发货
+	        $('.orders .tixing').click(function(){
+	            $('.remind_popup').show();
+	            $("body").append("<div class='tips_bg'></div>");
+	        });*/
+	        function remindOrder(oid){
+				if(oid){
+					sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'remind'},1);
+				}
+			}
+	        
+	        /*关闭弹窗*/
+	        $('.tips_close').click(function(){
+	            $('.confirm_popup').hide();
+	            $('.return_popup').hide();
+	            $('.remind_popup').hide();
+	            $('.cancel_popup').hide();
+	            $(".tips_bg").remove();
+	        });
+
+	    	function sendAjax(ajaxUrl,ajaxData,isre){
+				$.ajax({
+			  		url:ajaxUrl, 
+			  		data:ajaxData, 
+					dataType:'json',
+					type:'post', 
+					success:function (re){
+						alert(re.msg);
+				  		if(re.code && isre){
+				  			history.go(0);
+				  		}
+				  	}	
+			  	})
+			}
+	    });
+
+	</script>
+{/block}

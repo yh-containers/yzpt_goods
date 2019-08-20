@@ -1,0 +1,86 @@
+{extend name="member" /}
+{block name="member_content"}
+	<script src="/assets/index/js/imgUp.js"></script>
+	<script type="text/javascript" src="/assets/index/mobile/js/startScore.js"></script>
+		<div class="evaluation w1200">
+			<div class="evaluation_title">
+				<h3>评价订单</h3>
+				<p><span>订单号：<em>{$order_sn}</em></span><span>{:$create_time}</span></p>
+			</div>
+			<form id="toForm" action="{:url('member/handlecomment')}" method="post">
+			{volist name="goods_list" id="goods" key="k"}
+			<div class="evaluation_content clearfix">
+				<div class="left_pro">
+					<p><img src="{$goods.img}"></p>
+					<p>{$goods.name} [{$goods.spec_name}]</p>
+					<h3>￥{$goods.price}</h3>
+				</div>
+				<input type="hidden" name="gid[{$k}]" value="{$goods.gid}">
+				<input type="hidden" name="oid[{$k}]" value="{$goods.oid}">
+				<div class="right_evaluat">
+					<div id="starttwo{$goods.id}" class="store_rating clearfix">
+				        <span>描述相符：</span><div  class="star_score" data-id="{$goods.id}"></div>
+				        <input type="hidden" name="star[{$k}]" id="star_input{$goods.id}" value="1">
+				    </div>
+				    <!-- 评星数 -->
+					<script>
+						 scoreFun($("#starttwo{$goods.id}"),{
+					       fen_d:30,//每一个a的宽度
+					       ScoreGrade:5//a的个数 10或者
+					     });
+					</script>
+				    <div class="evaluat_content">
+						<label>评价晒单：</label>
+						<textarea  name="content[{$k}]" placeholder="谢谢你的感受吧，给万千想买的人一个参考~"></textarea>
+				    </div>
+				    <p>图片最多上传五张，快来上传吧~</p>
+					<div class="z_photo upimg-div clearfix">
+						<section class="z_file fl">
+							<img src="/assets/index/images/file02.jpg" class="add-img">
+							<input type="file" id="file{$goods.id}" data-key="{$k}" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
+							<input name='img[{$k}][]' value='' type='hidden'/>
+						</section>
+					</div>
+				</div>
+			</div>
+			{/volist}
+			<div class="evaluat_btn">
+				<input type="submit" value="发表评价">
+			</div>
+			</form>
+		</div>
+{/block}
+{block name="member_footer"}
+<script type="text/javascript">
+	$(function(){
+		$('.left_sort').hide();
+
+		$('#toForm').submit(function(){
+			var ajaxUrl = $(this).attr('action');
+		  	var ajaxData = $(this).serialize();
+		  	$.ajax({
+		  		url:ajaxUrl, 
+		  		data:ajaxData, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code){
+			  			window.location.href="/";
+			  		}else if(!re.code){
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		  	return false;
+		});
+	})
+</script>
+<!-- 提示框 -->
+<aside class="mask works-mask">
+	<div class="mask-content">
+		<p class="del-p ">您确定要删除图片吗？</p>
+		<p class="check-p"><span class="del-com wsdel-ok">确定</span><span class="wsdel-no">取消</span></p>
+	</div>
+</aside>
+
+{/block}
