@@ -207,4 +207,23 @@ class Index extends Common
         return action('info/video');
     }
 
+    //广告图
+    public function ad()
+    {
+        $type = input('type',0,'intval');
+
+        $list = [];
+        \app\common\model\Ad::where(['status'=>1,'type'=>$type])->order('sort asc')->select()->each(function($model,$index)use(&$list){
+            array_push($list,[
+                'title'=>$model['title'],
+                'img'=>$model['img'],
+                'url'=>$model['url'],
+            ]);
+        });
+
+
+
+        return $this->_resData(1,'获取成功',['list'=>$list]);
+    }
+
 }

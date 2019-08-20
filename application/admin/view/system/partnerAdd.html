@@ -28,7 +28,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">图片</label>
                         <div class="col-sm-10">
-                            <input type="hidden" name="img" value="{$model['img']}" />
+                            <input type="hidden" name="img" value="{:empty($model)?'':$model->getData('img')}" />
                             <button type="button" class="layui-btn upload-img" lay-data='{:action('upload/info',['type'=>'partner'])}'>
                                 <i class="layui-icon">&#xe67c;</i>图片
                             </button>

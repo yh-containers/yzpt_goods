@@ -7,6 +7,7 @@ class Activity extends BaseModel
 {
 
     protected $name='activity';
+    public static $fields_online=['线上','线下'];
 
     //发布时间
     protected function getReleaseDateAttr()
@@ -17,6 +18,33 @@ class Activity extends BaseModel
     protected function getImgAttr($value)
     {
         return self::handleFile($value);
+    }
+
+    protected function getUserNumAttr($value)
+    {
+        return empty($value)?[]:explode('-',$value);
+    }
+    protected function getUserNumStrAttr()
+    {
+        $num = $this->getAttr('user_num');
+        $str = '';
+        if(count($num)==2){
+            $str = ''.$num[0].'-'.$num[1].'名';
+        }elseif(count($num)==1){
+            $str = ''.$num[0].'名';
+        }
+        return $str;
+    }
+
+    protected function getStartDateAttr($value)
+    {
+        return empty($value)?'':substr($value,0,10);
+    }
+
+
+    protected function getEndDateAttr($value)
+    {
+        return empty($value)?'':substr($value,0,10);
     }
 
 
@@ -66,6 +94,34 @@ class Activity extends BaseModel
     }
 
 
+
+    /**
+     * 参加活动
+     * @param Users $user_model;
+     * @param array $data;
+     * @throws
+     * @return ActJoin
+     * */
+    public static function joinUs(Users $user_model,array $data=[])
+    {
+        empty($data['aid']) && exception('对象异常:id');
+        $model = ActJoin::where(['uid'=>$user_model->id,'aid'=>$data['aid']])->find();
+        !empty($model) && exception('您已报名活动,无需再次操作');
+
+        unset($data['id']);
+        $data['uid'] = $user_model->id;
+        $model = new ActJoin();
+        $validate =new \app\common\validate\ActJoin();
+        $validate->scene('api_join');
+        $model->actionAdd($data,$validate);
+//        $model->aid = $data['id'];
+//        $model->praise_date = empty($model->praise_date)?date('Y-m-d H:i:s'):null;
+//        $model->save();
+        return $model;
+    }
+
+
+
     //动态用户
     public function linkUsers()
     {
@@ -88,6 +144,12 @@ class Activity extends BaseModel
     public function linkJoinCount()
     {
         return $this->hasOne('ActJoin','aid')->field('aid,count(*) as join_count')->group('aid');
+    }
+
+    //参加状态
+    public function linkIsJoin()
+    {
+        return $this->hasOne('ActJoin','aid');
     }
 
 }

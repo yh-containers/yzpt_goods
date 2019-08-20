@@ -4,7 +4,7 @@ namespace app\api\controller;
 class Info extends Common
 {
     protected $need_login=true;
-    protected $ignore_action = ['dynamic','dydetail','dycomlist','activity','video','videocomlist'];
+    protected $ignore_action = ['dynamic','dydetail','dycomlist','activity','video','videodetail','videocomlist','welfare','welfareDetail'];
 
     /**
      * @var \app\common\model\Users
@@ -225,6 +225,47 @@ class Info extends Common
         return $this->_resData(1,'获取成功',$data);
     }
 
+
+    //视频详情
+    public function videoDetail()
+    {
+        $id = input('id',0,'intval');
+        $user_id = $this->user_id;
+
+        $where[] = ['id','=',$id];
+        $model=\app\common\model\Video::with(['linkCommentCount'
+            //点赞
+            ,'linkIsPraise'=>function($query)use($user_id){
+                $query->where('uid','=',$user_id);
+            }
+            //用户
+            ,'linkUsers'=>function($query)use($user_id){
+                $query->with(['linkHasFollow'=>function($query)use($user_id){
+                    $query->where('uid','=',$user_id);
+                }]);
+            }])->where($where)
+            ->order('id desc')->find();
+            $info = [
+                    'id'=>$model['id'],
+                    'uid'=>$model['uid'],
+                    'face'=>$model['link_users']['face'],
+                    'user_name'=>$model['link_users']['name'],
+                    'release_date'=>$model['releaseDate'],
+                    'title'=>$model['title'],
+                    'addr'=>'',
+                    'file'=>$model['fileGroup'],
+                    'share_times'=>$model['share_times'],
+                    'praise_times'=>$model['praise_times'],
+                    'views'=>$model['views'],
+                    'comment_times'=> isset($model['link_comment_count']['comment_count'])?$model['link_comment_count']['comment_count']:0,
+                    'is_follow'=>empty($model['link_users']['link_has_follow'])?0:1,
+                    'is_praise'=>empty($model['link_is_praise'])?0:1,
+                ];
+        $data = ['info'=>$info];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
+
     //发布视频
     public function videoRelease()
     {
@@ -324,9 +365,8 @@ class Info extends Common
         $user_id = $this->user_id;
         $where = [];
         $list =[];
-        $info=\app\common\model\Activity::with(['linkCommentCount','linkJoinCount','linkUsers'
-            //点赞
-            ,'linkIsPraise'=>function($query)use($user_id){
+        $info=\app\common\model\Activity::with(['linkJoinCount','linkUsers'
+            ,'linkIsJoin'=>function($query)use($user_id){
                 $query->where('uid','=',$user_id);
             }
             ])->where($where)
@@ -340,11 +380,18 @@ class Info extends Common
                     'user_name'=>$item['link_users']['name'],
                     'title'=>$item['title'],
                     'img'=>$item['img'],
+                    'content'=>$item['content'],
                     'share_times'=>$item['share_times'],
                     'praise_times'=>$item['praise_times'],
+                    'join_num' => empty($item['link_join_count']) ? 0 : $item['link_join_count']['join_count'],
                     'views'=>$item['views'],
-                    'comment_times'=> isset($item['link_comment_count']['comment_count'])?$item['link_comment_count']['comment_count']:0,
-                    'is_praise'=>empty($item['link_is_praise'])?0:1,
+                    'comment_times'=> 0,
+                    'start_date'=> $item['start_date'],
+                    'end_date'=> $item['end_date'],
+                    'date_str'=> $item['end_date'].'至'.$item['end_date'],
+                    'addr'=> $item['addr'],
+                    'addr_extra'=> $item['addr_extra'],
+                    'is_join'=>empty($item['link_is_join'])?0:1,
                 ]);
             });
         $data = ['list'=>$list,'total_page'=>$info->lastPage()];
@@ -368,6 +415,48 @@ class Info extends Common
         return $this->_resData(1,'发布成功');
     }
 
+    //活动详情
+    public function actDetail()
+    {
+        $id = input('id',0,'intval');
+        $user_id = $this->user_id;
+
+        $model=\app\common\model\Activity::with(['linkJoinCount','linkUsers'
+            ,'linkIsJoin'=>function($query)use($user_id){
+                $query->where('uid','=',$user_id);
+            }
+        ])->where(['status'=>1,'id'=>$id])
+            ->order('id desc')->find();
+        empty($model) && exception('活动不存在');
+
+
+        $info=[
+            'id'=>$model['id'],
+            'uid'=>$model['uid'],
+            'face'=>$model['link_users']['face'],
+            'user_name'=>$model['link_users']['name'],
+            'title'=>$model['title'],
+            'online'=>$model['online'],
+            'user_num'=>$model['user_num'],
+            'user_num_str'=>$model['user_num_str'],
+            'img'=>$model['img'],
+            'content'=>$model['content'],
+            'share_times'=>$model['share_times'],
+            'praise_times'=>$model['praise_times'],
+            'join_num' => empty($model['link_join_count']) ? 0 : $model['link_join_count']['join_count'],
+            'views'=>$model['views'],
+            'comment_times'=> 0,
+            'start_date'=> (string)$model['start_date'],
+            'end_date'=> (string)$model['end_date'],
+            'date_str'=> $model['end_date'].'至'.$model['end_date'],
+            'addr'=> $model['addr'],
+            'addr_extra'=> $model['addr_extra'],
+            'is_join'=>empty($model['link_is_join'])?0:1,
+        ];
+        return $this->_resData(1,'获取成功',$info);
+    }
+
+
 
     //评论--
     public function actComment()
@@ -381,6 +470,21 @@ class Info extends Common
 
         return $this->_resData(1,'评论成功');
     }
+
+    //报名活动
+    public function actJoin()
+    {
+        $php_input = input();
+        try{
+            \app\common\model\Activity::joinUs($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+
+        return $this->_resData(1,'加入成功');
+    }
+
+
     //-点赞
     public function actPraise()
     {
@@ -408,9 +512,46 @@ class Info extends Common
     }
 
 
-    //好友列表
-    public function friend()
+    //福利列表
+    public function welfare()
     {
-
+        $list = [];
+        $info=\app\common\model\Welfare::where(['status'=>1])
+            ->order('sort desc')->paginate()
+            ->each(function($item,$index)use(&$list){
+//                dump($item);exit;
+                array_push($list,[
+                    'id'=>$item['id'],
+                    'title'=>$item['title'],
+                    'img'=>$item['img'],
+                    'times'=>$item['times'],
+                    'num_intro'=>'已有'.$item['times'].'人体验过',
+                ]);
+            });
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
     }
+
+    //福利列表
+    public function welfareDetail()
+    {
+        $id = input('id',0,'intval');
+
+        $model=\app\common\model\Welfare::where(['status'=>1])
+            ->order('sort desc')->get($id);
+        empty($model) && exception('福利已丢失');
+
+        $info=[
+            'id'=>$model['id'],
+            'title'=>$model['title'],
+            'img'=>$model['img'],
+            'times'=>$model['times'],
+            'num_intro'=>'已有'.$model['times'].'人体验过',
+            'content'=>$model['content'],
+        ];
+
+        return $this->_resData(1,'获取成功',$info);
+    }
+
+
 }
