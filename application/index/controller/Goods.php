@@ -129,7 +129,7 @@ class Goods extends Common
         $where['grade'] = ['in','4,5'];
         $count['best'] = $com_model->where($where)->count();
         //好评率
-        $count['best_pro'] = round($count['best']/$comment_count,2)*100;
+        $count['best_pro'] = $count['best'] ? round($count['best']/$comment_count,2)*100 : 0;
         //中评
         $where['grade'] = 3;
         $count['normal'] = $com_model->where($where)->count();
