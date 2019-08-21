@@ -115,6 +115,19 @@ class Users extends BaseModel
 
     public static function init()
     {
+        //用户新增事件
+        self::event('after_insert', function ($model) {
+            //绑定用户
+            $config_chat_url = config('chat.url');
+            $config_chat_route = config('chat.route');
+            if(!empty($config_chat_url)){
+                //注册聊天用户
+                if(isset($config_chat_route['reg'])){
+                    $url = $config_chat_url.$config_chat_route['reg'].'?user_id='.$model['id'].'&user_name='.$model['name'].'&user_face='.self::handleFile($model['face']);
+                    file_get_contents($url);
+                }
+            }
+        });
         //养分日志记录
         self::event('raise_logs', function ($model) {
             UsersRaiseLogs::recordLog($model['id'],$model->c_raise_num,$model->c_raise_type,$model->c_raise_intro);

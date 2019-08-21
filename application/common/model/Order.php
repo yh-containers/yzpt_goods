@@ -8,6 +8,9 @@ use think\model\concern\SoftDelete;
 class Order extends BaseModel
 {
     use SoftDelete;
+    //订单有效时间--有效时间为1小时  单位秒
+    const ORDER_EXP_TIME = 7200;
+
     public static $fields_step = [
         ['name'=>'支付流程','field'=>'status'],
         ['name'=>'发货流程','field'=>'is_send'],
@@ -98,5 +101,46 @@ class Order extends BaseModel
         $bool = $model->save();
         !$bool && exception('操作异常');
         return $model;
+    }
+
+    //订单数据
+    public function getOrderPayInfo($mode)
+    {
+        return [
+            'body' => '订单支付',
+            'attach' => 'attach',
+            'no' => $this->getAttr('no'),
+//            'pay_money' => $this->getAttribute('pay_money'),
+            'pay_money' => 0.01,
+            'expire_time' => self::ORDER_EXP_TIME,
+            'goods_tag' => 'goods',
+            'notify_url' => url('wechat/notify',['mode'=>$mode],false,true),
+        ];
+    }
+
+
+    //调整订单支付已完成
+    protected function order_success()
+    {
+        if(!empty($this->step_flow)){
+            return true;
+        }
+        //调整订单信息
+        $this->step_flow = 3;
+        $this->status = 1;
+        $this->pay_time = time();
+        return $this->save();
+    }
+
+    //订单回调通知
+    public static function handleNotify($order_no,array $data)
+    {
+        $model = self::where(['no'=>$order_no])->find();
+        if(empty($model)){
+            return;
+        }
+        //保存第三方支付信息
+        $model->setAttr('pay_info',json_encode($data));
+        return $model->order_success();
     }
 }
