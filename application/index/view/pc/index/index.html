@@ -107,7 +107,7 @@
             </div>
             {else/}
             <div class="right">
-                {if($cg['goods_list'][0])}<p><a href="{:url('Goods/detail',['id'=>$cg['goods_list'][0]['id']])}"><img src="{$cg['goods_list'][0]['goods_image']}"></a></p>{/if}
+                {if(isset($cg['goods_list'][0]))}<p><a href="{:url('Goods/detail',['id'=>$cg['goods_list'][0]['id']])}"><img src="{$cg['goods_list'][0]['goods_image']}"></a></p>{/if}
                 {php}unset($cg['goods_list'][0]);{/php}
                 <ul>
                     {volist name="cg.goods_list" id="rgs" key="rks"}
