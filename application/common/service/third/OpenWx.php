@@ -28,11 +28,10 @@ class OpenWx
      * */
     public static function codeToAct($mode,$code)
     {
-        $wechat = self::config();
         //换取微信信息
         $param = [
-            'appid' => $wechat->config->GetAppId(),
-            'secret' => $wechat->config->GetAppSecret(),
+            'appid' => self::config($mode,'app_id'),
+            'secret' => self::config($mode,'app_secret'),
             'code' => $code,
             'grant_type' => 'authorization_code',
         ];
