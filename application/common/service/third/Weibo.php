@@ -37,6 +37,7 @@ class Weibo
             //报错
             exception('授权异常:'.$info['errmsg'].' 错误代码:'.$info['errcode']);
         }else{
+            dump($info);
             $user_info = self::userInfo($info['uid'],$info['access_token']);
 
             return [$info,$user_info];
