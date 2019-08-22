@@ -193,6 +193,21 @@ class Index extends Common
 
     //第三方登录
     public function thirdLogin(){
+        $mode = input('mode');
+        $code = input('code');
+        if(empty($code)){
+            return '授权异常';
+        }
+
+        try{
+            if($mode=='weibo'){
+                list($auth_info,$user_info) = \app\common\service\third\Weibo::codeToAct($code);
+                dump($auth_info);
+                dump($user_info);
+            }
+        }catch (\Exception $e){
+            return $e->getMessage();
+        }
 
     }
 }
