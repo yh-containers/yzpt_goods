@@ -16,7 +16,7 @@ class Pay extends Common
         if($mode=='wechat'){
             $pay =new \app\common\service\third\Wechat();
         }elseif($mode=='alipay'){
-            $pay =new \app\common\service\third\alipay();
+            $pay =new \app\common\service\third\Alipay();
         }
         //查询订单
         $model = \app\common\model\Order::get($order_id);

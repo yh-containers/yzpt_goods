@@ -190,4 +190,9 @@ class Index extends Common
     public function phpinfo(){
         phpinfo();
     }
+
+    //第三方登录
+    public function thirdLogin(){
+
+    }
 }

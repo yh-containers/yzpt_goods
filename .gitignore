@@ -4,5 +4,6 @@
 /uploads
 /runtime
 /ueditor
+/config/third.php
 .env
 .DS_Store
