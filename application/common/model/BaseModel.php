@@ -86,6 +86,7 @@ class BaseModel extends Model
     {
 
         if(empty($file)) return '';
+        if(preg_match('/^https?:\/\//',$file)) return $file;
         //当前模块
 //        $module = request()->module();
 //        if($module=='api'){

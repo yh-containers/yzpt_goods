@@ -124,7 +124,7 @@ class Users extends BaseModel
                 //注册聊天用户
                 if(isset($config_chat_route['reg'])){
                     $url = $config_chat_url.$config_chat_route['reg'].'?user_id='.$model['id'].'&user_name='.$model['name'].'&user_face='.self::handleFile($model['face']);
-                    file_get_contents($url);
+                    try{ file_get_contents($url);  }catch (\Exception $e){}
                 }
             }
         });
@@ -135,32 +135,105 @@ class Users extends BaseModel
     }
 
 
+
+
+    /**
+     * 用户第三方登录
+     * @param string $mode 登录方式
+     * @param array $data 模式密码/验证码
+     * @param int $mode 登录模式 0密码  1验证码
+     * @throws
+     * @return self
+     * */
+    public static function handleThirdLogin($mode,array $data=[])
+    {
+        $limit_mode = ['qq','weibo','wechat'];
+        empty($mode) && exception('登录方式异常');
+        empty(in_array($mode,$limit_mode)) && exception('不支持该登录方式');
+
+        empty($data['open_id']) && exception('参数异常:open_id');
+        empty($data['access_token']) && exception('参数异常:access_token');
+
+        if($mode=='qq'){
+            $where['qq_openid'] = $data['open_id'];
+        }elseif ($mode=='wechat'){
+            $where['wx_openid'] = $data['open_id'];
+        }elseif ($mode=='weibo'){
+            $where['wb_openid'] = $data['open_id'];
+        }
+
+        empty($where) && empty('条件异常:');
+        $model = self::where($where)->find();
+        empty($model) && exception('用户未注册',-2);
+
+        return $model;
+
+    }
+
+
     /**
      * 用户登录
      * @param string $account 登录帐号
      * @param string $mode_str 模式密码/验证码
      * @param int $mode 登录模式 0密码  1验证码
+     * @param array $php_input 提交数据
      * @throws
      * @return self
      * */
-    public static function handleLogin($account,$mode_str,$mode=0)
+    public static function handleLogin($account,$mode_str,$mode=0,array $php_input=[])
     {
         empty($account) && exception('请输入手机号');
         empty($mode_str) && exception('请输入'.($mode==1?'验证码':'密码'));
+        $auth_info = empty($php_input['auth_info'])?'':json_decode($php_input['auth_info'],true);
+
         $model = self::where(['phone'=>$account])->find();
+
+        $data = [];
+        if(!empty($auth_info) && isset($auth_info['mode']) && isset($auth_info['open_id']) && isset($auth_info['access_token'])){
+            //绑定第三方信息
+            if($auth_info['mode']=='wechat'){
+                $data['wx_openid'] = $auth_info['open_id'];
+                $third_update['wx_openid']='';
+            }elseif ($auth_info['mode']=='qq'){
+                $data['qq_openid'] = $auth_info['open_id'];
+                $third_update['qq_openid']='';
+            }elseif ($auth_info['mode']=='weibo'){
+                $data['wb_openid'] = $auth_info['open_id'];
+                $third_update['wb_openid']='';
+            }
+        }
+
         if($mode==1){
             //验证码登录
-            //验证验证码
             Sms::validVerify(0,$account,$mode_str);
-
             if(empty($model)){
                 //创建用户
                 $model = new self();
-                $model->data([
-                    'phone' => $account,
-                ]);
-                $bool = $model->save();
-                empty($bool) && exception('用户创建失败');
+                //绑定手机号码
+                $data['phone'] = $account;
+                if(!empty($auth_info) && isset($auth_info['mode']) && isset($auth_info['open_id']) && isset($auth_info['access_token'])){
+                    //新注册使用第三方基本信息
+                    try{
+                        if($auth_info['mode']=='wechat'){
+                            $auth_user_info = \app\common\service\third\OpenWx::actToUserInfo($auth_info['access_token'],$auth_info['open_id']);
+                            $data['name'] = $auth_user_info['nickname'];
+                            $data['face'] = $auth_user_info['headimgurl'];
+                            $data['sex'] = $auth_user_info['sex']==1?1:($auth_user_info['sex']==2?2:0); //普通用户性别，1为男性，2为女性
+                        }elseif ($auth_info['mode']=='qq'){
+//                            \app\common\service\third\QQ::actToUserInfo($auth_info['access_token'],$auth_info['open_id']);
+                        }elseif ($auth_info['mode']=='weibo'){
+                            $auth_user_info = \app\common\service\third\Weibo::actToUserInfo($auth_info['access_token'],$auth_info['open_id']);
+
+                            $data['name'] = $auth_user_info['name'];
+                            $data['face'] = $auth_user_info['avatar_large'];
+                            $data['sex'] = $auth_user_info['gender']=='m'?1:($auth_user_info['gender']=='f'?2:0); //性别，m：男、f：女、n：未知
+                        }
+                        trace('auth_user_info:'.json_encode($auth_user_info));
+                    }catch (\Exception $e){
+                        trace('auth_user_info_error:'.$e->getMessage());
+                    }
+
+                }
             }
 
         }else{
@@ -168,8 +241,24 @@ class Users extends BaseModel
             empty($model) && exception('用户名或密码错误');
             $model['password'] != self::generatePwd($mode_str,$model['salt']) && exception('用户名或密码错误.');
         }
+        if(!empty($data)){
+            //赋值数据
+            foreach ($data as $key=>$vo){
+                $model->setAttr($key,$vo);
+            }
+            $bool = $model->save();
+            empty($bool) && exception('更新失败');
 
-        $model->getAttr('status') !=1 && exception('非正常状态,无法进行登录');
+
+        }
+        //模型所有数据
+        $model_data = $model->getData();
+        isset($model_data['status']) && $model->getAttr('status') !=1 && exception('非正常状态,无法进行登录');
+
+        //移除其它用户绑定的第三方信息
+        !empty($third_update) && self::update($third_update,[['id','!=',$model->id]]);
+
+
 
         //验证成功
         return $model;

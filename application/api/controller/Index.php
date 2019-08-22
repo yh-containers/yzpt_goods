@@ -18,8 +18,9 @@ class Index extends Common
         $account = input('account');
         $mode_str = input('mode_str');
         $mode = input('mode',0,'intval');
+        $data = input();
         try{
-            $model = \app\common\model\Users::handleLogin($account,$mode_str,$mode);
+            $model = \app\common\model\Users::handleLogin($account,$mode_str,$mode,$data);
         }catch (\Exception $e){
             return $this->_resData(0,$e->getMessage());
         }
@@ -28,6 +29,23 @@ class Index extends Common
             'user_token' => $model->generateUserToken(),
         ]);
     }
+
+    //第三方登录流程
+    public function loginThird()
+    {
+        $mode = input('mode');
+        $php_input = input();
+        try{
+            $model = \app\common\model\Users::handleThirdLogin($mode,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData($e->getCode(),$e->getMessage());
+        }
+
+        return $this->_resData(1,'登录成功',[
+            'user_token' => $model->generateUserToken(),
+        ]);
+    }
+
 
     //用户注册
     public function reg()

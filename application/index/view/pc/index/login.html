@@ -86,7 +86,7 @@
 	var obj = new WxLogin({
 		self_redirect:false,
 		id:"login_container",
-		appid: "wx1ac7462d2eceff8a",
+		appid: "{:\\app\\common\\service\\third\\OpenWx::config('wechat','app_id')}",
 		scope: "snsapi_login",
 		redirect_uri: "{:url('index/wechat_login')}",
 		state: "",

@@ -11,6 +11,9 @@ class Test extends Common
 
     public function index()
     {
+
+        dump(str_replace(":","",strtolower('03:32:38:B6:8C:A0:A6:1C:25:27:A8:D5:F8:AC:BE:20:6E:CD:78:12')));
+
         dump(config('chat.url'));
         $config_chat = config('chat.url');
         $config_chat_route = config('chat.route');
@@ -31,8 +34,8 @@ class Test extends Common
 //        new \app\common\service\third\Alipay();
 //        $access_token = \app\common\service\third\Wechat::accessToken();
 //        dump($access_token);
-        $wechat = new \app\common\service\third\Wechat();
-        $wechat->nativePay(\app\common\model\Order::get(3));
+//        $wechat = new \app\common\service\third\Wechat();
+//        $wechat->nativePay(\app\common\model\Order::get(3));
     }
 
 }

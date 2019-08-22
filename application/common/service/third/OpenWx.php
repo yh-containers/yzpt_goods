@@ -6,31 +6,29 @@ class OpenWx
 
 
 
-    protected static $config_instance;
-
-
-
-    /**
-     * 获取微信配置单例
-     * */
-    public static function configInstance()
+    public static function config($app=null,$key=null)
     {
-        $instance = self::$config_instance;
-        if(empty($instance)){
-            $instance = new WechatConfg();
+        $config = config('third.wx_open');
+        if(is_null($app) && !isset($config[$app])){
+            return $config;
         }
-        return $instance;
+        $config = $config[$app];
+        if(is_null($key) && !isset($config[$key])){
+            return $config;
+        }
+        return $config[$key];
     }
 
     /**
      * 获取code换access_token
+     * @param string $mode 平台 app/web
      * @param string $code 用户换取access_token的code
      * @throws
      * @return array
      * */
-    public static function codeToAct($code)
+    public static function codeToAct($mode,$code)
     {
-        $wechat = self::configInstance();
+        $wechat = self::config();
         //换取微信信息
         $param = [
             'appid' => $wechat->config->GetAppId(),

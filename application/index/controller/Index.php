@@ -201,10 +201,14 @@ class Index extends Common
 
         try{
             if($mode=='weibo'){
-                list($auth_info,$user_info) = \app\common\service\third\Weibo::codeToAct($code);
-                dump($auth_info);
-                dump($user_info);
+                $auth_info = \app\common\service\third\Weibo::codeToAct('web',$code);
+            }elseif($mode=='wechat'){
+                $auth_info = \app\common\service\third\OpenWx::codeToAct('web',$code);
+            }elseif ($mode=='qq'){
+                $auth_info = \app\common\service\third\QQ::codeToAct($code);
             }
+            $auth_info['mode'] = $mode;
+            dump($auth_info);
         }catch (\Exception $e){
             return $e->getMessage();
         }
