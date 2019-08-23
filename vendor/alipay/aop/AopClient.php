@@ -416,7 +416,7 @@ class AopClient {
 	protected function buildRequestForm($para_temp) {
 		
 		$sHtml = "<form id='alipaysubmit' name='alipaysubmit' action='".$this->gatewayUrl."?charset=".trim($this->postCharset)."' method='POST'>";
-		while (list ($key, $val) = each ($para_temp)) {
+        foreach ($para_temp as $key => $val) {
 			if (false === $this->checkEmpty($val)) {
 				//$val = $this->characet($val, $this->postCharset);
 				$val = str_replace("'","&apos;",$val);
@@ -679,11 +679,12 @@ class AopClient {
 			//转换为openssl格式密钥
 			$res = openssl_get_publickey($pubKey);
 		}
-
+//		dump($sign);
+//		dump($data);
+//        dump(openssl_verify($data, base64_decode($sign), $res, OPENSSL_ALGO_SHA256));
 		($res) or die('支付宝RSA公钥错误。请检查公钥文件格式是否正确');  
 
 		//调用openssl内置方法验签，返回bool值
-
 		$result = FALSE;
 		if ("RSA2" == $signType) {
 			$result = (openssl_verify($data, base64_decode($sign), $res, OPENSSL_ALGO_SHA256)===1);

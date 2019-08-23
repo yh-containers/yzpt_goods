@@ -1,7 +1,7 @@
 <?php
 namespace app\common\service\third;
 
-require_once \think\facade\Env::get('vendor_path').'wechat\lib\WxPay.Data.php';
+require_once \think\facade\Env::get('vendor_path').'wechat/lib/WxPay.Data.php';
 class Wechat implements IPay
 {
 
@@ -60,7 +60,7 @@ class Wechat implements IPay
     public function appPay(\think\Model $model)
     {
         //引入第三方
-        require_once \think\facade\Env::get('vendor_path').'wechat\lib\WxPay.Api.php';
+        require_once \think\facade\Env::get('vendor_path').'wechat/lib/WxPay.Api.php';
 
         $input = $this->handleOrderInput($model,'APP');
         $input->SetBody(config('app.app_name'));
@@ -102,7 +102,7 @@ class Wechat implements IPay
     public function nativePay(\think\Model $model)
     {
         //引入第三方
-        require_once \think\facade\Env::get('vendor_path').'wechat\lib\WxPay.Api.php';
+        require_once \think\facade\Env::get('vendor_path').'wechat/lib/WxPay.Api.php';
 //        require_once \think\facade\Env::get('vendor_path').'wechat\example\WxPay.NativePay.php';
 
         $input=$this->handleOrderInput($model,'NATIVE');
@@ -136,9 +136,15 @@ class Wechat implements IPay
     //支付回调
     public static function notify()
     {
+        //引入第三方
+        require_once \think\facade\Env::get('vendor_path').'wechat/lib/WxPay.Api.php';
+//        $data = file_get_contents("php://input");
+//        \think\facade\Log::write("wechat-notify:" .json_encode(input()),'-------input-----');
+//        \think\facade\Log::write("wechat-notify:" .$data,'-----file_get_contents-----');
         $config = self::configInstance();
         $notify = new PayNotifyCallBack();
         $notify->Handle($config,false);
+//        return 'success';
     }
 
 
@@ -147,7 +153,7 @@ class Wechat implements IPay
 }
 
 
-require_once \think\facade\Env::get('vendor_path').'wechat\lib\WxPay.Config.Interface.php';
+require_once \think\facade\Env::get('vendor_path').'wechat/lib/WxPay.Config.Interface.php';
 class WechatConfg extends \WxPayConfigInterface
 {
     protected $APPID = '';
@@ -211,7 +217,7 @@ class WechatConfg extends \WxPayConfigInterface
 }
 
 //回调处理逻辑
-require_once \think\facade\Env::get('vendor_path').'wechat\lib\WxPay.Notify.php';
+require_once \think\facade\Env::get('vendor_path').'wechat/lib/WxPay.Notify.php';
 class PayNotifyCallBack extends \WxPayNotify
 {
 
@@ -223,7 +229,7 @@ class PayNotifyCallBack extends \WxPayNotify
         $input->SetTransaction_id($transaction_id);
 
 //        $config = new WxPayConfig();
-        $result = \WxPayApi::orderQuery(self::configInstance(), $input);
+        $result = \WxPayApi::orderQuery(Wechat::configInstance(), $input);
 //        Log::DEBUG("query:" . json_encode($result));
         trace("query:" . json_encode($result),'微信支付回调查询'.__METHOD__);
 

@@ -114,7 +114,7 @@ class Order extends BaseModel
             'pay_money' => 0.01,
             'expire_time' => self::ORDER_EXP_TIME,
             'goods_tag' => 'goods',
-            'notify_url' => url('wechat/notify',['mode'=>$mode],false,true),
+            'notify_url' => url('pay/notify',['mode'=>$mode],false,true),
         ];
     }
 
@@ -122,9 +122,9 @@ class Order extends BaseModel
     //调整订单支付已完成
     protected function order_success()
     {
-        if(!empty($this->step_flow)){
-            return true;
-        }
+//        if(!empty($this->step_flow)){
+//            return true;
+//        }
         //调整订单信息
         $this->step_flow = 3;
         $this->status = 1;
