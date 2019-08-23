@@ -256,7 +256,7 @@ class Users extends BaseModel
         isset($model_data['status']) && $model->getAttr('status') !=1 && exception('非正常状态,无法进行登录');
 
         //移除其它用户绑定的第三方信息
-        !empty($third_update) && self::update($third_update,[['id','!=',$model->id]]);
+        !empty($third_update) && self::update($third_update,[['id','<>',$model->id]]);
 
 
 
