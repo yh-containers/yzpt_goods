@@ -21,7 +21,7 @@ class Order extends BaseModel
         [
             'name'=>['待支付','已支付','已取消'],
             'handle'=>['<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="/order/payorder/order_id/{order_id}" class="red">立即付款</a>','<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="javascript:;" class="red" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel">已取消</a>'],
-            'w_handle'=>['<a href="/Order/payorder?order_id={order.id}" class="fukuan orange">立即付款</a><a href="javascript:;" class="cancel_order" onclick="orderCancel({order_id});">取消订单</a>','<a href="javascript:;" class="tixing orange_bg" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel_order">已取消</a>'],
+            'w_handle'=>['<a href="/Order/payorder?order_id={order_id}" class="fukuan orange">立即付款</a><a href="javascript:;" class="cancel_order" onclick="orderCancel({order_id});">取消订单</a>','<a href="javascript:;" class="tixing orange_bg" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel_order">已取消</a>'],
             'field'=>'status'
         ],
         [

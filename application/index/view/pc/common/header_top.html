@@ -4,7 +4,7 @@
             <div class="header_login">
                 <a href="/">返回首页</a>
                 {if condition="$Think.session.uid"}
-                <a href="personal.html">{$Think.session.userinfo.uname}</a>
+                <a href="/Member/index">{$Think.session.userinfo.uname}</a>
                 <a href="{:url('Index/loginout')}" class="reg">退出</a>
                 {else/}
                 <a href="{:url('Index/login')}">请登录</a>

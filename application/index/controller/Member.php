@@ -353,4 +353,8 @@ class Member extends Common
             echo json_encode($res);die;
         }
     }
+    //我的消息
+    public function message(){
+        return view('message');
+    }
 }

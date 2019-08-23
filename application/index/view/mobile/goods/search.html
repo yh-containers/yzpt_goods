@@ -1,0 +1,46 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="bg"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">搜索</div>
+	</header>
+
+	<main class="main mgtop">
+		<div class="search_box clearfix">
+			<i class="icon iconfont icon-search"></i>
+			<form action="{:url('Goods/goods_list')}">
+			<input type="search" name="search" class="ssk" placeholder="请输入搜索关键词">
+			<input type="submit" name="" class="ss" value="搜索">
+			</form>
+		</div>
+		<div class="search">
+			<div class="search_hot">
+				<div class="search_title"><h2>热门搜索</h2></div>
+				<div class="search_content">
+					<a href="">治疗器</a>
+					<a href="">治疗床牵引器</a>
+					<a href="">医用口罩</a>
+					<a href="">医用消毒器</a>
+				</div>
+			</div>
+			<div class="search_recording">
+				<div class="search_title"><h2>搜索历史</h2><i class="icon iconfont icon-shanchu" onclick=""></i></div>
+				<div class="search_content">
+					{volist name="search_goods" id="sv"}
+					<a href="{:url('Goods/goods_list')}?search={$sv}">{$sv}</a>
+					{/volist}
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script type="text/javascript">
+		$(".search_recording .icon-shanchu").click(function(){
+			$.post("{:url('Goods/search')}",{'1':1},function(e){});
+			$(".search_recording .search_content").empty();
+		});
+	</script>
+{/block}
+{block name="footer"}{/block}
