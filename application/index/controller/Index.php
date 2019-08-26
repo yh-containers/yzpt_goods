@@ -71,10 +71,35 @@ class Index extends Common
             echo json_encode($res);die;
         }
     }
+    //手机号登录
+    public function mobile_login(){
+        if($this->request->isAjax()) {
+            $res = ['code' => 0, 'msg' => ''];
+            $code =  $this->request->param('code');
+            $phone =  $this->request->param('phone');
+            try{
+                //\app\common\model\Sms::validVerify(0,$phone,$code);
+                $model = \app\common\model\Users::handleLogin($phone,$code,1);
+            } catch (\Exception $e) {
+                $res['msg'] = $e->getMessage();
+                return json($res);
+            }
+            session('userinfo',[
+                'uid' => $model['id'],
+                'uname' => $model['name'],
+                'face' => $model['face']
+            ]);
+            session('uid',$model['id']);
+            $res['code'] = 1;
+            return json($res);
+        }
+    }
+    //退出
     public function loginout(){
         session('userinfo',null);
         session('uid',null);
-        $this->success("退出成功");
+        //$this->success("退出成功");
+        $this->redirect('Index/index');
     }
 //注册三步
     public function register(){
@@ -191,7 +216,7 @@ class Index extends Common
         phpinfo();
     }
 
-    //第三方登录
+//第三方登录
     public function thirdLogin(){
         $mode = input('mode');
         $code = input('code');
@@ -212,6 +237,34 @@ class Index extends Common
         }catch (\Exception $e){
             return $e->getMessage();
         }
+    }
 
+//忘记密码
+    public function forget_pwd(){
+        if(session('uid')){
+            $this->redirect(url('Index/index'));
+        }
+        //手机号 验证码验证
+        if($this->request->isAjax()) {
+            $res = ['code' => 0, 'msg' => ''];
+            $code =  $this->request->param('code');
+            $phone =  $this->request->param('phone');
+            $password =  $this->request->param('password');
+            $confirm_password =  $this->request->param('confirm_password');
+            if($password != $confirm_password){
+                $res['msg'] = '两次密码不一致';
+                return json($res);
+            }
+            try{
+                \app\common\model\Sms::validVerify(1,$phone,$code);
+                $model = \app\common\model\Users::handleForget(['phone'=>$phone,'password'=>$password]);
+            } catch (\Exception $e) {
+                $res['msg'] = $e->getMessage();
+                return json($res);
+            }
+            $res['code'] = 1;
+            return json($res);
+        }
+        return view('forget_pwd');
     }
 }

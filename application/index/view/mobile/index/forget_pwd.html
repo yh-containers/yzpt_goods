@@ -1,0 +1,111 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="bg"}{/block}
+{block name="center"}
+	<header class="header">
+		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+		<div class="header_title">找回密码</div>
+	</header>
+	<main class="main">
+		<div class="login">
+			<div class="logo"><img src="/assets/index/images/logo.png"></div>
+			<div class="login_box">
+				<form id="toForm" action="{:url('index/forget_pwd')}" tz_url="{:url('Index/login')}">
+				<div class="box">
+					<span class="icon iconfont icon-ziyuan"></span>
+					<input type="text" class="requires" name="phone" placeholder="请输入手机号">
+				</div>
+				<div class="box">
+					<span class="icon iconfont icon-yanzhengma"></span>
+					<input type="text" name="code" class="code requires" placeholder="请输入短信验证码">
+					<button type="button" class="obtain" onclick="sendemail()">获取验证码</button>
+				</div>
+				<div class="box">
+					<span class="icon iconfont icon-yanzhengma"></span>
+					<input type="password" name="password" class="code requires" placeholder="请输入新密码">
+				</div>
+				<div class="box">
+					<span class="icon iconfont icon-yanzhengma"></span>
+					<input type="password" name="confirm_password" class="code requires" placeholder="请再次输入新密码">
+				</div>
+				<div class="btn"><input type="submit" name="" value="提交"></div>
+				</form>
+			</div>
+		</div>
+	</main>
+
+	<!--验证码倒计时-->
+	<script type="text/javascript">
+		var countdown=60; 
+		function sendemail(){
+			var phone = $('input[name=phone]').val();
+			if(phone.length != 11){
+				return false;
+			}
+			$.ajax({
+				url:'{:url("Index/sendSms")}', 
+				data:{'phone':phone,'type':1},
+				dataType:'json',
+				type:'post', 
+				success:function (e){
+					if(e.code){
+			    		var obj = $(".obtain");
+			    		settime(obj);
+			    	}else{
+			    		alert(e.msg);
+			    	}
+			    }
+		    })
+		}
+		function settime(obj) { //发送验证码倒计时
+		    if (countdown == 0) { 
+		        obj.attr('disabled',false); 
+		        //obj.removeattr("disabled"); 
+		        obj.text("获取验证码");
+		        countdown = 60; 
+		        obj.css("background","");
+		        return;
+		    } else { 
+		        obj.attr('disabled',true);
+		        obj.text("重新发送(" + countdown + ")");
+		        countdown--; 
+		        obj.css("background","#666");
+		    } 
+		setTimeout(function() { 
+		    settime(obj) }
+		    ,1000) 
+		}
+
+		$("#toForm").submit(function(){
+			var _this = $(this);
+				var flag = true;
+			$('form .requires').each(function (k, v){
+			    if($(this).val() == ''){				    
+			      flag = false;
+			      $(this).focus();
+			    }
+		  	});
+		  	if(!flag){
+		    	return false;
+		  	}
+		  	var url = _this.attr('action');
+		  	var tz_url = _this.attr('tz_url');
+		  	var data = _this.serialize();
+		  	$.ajax({
+		  		url:url, 
+		  		data:data, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code){
+			  			window.location.href= tz_url;
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		  	return false;
+		})
+	</script>
+{/block}
+{block name="footer"}{/block}

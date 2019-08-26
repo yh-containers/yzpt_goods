@@ -12,6 +12,7 @@ class Goods extends Common
         $cate_id  = $this->request->param('cate_id');
         $get_lift  = $this->request->param('lift');
         $sort  = $this->request->param('sort');
+        $search  = $this->request->param('search');
         if(empty($sort)) $sort = 'sort';
         if($get_lift == 'desc'){
             $lift = 'asc';
@@ -24,6 +25,16 @@ class Goods extends Common
         $sql_where = 'status=1';
         if($bread['sql_where']){
             $sql_where .= $bread['sql_where'];
+        }
+        if($search){
+            $sql_where .= ' and goods_name like "%'.$search.'%"';
+            $search_goods = cookie('search_goods');
+            if(!$search_goods){
+                $search_goods[] = $search;
+            }else{
+                $search_goods[count($search_goods)] = $search;
+            }
+            cookie('search_goods',$search_goods);
         }
         $goods_model = new \app\common\model\Goods();
         $goods_list = $goods_model->where($sql_where)->field('id,goods_name,goods_image,price,original_price')->order($sort.' '.$lift)->paginate();
@@ -209,5 +220,12 @@ class Goods extends Common
             }
             echo json_encode(['code'=>1,'msg'=>'已加入购物车']);die;
         }
+    }
+    //查询界面
+    public function search(){
+        if($this->request->isAjax()){
+            cookie('search_goods',null);
+        }
+        return view('search',['search_goods'=>cookie('search_goods')]);
     }
 }

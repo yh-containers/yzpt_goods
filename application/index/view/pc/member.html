@@ -24,7 +24,13 @@
 				<li><a href="/">返回首页</a></li>
 			</ul>
 			<div class="search">
-				<p class="clearfix"><input type="text" name="" class="ssk" placeholder="搜索商品"><input type="submit" name="" value="搜索" class="ss"></p>
+				<p class="clearfix"><input type="text" name="" class="ssk" placeholder="搜索商品"><input type="submit" name="" value="搜索" class="ss" onclick="toSearchGoods();"></p>
+				<script type="text/javascript">
+		            function toSearchGoods(){
+		                var search = $('.ssk').val();
+		                window.location.href="{:url('Goods/goods_list')}"+"?search="+search;
+		            }
+		        </script>
 			</div>
 		</div>
 	</div>

@@ -2,7 +2,13 @@
     <div class="header_logo"><a href="/"><img src="/assets/index/images/logo.png"></a></div>
     {if($show_search)}
     <div class="header_search">
-        <p class="clearfix"><input type="text" name="" class="ssk" placeholder="搜索商品"><input type="submit" name="" value="搜索" class="ss"></p>
+        <p class="clearfix"><input type="text" name="" class="ssk" placeholder="搜索商品"><input type="submit" name="" value="搜索" class="ss" onclick="toSearchGoods();"></p>
+        <script type="text/javascript">
+            function toSearchGoods(){
+                var search = $('.ssk').val();
+                window.location.href="{:url('Goods/goods_list')}"+"?search="+search;
+            }
+        </script>
     </div>
     <div class="header_shopping"><a href="{:url('Order/cart')}">我的购物车{if($cart_count)}<span>{$cart_count}</span>{/if}</a></div>
     <div class="header_ewm">

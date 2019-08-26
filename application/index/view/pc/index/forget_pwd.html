@@ -1,0 +1,120 @@
+{extend name="login_reg" /}
+{block name="title"}{:config('app_name')} _ 找回密码{/block}
+{block name="content"}
+	<div class="main">
+		<div class="login">
+			<div class="title">
+				<p><img src="/assets/index/images/logo.png"></p>
+				<h3>找回密码</h3>
+			</div>
+			<div class="login_box">
+				<form id="toForm" action="{:url('index/forget_pwd')}" tz_url="{:url('Index/login')}">
+				<div class="box">
+					<i class="icon"><img src="/assets/index/images/icon21.png"></i>
+					<input type="text" class="requires" name="phone" placeholder="请输入手机号">
+				</div>
+				<div class="box">
+					<i class="icon"><img src="/assets/index/images/icon21.png"></i>
+					<input type="text" class="requires" name="code" class="code" placeholder="请输入验证码">
+					<button type="button" class="obtain" onclick="sendemail()">获取短信验证码</button>
+				</div>
+				<div class="box">
+					<i class="icon"><img src="/assets/index/images/icon22.png"></i>
+					<input type="password" class="requires" name="password" placeholder="请输入新密码">
+				</div>
+				<div class="box">
+					<i class="icon"><img src="/assets/index/images/icon22.png"></i>
+					<input type="password" class="requires" name="confirm_password" placeholder="请再次输入新密码">
+				</div>
+				<div class="btn"><input type="submit" name="" value="提交"></div>
+				<div class="link"><a href="{:url('Index/login')}">返回登录</a></div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="sidebar">
+		<ul>
+			<li><a href="{:url('Member/center')}"><i class="icon"><img src="/assets/index/images/icon12.png"></i></a></li>
+			<li><a href="{:url('Order/cart')}"><i class="icon"><img src="/assets/index/images/icon13.png"></i><span>购物车</span></a></li>
+			<li><a href="javascript:;" target="_blank"><i class="icon"><img src="/assets/index/images/icon14.png"></i></a></li>
+		</ul>
+		<div class="sidebar_bottom">
+        	<div title="返回顶部" id="return_top" class="return_top"><img src="/assets/index/images/icon15.png"></div>
+		</div>
+	</div>
+	
+	<!-- 验证码倒计时 -->
+	<script type="text/javascript">
+		var countdown=60; 
+		function sendemail(){
+			var phone = $('input[name=phone]').val();
+			if(phone.length != 11){
+				return false;
+			}
+			$.ajax({
+				url:'{:url("Index/sendSms")}', 
+				data:{'phone':phone,'type':1},
+				dataType:'json',
+				type:'post', 
+				success:function (e){
+					if(e.code){
+			    		var obj = $(".obtain");
+			    		settime(obj);
+			    	}else{
+			    		alert(e.msg);
+			    	}
+			    }
+		    })
+		}
+		function settime(obj) { //发送验证码倒计时
+		    if (countdown == 0) { 
+		        obj.attr('disabled',false); 
+		        //obj.removeattr("disabled"); 
+		        obj.text("获取短信验证码");
+		        countdown = 60; 
+		        obj.css("background","");
+		        return;
+		    } else { 
+		        obj.attr('disabled',true);
+		        obj.text("重新发送(" + countdown + ")");
+		        countdown--; 
+		        obj.css("background","#999");
+		    } 
+		setTimeout(function() { 
+		    settime(obj) }
+		    ,1000) 
+		}
+		$("#toForm").submit(function(){
+			var _this = $(this);
+				var flag = true;
+			$('form .requires').each(function (k, v){
+			    if($(this).val() == ''){				    
+			      flag = false;
+			      $(this).focus();
+			    }
+		  	});
+		  	if(!flag){
+		    	return false;
+		  	}
+		  	var url = _this.attr('action');
+		  	var tz_url = _this.attr('tz_url');
+		  	var data = _this.serialize();
+		  	$.ajax({
+		  		url:url, 
+		  		data:data, 
+				dataType:'json',
+				type:'post', 
+				success:function (re){
+			  		if(re.code){
+			  			window.location.href= tz_url;
+			  		}else{
+			  			alert(re.msg);
+			  		}
+			  	}	
+		  	})
+		  	return false;
+		})
+	</script>
+
+{/block}
