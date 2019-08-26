@@ -546,6 +546,8 @@ class Users extends BaseModel
         return $data;
     }
 
+
+
     //我是否关注
     public function linkHasFollow()
     {
