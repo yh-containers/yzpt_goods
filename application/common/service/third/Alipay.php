@@ -102,35 +102,6 @@ class Alipay implements IPay
     public static function notify()
     {
         $pay = new self();
-        $_POST=array (
-            'gmt_create' => '2019-08-23 10:29:38',
-            'charset' => 'utf-8',
-            'seller_email' => 'unxbdd6070@sandbox.com',
-            'subject' => '订单支付',
-            'sign' => 'SFx8OZS5Dh/FkUW0iJ/4bA8ewtOpxPkgQQiE9+VAZ1swhM2z/iTQQRN8zgTUN5GEGGIaQlPBAW66ugZOufzso1qdQFv4kLHzQuzSeHYaG+WqqHx7aA5LIqpWQENvWZA5n0hvxtGryU+QXBhfLF2LSoWgen+7le5VbgueFL66QPlth4BxTsQvgm24ypI3Y8kMyWZepAC0+190BLBl58Rheq4kOfIZnyy58sA68cfgDnrkzflHbT2BUxWuLyhoWj2I3+V18ot6RsHiVdpWcH8m1bsU912XOcVkZVScxyDPHMhAkXLY7kgifHd54om8YXnSBbrTCkFuyXmS/xqegF9NXw==',
-            'body' => '订单支付',
-            'buyer_id' => '2088102176336676',
-            'invoice_amount' => '0.01',
-            'notify_id' => '2019082300222102945036671000552045',
-            'fund_bill_list' => '[{"amount":"0.01","fundChannel":"ALIPAYACCOUNT"}]',
-            'notify_type' => 'trade_status_sync',
-            'trade_status' => 'TRADE_SUCCESS',
-            'receipt_amount' => '0.01',
-            'buyer_pay_amount' => '0.01',
-            'app_id' => '2016091700532079',
-            'sign_type' => 'RSA2',
-            'seller_id' => '2088102176032231',
-            'gmt_payment' => '2019-08-23 10:29:45',
-            'notify_time' => '2019-08-23 10:29:46',
-            'version' => '1.0',
-            'out_trade_no' => '2019081909353165263',
-            'total_amount' => '0.01',
-            'trade_no' => '2019082322001436671000094541',
-            'auth_app_id' => '2016091700532079',
-            'buyer_logon_id' => 'rss***@sandbox.com',
-            'point_amount' => '0.00',
-            'mode' => 'alipay',
-        );
         $data = $_POST;
         unset($data['mode']);
         $flag = $pay->aop->rsaCheckV1($data, NULL, $pay->aop->signType);
@@ -143,6 +114,7 @@ class Alipay implements IPay
                 trace('支付宝订单交易失败,相关数据:'.json_encode($_POST));
             }
         }else{
+
             trace('支付宝签验失败!相关数据:'.json_encode($_POST));
         }
         return 'success';

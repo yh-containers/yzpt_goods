@@ -126,5 +126,35 @@ class BaseModel extends Model
         return  $d;
     }
 
+    //计算时间
+    public static function time_tranx($the_time)
+    {
+        $now_time = time();
+        $dur = $now_time - $the_time;
+        if ($dur <= 0) {
+            $mas =  '刚刚';
+        } else {
+            if ($dur < 60) {
+                $mas =  $dur . '秒前';
+            } else {
+                if ($dur < 3600) {
+                    $mas =  floor($dur / 60) . '分钟前';
+                } else {
+                    if ($dur < 86400) {
+                        $mas =  floor($dur / 3600) . '小时前';
+                    } else {
+                        if ($dur < 259200) { //3天内
+                            $mas =  floor($dur / 86400) . '天前';
+                        } else {
+                            $mas =  date("Y-m-d H:i:s",$the_time);
+                        }
+                    }
+                }
+            }
+        }
+        return $mas;
+    }
+
+
 
 }
