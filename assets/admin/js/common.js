@@ -18,6 +18,7 @@ $.common={
             }
 
         })
+        return false;
     },
     //待确定请求动作
     waitConfirm:function(tip_msg,url,data,type,func){

@@ -118,6 +118,27 @@ class Index extends Common
             $phone =  $this->request->param('phone');
             try{
                 \app\common\model\Sms::validVerify(2,$phone,$code);
+                if(session('auth_info')){
+                    $auth_info = session('auth_info');
+                    $user_model = new \app\common\model\Users();
+                    $data['phone'] = $phone;
+                    $data['password'] = 000000;
+                    if($auth_info['mode']=='weibo'){
+                        $data['wb_openid'] = $auth_info['uid'];
+                    }elseif($auth_info['mode']=='wechat'){
+                        $data['wx_openid'] = $auth_info['openid'];
+                    }elseif ($auth_info['mode']=='qq'){
+                        $data['qq_openid'] = $auth_info['openid'];
+                    }
+                    $model = $user_model->handleReg($data);
+                    session('auth_info',null);
+                    session('userinfo',[
+                        'uid' => $model['id'],
+                        'uname' => $model['name'],
+                        'face' => $model['face']
+                    ]);
+                    session('uid',$model['id']);
+                }
             } catch (\Exception $e) {
                 $res['msg'] = $e->getMessage();
                 echo json_encode($res);
@@ -132,6 +153,11 @@ class Index extends Common
         return view('register',['step'=>1,'content' =>\app\common\model\SysSetting::getContent('reg_protocol')]);
     }
     public function register2(){
+        if(session('uid')){
+            session('reg_info',null);
+            session('step',null);
+            $this->redirect(url('Index/index'));
+        }
         if(session('step') != 2){
             $this->redirect(url('Index/register'));
         }
@@ -163,6 +189,11 @@ class Index extends Common
         return view('register',['step'=>2]);
     }
     public function register3(){
+        if(session('uid')){
+            session('reg_info',null);
+            session('step',null);
+            $this->redirect(url('Index/index'));
+        }
         if(session('step') != 3){
             $this->redirect(url('Index/register2'));
         }
@@ -216,9 +247,6 @@ class Index extends Common
             die;
         }
     }
-    public function phpinfo(){
-        phpinfo();
-    }
 
 //第三方登录
     public function thirdLogin(){
@@ -231,13 +259,30 @@ class Index extends Common
         try{
             if($mode=='weibo'){
                 $auth_info = \app\common\service\third\Weibo::codeToAct('web',$code);
+                $where['wb_openid'] = $auth_info['uid'];
             }elseif($mode=='wechat'){
                 $auth_info = \app\common\service\third\OpenWx::codeToAct('web',$code);
+                $where['wx_openid'] = $auth_info['openid'];
             }elseif ($mode=='qq'){
                 $auth_info = \app\common\service\third\QQ::codeToAct($code);
+                $where['qq_openid'] = $auth_info['openid'];
             }
-            $auth_info['mode'] = $mode;
-            dump($auth_info);
+            $user_model = new \app\common\model\Users();
+            $models = $user_model->where($where)->find();
+            if($models['id']){
+                session('userinfo',[
+                    'uid' => $models['id'],
+                    'uname' => $models['name'],
+                    'face' => $models['face']
+                ]);
+                session('uid',$models['id']);
+                $this->redirect(url('Index/index'));
+            }else{
+                $auth_info['mode'] = $mode;
+                session('auth_info',$auth_info);
+                $this->redirect(url('Index/register'));
+            }
+            //dump($auth_info);
         }catch (\Exception $e){
             return $e->getMessage();
         }
