@@ -210,4 +210,10 @@ class Mine extends Common
         }
         return $this->_resData(1,'签到成功',['last_times'=>$last_times,'num'=>$num]);
     }
+
+    //我的通知
+    public function notice()
+    {
+
+    }
 }
