@@ -11,25 +11,47 @@ class Pay extends Common
 
     public function info()
     {
-        $mode = input('mode','alipay','trim');
-        $pay_way = input('pay_way','nativePay','trim');
         $order_id = input('order_id',0,'intval');
+        $model = \app\common\model\Order::get($order_id);
+        if($model['pay_way'] == 1){
+            $mode = 'alipay';
+            if(isMobile()){
+                $pay_way = 'appPay';
+            }else{
+                $pay_way = 'webPay';
+            }
+            $pay_way = 'webPay';
+        }else{
+            $mode = 'wechat';
+            if(isMobile()){
+                $pay_way = 'appPay';
+            }else{
+                $pay_way = 'nativePay';
+            }
+        }
+        //$mode = input('mode','alipay','trim');
+        //$pay_way = input('pay_way','webPay','trim');
         if($mode=='wechat'){
             $pay =new \app\common\service\third\Wechat();
         }elseif($mode=='alipay'){
             $pay =new \app\common\service\third\Alipay();
         }
         //查询订单
-        $model = \app\common\model\Order::get($order_id);
+
         if(empty($model)){
             exception('订单错误:id');
         }
         try{
-            $result=$pay->$pay_way($model);
+            $html = $pay->$pay_way($model);
+            if($mode=='wechat' && !isMobile()){
+                return view('order/pay_order',['order'=>$model,'code_url'=>$html]);
+            }
+            return $html;
         }catch (\Exception $e){
             dump($e->getMessage());
         }
-        dump($result);
+        //return $html;
+        //print_r($htm3l);
     }
 
     public function notify()

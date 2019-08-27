@@ -37,7 +37,11 @@ class Index extends Common
                 }
             }
             unset($val['link_child_cate']);
-            $val['goods_list'] = $goods_model->where('status=1 and cate_id in('.$val['inids'].')')->field('id,goods_image,goods_name')->limit(6)->select();
+            $goods_list = $goods_model->where('status=1 and cate_id in('.$val['inids'].')')->field('id,goods_image,goods_name')->limit(6)->select();
+            foreach($goods_list as $k => $v){
+
+            }
+            $val['goods_list'] = $goods_list;
         }
         //print_r($cate_lists);
         return view('index',['goods'=>$goods,'banner'=>$banner,'isIndex'=>1,'cate_goods'=>$cate_lists]);
