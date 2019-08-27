@@ -547,7 +547,6 @@ class Users extends BaseModel
     }
 
 
-
     //我是否关注
     public function linkHasFollow()
     {

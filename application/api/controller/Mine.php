@@ -214,6 +214,60 @@ class Mine extends Common
     //我的通知
     public function notice()
     {
+        $php_input = input();
+        $list = [];
+        $info = \app\common\model\UserNotice::getList($php_input,$this->user_id)->each(function($item,$index)use(&$list){
+            array_push($list,[
+                'id' => $item['id'],
+                'title' => $item['title'],
+                'content' => $item['content'],
+                'date' => $item['create_time'],
+            ]);
+        });
 
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
+    //给我点赞
+    public function praiseInfo()
+    {
+        $php_input = input();
+        $list = [];
+        $info = \app\common\model\ViewPraise::getList($php_input,$this->user_id)->each(function($item,$index)use(&$list){
+            array_push($list,[
+                'uid' => $item['uid'],
+                'user_name' => $item['link_users']['name'],
+                'user_face' => $item['link_users']['face'],
+                'cond_id' => $item['cond_id'],
+                'title' => \app\common\model\ViewPraise::getPropInfo('fields_type',$item['type'],'name'),
+                'content' => '',
+                'date' => $item['trax_date'],
+            ]);
+        });
+
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
+    //评论
+    public function commentInfo()
+    {
+        $php_input = input();
+        $list = [];
+        $info = \app\common\model\ViewComment::getList($php_input,$this->user_id)->each(function($item,$index)use(&$list){
+            array_push($list,[
+                'uid' => $item['uid'],
+                'user_name' => $item['link_users']['name'],
+                'user_face' => $item['link_users']['face'],
+                'cond_id' => $item['cond_id'],
+                'title' => \app\common\model\ViewComment::getPropInfo('fields_type',$item['type'],'name'),
+                'content' => $item['content'],
+                'date' => $item['trax_date'],
+            ]);
+        });
+
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
     }
 }

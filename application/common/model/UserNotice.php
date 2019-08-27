@@ -8,7 +8,7 @@ use think\model\concern\SoftDelete;
 class UserNotice extends BaseModel
 {
     use SoftDelete;
-    protected $table = 'user_notice';
+    protected $name = 'users_notice';
 
     /**
      * 我的通知
@@ -21,13 +21,14 @@ class UserNotice extends BaseModel
     {
 
         $where = [];
+        $where[] = ['status','=',1];
         if($user_id){
             $where[] =['uid','=',$user_id];
         }
-        if(!empty($type)){
-            $where[] =['type','=',$type];
+        if(!empty($php_input['type'])){
+            $where[] =['type','=',$php_input['type']];
         }
-        $list = self::where($where)->paginate();
+        $list = self::whereOr([$where,[['uid','=',0]]])->paginate();
         return $list;
     }
 }
