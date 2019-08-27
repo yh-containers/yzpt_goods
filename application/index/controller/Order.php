@@ -34,6 +34,7 @@ class Order extends Common
         $sku_model = new \app\common\model\GoodsSpecStock();
         $spec_model = new \app\common\model\GoodsSpecValue();
         $collect_model = new \app\common\model\Collect();
+        $goods_model = new \app\common\model\Goods();
         $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid'))->field('c.*,g.goods_name,g.goods_image,g.price,g.status')->select();
         foreach ($cart_list as &$cart){
             if($cart['sid']){
@@ -49,6 +50,7 @@ class Order extends Common
             }else{
                 $cart['spec_name'] = '';
             }
+            $cart['goods_image'] = $goods_model->getGoodsImageAttr($cart['goods_image']);
             //是否收藏
             $cart['is_collect'] = $collect_model->where(['gid'=>$cart['gid'],'uid'=>session('uid')])->count();
         }
@@ -99,6 +101,7 @@ class Order extends Common
         $cart_model = new \app\common\model\Cart();
         $sku_model = new \app\common\model\GoodsSpecStock();
         $spec_model = new \app\common\model\GoodsSpecValue();
+        $goods_model = new \app\common\model\Goods();
         $total = 0;
         $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.*,g.goods_name,g.goods_image,g.price,g.status')->select();
         if(count($cart_list) == 0){
@@ -118,6 +121,7 @@ class Order extends Common
             }else{
                 $cart['spec_name'] = '';
             }
+            $cart['goods_image'] = $goods_model->getGoodsImageAttr($cart['goods_image']);
             if($cart['status'] != 1){
                 $this->error('购物车中存在下架的商品');
             }

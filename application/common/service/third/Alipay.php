@@ -40,6 +40,7 @@ class Alipay implements IPay
         $this->handleOrderInput($model,$request);
 
         $result = $this->aop->sdkExecute ($request);
+        //print_r($result);die;
         return $result;
     }
 
@@ -94,6 +95,8 @@ class Alipay implements IPay
         $request->setNotifyUrl($pay_info['notify_url']);
         //设置支付内容
         $request->setBizContent($content);
+        //设置支付回跳地址
+        $request->setReturnUrl($pay_info['return_url']);
 
     }
 

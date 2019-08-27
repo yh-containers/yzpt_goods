@@ -111,8 +111,9 @@ class Wechat implements IPay
 
         $config = self::configInstance();
         $result = \WxPayApi::unifiedOrder($config, $input);
-
-        return $result;
+        //print_r($result);die;
+        //return $result;
+        return "<img src='http://qr.liantu.com/api.php?text=" . $result['code_url'] . "' alt='扫描进行支付'>";
     }
 
     protected function handleOrderInput($model,$trade_type)

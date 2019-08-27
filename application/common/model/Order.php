@@ -20,8 +20,8 @@ class Order extends BaseModel
     public static $fields_mobile_step = [
         [
             'name'=>['待支付','已支付','已取消'],
-            'handle'=>['<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="/order/payorder/order_id/{order_id}" class="red">立即付款</a>','<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="javascript:;" class="red" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel">已取消</a>'],
-            'w_handle'=>['<a href="/Order/payorder?order_id={order_id}" class="fukuan orange">立即付款</a><a href="javascript:;" class="cancel_order" onclick="orderCancel({order_id});">取消订单</a>','<a href="javascript:;" class="tixing orange_bg" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel_order">已取消</a>'],
+            'handle'=>['<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="/pay/info?order_id={order_id}" class="red">立即付款</a>','<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="javascript:;" class="red" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel">已取消</a>'],
+            'w_handle'=>['<a href="/Pay/info?order_id={order_id}" class="fukuan orange">立即付款</a><a href="javascript:;" class="cancel_order" onclick="orderCancel({order_id});">取消订单</a>','<a href="javascript:;" class="tixing orange_bg" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel_order">已取消</a>'],
             'field'=>'status'
         ],
         [
@@ -115,6 +115,7 @@ class Order extends BaseModel
             'expire_time' => self::ORDER_EXP_TIME,
             'goods_tag' => 'goods',
             'notify_url' => url('pay/notify',['mode'=>$mode],false,true),
+            'return_url' => url('Index/index',['mode'=>$mode],false,true)
         ];
     }
 
