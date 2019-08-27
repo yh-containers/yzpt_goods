@@ -185,8 +185,13 @@ class Order extends Common
     }
     //支付界面
     public function payorder(){
-        $id = $this->request->param('order_id');
         $order_model = new \app\common\model\Order();
+        if($this->request->isAjax()){
+            $no = $this->request->param('no');
+            $orderState = $order_model->where('no="'.$no.'"')->field('state')->find();
+            return json(['state'=>$orderState['state']]);
+        }
+        $id = $this->request->param('order_id');
         $order = $order_model->field('no,money')->get($id);
         return view('pay_order',['order'=>$order]);
     }

@@ -10,13 +10,61 @@ class Order extends BaseModel
     use SoftDelete;
     //订单有效时间--有效时间为1小时  单位秒
     const ORDER_EXP_TIME = 7200;
+    //用户可操作常量
+    const U_ORDER_HANDLE_PAY = 'pay';           //订单支付
+    const U_ORDER_HANDLE_CANCEL = 'cancel';     //取消订单
+    const U_ORDER_HANDLE_DEL = 'del';           //删除订单
+    const U_ORDER_HANDLE_SURE_REC = 'receive'; //确认收货
 
-    public static $fields_step = [
-        ['name'=>'支付流程','field'=>'status'],
-        ['name'=>'发货流程','field'=>'is_send'],
-        ['name'=>'收货流程','field'=>'is_receive'],
-        ['name'=>'交易已完成','field'=>'status']
+    //管理员操作
+    const M_ORDER_HANDLE_SURE_PAY = 'sure-pay';      //确定支付
+    const M_ORDER_HANDLE_SEND = 'send';         //发送
+    const M_ORDER_HANDLE_DEL = 'del';           //删除
+    const M_ORDER_HANDLE_CANCEL = 'cancel';     //取消
+    //const M_ORDER_HANDLE_EDIT_ADDR = 'edit-addr';     //编辑订单地址
+
+    public $m_id_opt_del=0;  //删除订单
+    public $m_id_opt_cancel=0;//取消订单
+
+    //收货方式
+    public static $fields_rec_mode = [
+        ['name'=>'自提'],
+        ['name'=>'快递'],
     ];
+
+    //订单状态
+    public static $fields_status = [
+        ['name'=>'待付款','u_handle'=>[
+            self::U_ORDER_HANDLE_PAY,
+            self::U_ORDER_HANDLE_CANCEL,
+        ],'m_handle'=>[
+            self::M_ORDER_HANDLE_DEL,self::M_ORDER_HANDLE_CANCEL,self::M_ORDER_HANDLE_SURE_PAY
+        ]
+        ],
+        ['name'=>'已付款','m_handle'=>[]],
+        ['name'=>'已取消','u_handle'=>[self::U_ORDER_HANDLE_DEL],'m_handle'=>[self::M_ORDER_HANDLE_DEL]],
+        ['name'=>'已完成,待评价','u_handle'=>[self::U_ORDER_HANDLE_DEL],'m_handle'=>[]],
+        ['name'=>'已完成','u_handle'=>[self::U_ORDER_HANDLE_DEL],'m_handle'=>[]],
+    ];
+    //发货状态
+    public static $fields_is_send = [
+        ['name'=>'待发貨','m_handle'=>[
+            self::M_ORDER_HANDLE_SEND,
+        ]],
+        ['name'=>'已发貨','m_handle'=>[]],
+    ];
+    //收货状态
+    public static $fields_is_recive = [
+        ['name'=>'待收貨','u_handle'=>[ self::U_ORDER_HANDLE_SURE_REC ],'m_handle'=>[]],
+        ['name'=>'已收貨','m_handle'=>[]],
+    ];
+    public static $fields_step = [
+        ['name'=>'支付流程','field'=>'status','prop_func'=>'fields_status'],
+        ['name'=>'发货流程','field'=>'is_send','prop_func'=>'fields_is_send'],
+        ['name'=>'收货流程','field'=>'is_receive','prop_func'=>'fields_is_recive'],
+        ['name'=>'交易已完成','field'=>'status','prop_func'=>'fields_status']
+    ];
+    public static $fields_pay = ['','支付宝','微信'];
     public static $fields_mobile_step = [
         [
             'name'=>['待支付','已支付','已取消'],
@@ -51,6 +99,10 @@ class Order extends BaseModel
     public function ownAddr()
     {
         return $this->hasMany('OrderAddr','oid')->order('id asc');
+    }
+    public function ownAddrs()
+    {
+        return $this->hasOne('OrderAddr','oid')->order('id asc');
     }
     public function getOrderSn(){
         return date('YmdHis').mt_rand(1000,9999).self::count();
@@ -101,6 +153,44 @@ class Order extends BaseModel
         $bool = $model->save();
         !$bool && exception('操作异常');
         return $model;
+    }
+    //管理员确认付款
+    public function orderPay($uid,$order_id){
+        if(empty($order_id) || !is_numeric($order_id) || $order_id<=0) exception('订单信息异常:id');
+        if(empty($uid)) exception('用户资料异常');
+        $model = self::find($order_id);
+        if($model['uid'] != $uid || empty($model)) exception('订单信息异常');
+        $handle_action = self::getHandle('m_handle',$model);
+        if(!in_array(self::M_ORDER_HANDLE_SURE_PAY,$handle_action)) exception('订单状态未处于付款状态');
+        $model->step_flow = 1;
+        $model->status = 1;
+        $model->pay_time = time();
+        $bool = $model->save();
+        !$bool && exception('操作异常');
+        return $model;
+    }
+    //管理员确认发货
+    public function orderSend($uid,$order_id){
+        if(empty($order_id) || !is_numeric($order_id) || $order_id<=0) exception('订单信息异常:id');
+        if(empty($uid)) exception('用户资料异常');
+        $model = self::find($order_id);
+        if($model['uid'] != $uid || empty($model)) exception('订单信息异常');
+        $handle_action = self::getHandle('m_handle',$model);
+        if(!in_array(self::M_ORDER_HANDLE_SURE_PAY,$handle_action)) exception('订单状态未处于待发货状态');
+        $model->is_send = 1;
+        $model->send_end_time = time();
+        $model->step_flow = 2;
+        $model->is_receive=0;//等待收货状态
+        $model->receive_start_time=time();//开始收货时间
+        $bool = $model->save();
+        !$bool && exception('操作异常');
+        return $model;
+    }
+
+    public function getHandle($mode,$order){
+        $step = self::$fields_step[$order['step_flow']];
+        $handle = self::getPropInfo($step['prop_func'],$order[$step['field']]);
+        return $handle[$mode];
     }
 
     //订单数据

@@ -1,0 +1,121 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}order,order.index/index{/block}
+{block name="content"}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">订单详情</h3>
+    </div>
+
+    <div class="box-body">
+		<form class="form-horizontal" action="" id="form" onsubmit="return false;">								
+			<div class="box-body clearfix">
+				<table class="table table-bordered table-hover noborder">
+					<thead>
+						<tr>
+							<th colspan="2">订单信息</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span>订单编号号：{$data.no}</span></td>
+							<td><span>下单人：{$data.own_addrs.username}</span></td>
+						</tr>
+						<tr>
+							<td><span>订单时间：{:$data.create_time}</span></td>
+							<td><span>支付方式：{:\\app\\common\\model\\Order::getPropInfo('fields_pay',$data['pay_way'])}</span></td>
+						</tr>
+						<tr>
+							<td><span>订单价格：</span>￥{$data.money}</td>
+							<td><span>订单状态：</span><span>{$data.status}</span></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="table table-bordered table-hover noborder" style="margin:15px 0px;">
+					<thead>
+						<tr>
+							<th colspan="2">收货信息</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span>收货人：{$data.own_addrs.username}</span></td>
+							<td><span>联系电话：{$data.own_addrs.phone}</span></td>
+						</tr>
+						<tr>
+							<td colspan="2"><span>收货地址：{$data.own_addrs.addr} {$data.own_addrs.addr_extra}</span></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="table table-bordered table-hover" style="margin:15px 0px;">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>商品名称</th>
+							<th>商品图片</th>
+							<th>数量</th>
+							<th>商品单价</th>
+						</tr>
+					</thead>                      
+					<tbody>
+						{foreach name="data.own_goods" item="val" key="k"}
+						<tr>
+							<td>{$val.id}</td>
+							<td>{$val.name}</td>
+							{php}$goodsModel = new \app\common\model\Goods();{/php}
+							<td><img src="{:$goodsModel->getGoodsImageAttr($val['img'])}" width="50" height="50"></td>
+							<td>x{$val.num}</td>
+							<td>{$val.price}</td>
+						</tr>
+						{/foreach}
+					</tbody>
+				</table>
+
+				<div class="form-group" style="width:100%;">
+					<div class="col-sm-12" style="padding:0px;margin:0px;margin-left: 15px;">
+						<!-- 确认付款 -->
+						{php} 
+						if(in_array(\app\common\model\Order::M_ORDER_HANDLE_SURE_PAY,$handle)){
+							echo '<input type="submit" value="确认付款" name="'.\app\common\model\Order::M_ORDER_HANDLE_SURE_PAY.'" class="btn btn-info" onclick="$(\'#type\').val(this.name),$.common.submitForm()">';
+						}
+						{/php}
+						<!-- 确认发货 -->
+						{php} 
+						if(in_array(\app\common\model\Order::M_ORDER_HANDLE_SEND,$handle)){
+							echo '<input type="submit" value="发货" name="'.\app\common\model\Order::M_ORDER_HANDLE_SEND.'" class="btn btn-default" style="margin-left: 20px;" onclick="$(\'#type\').val(this.name),$.common.submitForm()">';
+						}
+						{/php}
+						<!-- 删除订单 -->
+						{php} 
+						if(in_array(\app\common\model\Order::M_ORDER_HANDLE_DEL,$handle)){
+							echo '<input type="submit" value="删除订单" name="'.\app\common\model\Order::M_ORDER_HANDLE_DEL.'" class="btn btn-danger" style="margin-left: 20px;" onclick="$(\'#type\').val(this.name),$.common.submitForm()">';
+						}
+						{/php}
+						<!-- 取消订单 -->
+						{php} 
+						if(in_array(\app\common\model\Order::M_ORDER_HANDLE_CANCEL,$handle)){
+							echo '<input type="submit" value="取消订单" name="'.\app\common\model\Order::M_ORDER_HANDLE_CANCEL.'" class="btn btn-default" style="margin-left: 20px;" onclick="$(\'#type\').val(this.name),$.common.submitForm()">';
+						}
+						{/php}
+					</div>
+				</div>
+				<div class="form-group" style="width:100%;">
+					<div class="col-sm-12" style="padding:0px;margin:0px;margin-left: 15px;"> 
+						<input type="button" class="btn btn-block  btn-default" onclick="javascript:history.back(-1);" value="返回">  
+					</div>
+				</div>
+
+			</div>
+			<input type="hidden" name="id" value="{$data.id}">
+			<input type="hidden" name="type" value="" id="type">
+		</form>
+    </div>
+    <!-- /.box-body -->
+
+    <div class="box-footer">
+        <!-- <button type="button" onclick="$.common.submitForm()" class="col-sm-offset-2 btn  btn-info">保存</button> -->
+    </div>
+</div>
+{/block}

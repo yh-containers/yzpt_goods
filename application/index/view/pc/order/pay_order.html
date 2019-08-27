@@ -13,7 +13,7 @@
 					<p><span>微信支付</span></p>
 				</div>
 				<div class="pay_content">
-					<div class="pay_ewm">
+					<div class="pay_ewm" style="position: relative;">
 						{$code_url|raw}
 						<div class="text">
 							<p>请使用微信扫一扫<br />
@@ -28,5 +28,27 @@
 {/block}
 
 {block name="footer_script"}
-
+<script type="text/javascript">
+	$(function(){
+		var t = setInterval(function(){
+			$.ajax({
+				url:"{:url('Goods/collect')}",
+                data:{'gid':goods_id},
+                dataType:'json',
+                type:'post',
+                success:function(e){                    
+                    if(e.state == 1){
+                    	clearInterval(t);
+                    	$('.pay_ewm').find('img').attr('style','opacity: 0.3;border: 1px solid #000;');
+                    	$('.pay_ewm').find('.text').html('');
+                    	$('.pay_ewm').find('.text').html('支付成功');
+                    	setTimeout(function(){
+                    		window.location.href = '/Member/orderlist';
+                    	},2000);
+                    }
+                }
+			})
+		},2000);
+	})
+</script>
 {/block}
