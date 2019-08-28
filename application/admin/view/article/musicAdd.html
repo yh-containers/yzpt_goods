@@ -80,8 +80,8 @@
         var upload = layui.upload;
         $.common.fileUpload(upload,'.upload-img',(res,query_select)=>{
             //保存图片路径
-            query_select.prev().val(res.path)
-            query_select.parent().find('a').attr('href',res.path).text('查看资源')
+            query_select.prev().val(res.key)
+            query_select.parent().find('a').attr('href',res.preview_domain+res.key).text('查看资源')
             res.hasOwnProperty('duration') && query_select.parent().find("input[name='duration']").val(res.duration)
         })
 
