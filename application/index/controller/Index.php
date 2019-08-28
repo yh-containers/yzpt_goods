@@ -16,7 +16,7 @@ class Index extends Common
         //新品推荐
         $goods['new'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(10)->select();
         //banner下产品
-        $goods['bg'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(8)->select();
+        $goods['bg'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(6)->select();
         //特价
         $goods['special'] = $goods_model->where(['status'=>1,'is_special'=>1])->field('id,goods_image')->limit(10)->select();
         //人气
@@ -27,7 +27,7 @@ class Index extends Common
         //分类下商品
         $cate_lists = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
             return $query->where(['status'=>1])->field('id,pid')->with('linkChildCate');
-        }])->where(['status'=>1,'pid'=>0])->field('id,cate_name,desc,pid')->order('sort asc')->limit(3)->select();
+        }])->where(['status'=>1,'pid'=>0])->field('id,cate_name,image,desc,pid')->order('sort asc')->limit(3)->select();
         foreach ($cate_lists as &$val){
             $val['inids'] = $val['id'];
             foreach ($val['link_child_cate'] as $cvl){
@@ -37,10 +37,7 @@ class Index extends Common
                 }
             }
             unset($val['link_child_cate']);
-            $goods_list = $goods_model->where('status=1 and cate_id in('.$val['inids'].')')->field('id,goods_image,goods_name')->limit(6)->select();
-            foreach($goods_list as $k => $v){
-
-            }
+            $goods_list = $goods_model->where('status=1 and cate_id in('.$val['inids'].') and tuijian=1')->field('id,tuijian_img,goods_name')->limit(5)->select();
             $val['goods_list'] = $goods_list;
         }
         //print_r($cate_lists);
