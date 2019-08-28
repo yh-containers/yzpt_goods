@@ -96,7 +96,7 @@
                 <p><a href="{:url('Goods/goods_list',['cate_id'=>$cg['id']])}"><img src="{$cg.image}"></a></p>
                 <ul>
                     {volist name="cg.goods_list" id="rg" key="rk"}
-                    {if condition="$lk egt 3"}
+                    {if condition="$rk egt 3"}
                     <li><a href="{:url('Goods/detail',['id'=>$rg['id']])}"><img src="{$rg.tuijian_img}"></a></li>
                     {/if}
                     {/volist}
