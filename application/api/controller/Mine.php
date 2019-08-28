@@ -46,7 +46,10 @@ class Mine extends Common
 
         //用户余额
         if($on_user_money){
-            $data['money']=['raise_num'=>0,'money'=>0];
+            $data['money']=[
+                'raise_num'=>empty($this->user_model['raise_num'])?0:$this->user_model['raise_num'],
+                'money'=>0
+            ];
         }
         //用户点赞
         if($on_praise_num){

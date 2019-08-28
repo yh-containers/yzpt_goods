@@ -244,4 +244,27 @@ class Index extends Common
         return $this->_resData(1,'获取成功',['list'=>$list]);
     }
 
+    //分享信息
+    public function shareInfo(){
+        return $this->_resData(1,'获取成功',[
+            'type'=>'page',
+            'title'=>'分享图片',
+            'image'=>'http://chinacarechain.com/uploads/ad/20190724/169fc311fed6a2d2a5b8acf848bdec22.jpg',
+            'desc'=>'我的图片分享',
+            'url'=>'http://www.baidu.com',
+        ]);
+    }
+
+    //系统通知
+    public function notice(){
+        return $this->_resData(1,'获取成功',[
+            'list'=>[
+                ['content'=>'我的通知1'],
+                ['content'=>'我的通知2'],
+                ['content'=>'我的通知3'],
+                ['content'=>'我的通知4'],
+            ]
+        ]);
+    }
+
 }
