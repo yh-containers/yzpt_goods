@@ -99,6 +99,20 @@ class Goods extends Common
         $collect_model = new \app\common\model\Collect();
         $collect_count = $collect_model->where(['gid'=>$id])->count();
         //总评价
+        $arr = [19,18];
+        $brr = [];
+        for($i=0;$i<count($arr);$i++){
+            $n = 0;
+            $brr[$n] = $arr[$i];
+            for($j=count($arr)-1;$j>=0;$j--){
+                if($arr[$i] != $arr[$j]){
+                    $n++;
+                    $brr[$n] = $arr[$j];
+                    print_r(implode(',',$brr));
+                    print_r('<br/>');
+                }
+            }
+        }
         $comment_count = \app\common\model\Comment::where(['gid'=>$id])->count();
         return view('goods_detail',['goods'=>$data,'bread'=>$bread['bread'],'like_list'=>$goods_list,'sku_arr'=>$sku,'collect_count'=>$collect_count,'comment_count'=>$comment_count]);
     }
@@ -112,9 +126,17 @@ class Goods extends Common
             $addSpecStock = new \app\common\model\GoodsSpecStock();
             $sql_where = 'goods_id='.$goods_id.' and (';
             $arr = explode(',',$sv_ids);
-            for ($i=0;$i<count($arr);$i++){
-                shuffle($arr);
-                $sql_where .= 'sv_ids="'.implode(',',$arr).'" or ';
+            $brr = [];
+            for($i=0;$i<count($arr);$i++){
+                $n = 0;
+                $brr[$n] = $arr[$i];
+                for($j=count($arr)-1;$j>=0;$j--){
+                    if($arr[$i] != $arr[$j]){
+                        $n++;
+                        $brr[$n] = $arr[$j];
+                        $sql_where .= 'sv_ids="'.implode(',',$brr).'" or ';
+                    }
+                }
             }
             $sql_where = rtrim($sql_where,'or ');
             $sql_where .= ')';

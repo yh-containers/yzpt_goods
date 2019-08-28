@@ -176,7 +176,7 @@ class Order extends BaseModel
         $model = self::find($order_id);
         if($model['uid'] != $uid || empty($model)) exception('订单信息异常');
         $handle_action = self::getHandle('m_handle',$model);
-        if(!in_array(self::M_ORDER_HANDLE_SURE_PAY,$handle_action)) exception('订单状态未处于待发货状态');
+        if(!in_array(self::M_ORDER_HANDLE_SEND,$handle_action)) exception('订单状态未处于待发货状态');
         $model->is_send = 1;
         $model->send_end_time = time();
         $model->step_flow = 2;

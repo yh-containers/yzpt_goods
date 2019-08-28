@@ -16,7 +16,7 @@ class Index extends Common
         //新品推荐
         $goods['new'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(10)->select();
         //banner下产品
-        $goods['bg'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(6)->select();
+        $goods['bg'] = $goods_model->where(['status'=>1,'tuijian'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(6)->select();
         //特价
         $goods['special'] = $goods_model->where(['status'=>1,'is_special'=>1])->field('id,goods_image')->limit(10)->select();
         //人气
