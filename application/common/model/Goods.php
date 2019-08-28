@@ -14,9 +14,13 @@ class Goods extends BaseModel
     public static $fields_hot = ['','是','否'];
     public static $fields_best = ['','是','否'];
     public static $fields_special = ['','是','否'];
+    public static $fields_tuijian = ['','是','否'];
     //数据库表名
     protected $table = 'gd_goods';
     public function getGoodsImageAttr($value){
+        return self::handleFile($value);
+    }
+    public function getTuijianImgAttr($value){
         return self::handleFile($value);
     }
     public function getImageArrAttr($value){

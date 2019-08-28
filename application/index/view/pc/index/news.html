@@ -1,0 +1,31 @@
+{extend name="public" /}
+{block name="cate"}{/block}
+{block name="content"}
+<div class="main inside_main">
+    <div class="help w1200 clearfix">
+        <div class="bread_crumbs w1200 clearfix"><a href="index.html">首页</a><span>&gt;</span><a href="products.html">营养保健</a></div>
+        <div class="left_sort">
+            <div class="left_sort_title">帮助中心</div>
+            <div class="sideMenu">
+                {foreach name="article" item="val"}
+                <h3>{$val.name}<span><img src="/assets/index/images/xia02.png"></span></h3>
+                <ul>
+                    {volist name="val.link_cate_news" id="vl"}
+                    <li {if condition="$vl['id'] eq $data['id']"}class="cur"{/if}><a href="{:url('Article/index',['id'=>$vl['id']])}">{$vl.title}</a></li>
+                    {/volist}
+                </ul>
+                {/foreach}
+            </div>
+        </div>
+        <div class="right_content">
+            <div class="about_title">{$data.title}</div>
+            <div class="about_text">
+               {$data.content|raw}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(".sideMenu").slide({titCell:"h3", targetCell:"ul",defaultIndex:0,effect:"slideDown",delayTime:300,trigger:"click",returnDefault:true})
+</script>
+{/block}

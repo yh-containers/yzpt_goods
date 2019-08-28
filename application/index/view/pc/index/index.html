@@ -27,11 +27,8 @@
             {/if}
             {/volist}
             <li>
-                {volist name="goods.bg" id="bg_good" key="bks"}
-                {if condition="$bks egt 6"}
-                <a href="{:url('Goods/detail',['id'=>$bg_good['id']])}"><img src="{$bg_good.goods_image}"></a>
-                {/if}
-                {/volist}
+                <a href="javascript:;"><img src="/assets/index/images/adv07.jpg"></a>
+                <a href="javascript:;"><img src="/assets/index/images/adv08.jpg"></a>
             </li>
         </ul>{/if}
     </div>
@@ -91,28 +88,27 @@
             <div class="left">
                 {volist name="cg.goods_list" id="lg" key="lk"}
                 {if condition="$lk elt 2"}
-                <a href="{:url('Goods/detail',['id'=>$lg['id']])}"><img src="{$lg.goods_image}"></a>
+                <a href="{:url('Goods/detail',['id'=>$lg['id']])}"><img src="{$lg.tuijian_img}"></a>
                 {/if}
                 {/volist}
             </div>
             <div class="right">
-                {if($cg['goods_list'][2])}<p><a href="{:url('Goods/detail',['id'=>$cg['goods_list'][2]['id']])}"><img src="{$cg['goods_list'][2]['goods_image']}"></a></p>{/if}
+                <p><a href="{:url('Goods/goods_list',['cate_id'=>$cg['id']])}"><img src="{$cg.image}"></a></p>
                 <ul>
                     {volist name="cg.goods_list" id="rg" key="rk"}
-                    {if condition="$lk egt 4"}
-                    <li><a href="{:url('Goods/detail',['id'=>$rg['id']])}"><img src="{$rg.goods_image}"></a></li>
+                    {if condition="$lk egt 3"}
+                    <li><a href="{:url('Goods/detail',['id'=>$rg['id']])}"><img src="{$rg.tuijian_img}"></a></li>
                     {/if}
                     {/volist}
                 </ul>
             </div>
             {else/}
             <div class="right">
-                {if(isset($cg['goods_list'][0]))}<p><a href="{:url('Goods/detail',['id'=>$cg['goods_list'][0]['id']])}"><img src="{$cg['goods_list'][0]['goods_image']}"></a></p>{/if}
-                {php}unset($cg['goods_list'][0]);{/php}
+                <p><a href="{:url('Goods/goods_list',['cate_id'=>$cg['id']])}"><img src="{$cg.image}"></a></p>
                 <ul>
                     {volist name="cg.goods_list" id="rgs" key="rks"}
                     {if condition="$rks elt 3"}
-                    <li><a href="{:url('Goods/detail',['id'=>$rgs['id']])}"><img src="{$rgs.goods_image}"></a></li>
+                    <li><a href="{:url('Goods/detail',['id'=>$rgs['id']])}"><img src="{$rgs.tuijian_img}"></a></li>
                     {/if}
                     {/volist}
                 </ul>
@@ -120,7 +116,7 @@
             <div class="left">
                 {volist name="cg.goods_list" id="lgs" key="lks"}
                 {if condition="$lks egt 4"}
-                <a href="{:url('Goods/detail',['id'=>$lgs['id']])}"><img src="{$lgs.goods_image}"></a>
+                <a href="{:url('Goods/detail',['id'=>$lgs['id']])}"><img src="{$lgs.tuijian_img}"></a>
                 {/if}
                 {/volist}
             </div>

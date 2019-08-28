@@ -21,6 +21,7 @@ class Index extends Common
         $id  = $this->request->param('id');
         $model = new \app\common\model\Goods();
         $data = $model->with('ownSpecValue')->get($id);
+//        dump($data->getData('goods_image'));exit;
         //dump($data);exit;
         if(!empty($data)){
             $isok = 0;
@@ -35,9 +36,7 @@ class Index extends Common
             $image_arr = $this->request->param('image_arr');
             $sku = $this->request->param('sku');
             $new_sku = $this->request->param('new_sku');
-//            if(empty($php_input['goods_image']) && $php_input['image_arr']){
-            $php_input['goods_image'] = isset($image_arr[0])?$image_arr[0]:'';
-//            }
+            //$php_input['goods_image'] = isset($image_arr[0])?$image_arr[0]:'';
             $php_input['image_arr'] = implode(',',$php_input['image_arr']);
             $validate = new \app\common\validate\Goods();
             //商品属性
