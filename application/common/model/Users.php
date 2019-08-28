@@ -77,12 +77,19 @@ class Users extends BaseModel
     //自动完成头像
     protected function setNameAttr($value,$data)
     {
-//        if($value){
-//            return $value;
-//        }
-        $name = $value?$value:'用户昵称';
-        $phone = empty($data['phone'])?'':$data['phone'];
-        !empty($name) && !empty($phone) && $name = substr($phone,-4).'用户';
+        if($value){
+            $name =  $value;
+        }else{
+            $phone = empty($data['phone'])?'':$data['phone'];
+
+            if(!empty($phone)){
+                $name = substr($phone,-4).'用户';
+            } else{
+                $name = '用户昵称';
+            }
+        }
+
+
 
         if(!empty($name)){
             $pinyin =new \Overtrue\Pinyin\Pinyin();
