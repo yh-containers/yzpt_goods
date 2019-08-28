@@ -30,10 +30,11 @@
 {block name="footer_script"}
 <script type="text/javascript">
 	$(function(){
+	    var no = {$order.no};
 		var t = setInterval(function(){
 			$.ajax({
 				url:"{:url('Goods/collect')}",
-                data:{'gid':goods_id},
+                data:{'no':no},
                 dataType:'json',
                 type:'post',
                 success:function(e){                    

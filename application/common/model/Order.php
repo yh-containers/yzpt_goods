@@ -217,7 +217,7 @@ class Order extends BaseModel
 //            return true;
 //        }
         //调整订单信息
-        $this->step_flow = 3;
+        $this->step_flow = 1;
         $this->status = 1;
         $this->pay_time = time();
         return $this->save();

@@ -34,7 +34,7 @@
 									</a>
 									{/volist}
 								</div>
-								<div class="receiver"></div>
+								<div class="receiver">{$order.own_addrs.username}</div>
 								<div class="num">X{$order.number}</div>
 								<div class="yuan">￥{$order.money}</div>
 								<div class="status">
@@ -172,8 +172,11 @@
 					dataType:'json',
 					type:'post', 
 					success:function (re){
-						alert(re.msg);
-				  		if(re.code && isre){
+						//alert(re.msg);
+                        $('#tips').find('div').html('');
+                        $('#tips').find('div').html(re.msg);
+                        $('#tips').show ().delay (1000).fadeOut ();
+                        if(re.code && isre){
 				  			history.go(0);
 				  		}
 				  	}	
@@ -182,4 +185,7 @@
 	    //});
 
 	</script>
+<div id="tips" >
+	<div>复制成功</div>
+</div>
 {/block}
