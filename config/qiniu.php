@@ -6,7 +6,7 @@ return [
     'expires' => 3600,
     'url' => 'https://up.qiniup.com',
     'fsizeLimit'=> 1024*1024*10,//文件上传大小 10M
-    'is_use'=>0,//开启七牛上传
+    'is_use'=>1,//开启七牛上传
     'file_prefix'=> '/qn_',
     'preview_domain'=> 'http://slhqn.liaozx.com/', //域名
 ];
