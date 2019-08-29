@@ -1,0 +1,61 @@
+{extend name="base" /}
+
+{block name="content"}
+
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="col-sm-3">
+            <a class="btn btn-sm btn-adn" href="{:url('column_add')}">添加栏目</a>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body no-padding">
+        <table class="table table-striped" id="layer-photos-demo">
+            <thead>
+            <tr>
+                <th width="20">#</th>
+                <th width="80">栏目名称</th>
+                <th width="80">所属栏目</th>
+                <th width="80">状态</th>
+                <th width="80">发布时间</th>
+                <th width="120">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="list" id="vo"}
+            <tr>
+                <td>{$vo.id}</td>
+                <td>{$vo['name']}</td>
+                <td>----</td>
+                <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_status',$vo['status'])}</td>
+                <td>{$vo['send_time']}</td>
+                <td>
+                    <a class="layui-btn layui-btn-sm" href="{:url('column_add',['id'=>$vo['id']])}">编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("column_del",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
+                </td>
+            </tr>
+            {volist name="vo.own_columns" id="vol"}
+            <tr>
+                <td>{$vol.id}</td>
+                <td>|___{$vol['name']}</td>
+                <td>{$vo['name']}</td>
+                <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_status',$vol['status'])}</td>
+                <td>{$vol['send_time']}</td>
+                <td>
+                    <a class="layui-btn layui-btn-sm" href="{:url('column_add',['id'=>$vol['id']])}">编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("column_del",["id"=>$vol["id"]])}')" class="ml-5">  删除</a>
+                </td>
+            </tr>
+            {/volist}
+            {/volist}
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+
+    <div class="box-footer clearfix">
+
+    </div>
+</div>
+<!-- /.error-page -->
+{/block}

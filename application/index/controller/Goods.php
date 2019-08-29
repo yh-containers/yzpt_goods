@@ -233,6 +233,7 @@ class Goods extends Common
         if($this->request->isAjax()){
             cookie('search_goods',null);
         }
-        return view('search',['search_goods'=>cookie('search_goods')]);
+        $search_list = \app\common\model\SearchKey::field('name')->select();
+        return view('search',['search_goods'=>cookie('search_goods'),'search_key'=>$search_list]);
     }
 }

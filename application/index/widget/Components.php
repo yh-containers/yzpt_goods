@@ -35,10 +35,10 @@ class Components
 
     public function footer()
     {
-        $list = \app\common\model\NewsCate::with(['linkChild'=>function($query){
-            return $query->field('id,name,pid')->with('linkCateNews');
-        }])->field('id')->where('name like "%商城文章%"')->find();
-        return view('common/footer',['article'=>$list['link_child']])->getContent();
+        $list = \app\common\model\BottomColumn::with(['ownColumns'=>function($query){
+            return $query->where('status=1');
+        }])->where('status=1 and pid=0')->select();
+        return view('common/footer',['article'=>$list])->getContent();
     }
     public function mobile_footer($is_active = 1)
     {

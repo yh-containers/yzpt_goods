@@ -35,8 +35,8 @@
                 {volist name="article" id="aval"}
                 <dl>
                     <dt><a href="javascript:;">{$aval.name}</a></dt>
-                    {volist name="aval.link_cate_news" id="ca"}
-                    <dd><a href="{:url('Article/index',['id'=>$ca['id']])}">{$ca.title}</a></dd>
+                    {volist name="aval.own_columns" id="ca"}
+                    <dd><a href="{:url('Article/index',['id'=>$ca['id']])}">{$ca.name}</a></dd>
                     {/volist}
                 </dl>
                 {/volist}

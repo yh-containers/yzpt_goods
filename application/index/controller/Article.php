@@ -11,12 +11,12 @@ use think\Request;
 class Article extends Common
 {
     public function index(){
-        $list = \app\common\model\NewsCate::with(['linkChild'=>function($query){
-            return $query->field('id,name,pid')->with('linkCateNews');
-        }])->field('id')->where('name like "%商城文章%"')->find();
+        $list = \app\common\model\BottomColumn::with(['ownColumns'=>function($query){
+            return $query->where('status=1');
+        }])->where('status=1 and pid=0')->select();
 
         $aid = $this->request->param('id');
-        $data = \app\common\model\News::field('id,title,content')->get($aid);
-        return view('index/news',['article'=>$list['link_child'],'data'=>$data]);
+        $data = \app\common\model\BottomColumn::field('id,name,content')->get($aid);
+        return view('index/news',['article'=>$list,'data'=>$data]);
     }
 }

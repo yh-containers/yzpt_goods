@@ -9,7 +9,13 @@
                     <i class="icon"><img src="{$cate.icon}"></i>
                     <div class="text">
                         <h2><a href="{:url('Goods/goods_list',['cate_id'=>$cate['id']])}">{$cate.cate_name}</a></h2>
-                        <!-- <p><a href="products.html">阿胶</a><span>|</span><a href="products.html">三七粉</a><span>|</span><a href="products.html">膳食汉方</a></p> -->
+                         <p>
+                             {volist name="cate.link_child_cate" id="child_cates" key="cik"}
+                             {if condition="$cik elt 3"}
+                             <a href="{:url('Goods/goods_list',['cate_id'=>$child_cates['id']])}">{$child_cates.cate_name}</a><span>{if condition="$cik lt 3"}|{/if}</span>
+                             {/if}
+                             {/volist}
+                         </p>
                     </div>
                     <div class="sort_sub">
                         <ul>

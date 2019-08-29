@@ -19,10 +19,9 @@
 			<div class="search_hot">
 				<div class="search_title"><h2>热门搜索</h2></div>
 				<div class="search_content">
-					<a href="">治疗器</a>
-					<a href="">治疗床牵引器</a>
-					<a href="">医用口罩</a>
-					<a href="">医用消毒器</a>
+					{volist name="search_key" id="searchs"}
+					<a href="{:url('Goods/goods_list')}?search={$searchs['name']}">{$searchs['name']}</a>
+					{/volist}
 				</div>
 			</div>
 			<div class="search_recording">
