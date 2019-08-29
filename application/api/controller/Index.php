@@ -269,12 +269,17 @@ class Index extends Common
 
     //分享信息
     public function shareInfo(){
+
+        if(empty($this->user_id)){
+            $model = \app\common\model\Users::get($this->user_id);
+            $redirect_url = empty($model)?url('index/share',[],false,true):$model->qr_code_info;
+        }
         return $this->_resData(1,'获取成功',[
             'type'=>'page',
             'title'=>'分享图片',
-            'image'=>'http://chinacarechain.com/uploads/ad/20190724/169fc311fed6a2d2a5b8acf848bdec22.jpg',
+            'image'=>'http://chinacarechain.com/assets/images/share_img.png',
             'desc'=>'我的图片分享',
-            'url'=>'http://www.baidu.com',
+            'url'=>$redirect_url,
         ]);
     }
 
