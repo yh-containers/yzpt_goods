@@ -19,16 +19,16 @@
 			<div class="personal_list">
 				<ul>
 					<li><a href="{:url('Member/mysafe',['modify'=>'phone'])}"><label>手机号</label><input type="text" name="" value="{$member.phone}" disabled="disabled"></a></li>
-					<li><a href="javascript:;"><label>昵　称</label><input type="text" name="name" value="{$member.name}"></a></li>
+					<li><a href="javascript:;"><label>昵　称</label><input type="text" name="name" value="{$member.name}" onblur="sendAjax('/Member/center',{'name':this.value},1);"></a></li>
 					<li>
                         <a href="javascript:;">
     						<label>性　别</label>
     						<div class="gender_select">
     							<div class="gender2 {if condition="$member['sex'] eq 1"}on_radio{/if}">
-    								<input type="radio" name="sex" value="1" id="male"><label for="male">男</label>
+    								<input type="radio" name="sex" value="1" id="male" onclick="sendAjax('/Member/center',{'sex':1},1);"><label for="male">男</label>
     							</div>
     							<div class="gender2 {if condition="$member['sex'] eq 0"}on_radio{/if}">
-    								<input type="radio" name="sex" value="0" id="female"><label for="female">女</label>
+    								<input type="radio" name="sex" value="0" id="female" onclick="sendAjax('/Member/center',{'sex':0},1);"><label for="female">女</label>
     							</div>
     						</div>
                         </a>

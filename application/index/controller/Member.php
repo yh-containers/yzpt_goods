@@ -222,11 +222,14 @@ class Member extends Common
         if($this->request->isAjax()) {
             $res = ['code' => 0, 'msg' => ''];
             $php_input = $this->request->param();
+            $face = $this->request->param('face');
+            $name = $this->request->param('name');
             try{
                 $user_model->where(['id'=>session('uid')])->update($php_input);
-                if($php_input['face']){
+                if($face || $name){
                     $uinfo = session('userinfo');
-                    $uinfo['face'] = $user_model->getFaceAttr($php_input['face']);
+                    if($face) $uinfo['face'] = $user_model->getFaceAttr($face);
+                    if($name) $uinfo['uname'] = $name;
                     session('userinfo',$uinfo);
                 }
             } catch (\Exception $e) {
