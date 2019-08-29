@@ -119,6 +119,7 @@
 			<div class="pro_info">
 				<div class="pro_message">
 					<span>买家留言：</span><input type="text" name="remark" placeholder="选填：对本次交易的说明（建议填写已经和商家达成一致的说明）">
+					{if($integral)}<span style="margin-top: 10px;">使用养分：</span><input type="number" name="integral" min="0" max="{$integral}" placeholder="最多可使用{$integral}" style="margin-top: 10px;" onblur="ckIntegral(this.value);">{/if}
 				</div>
 				<div class="total">
 					<p>商品总金额：<span>￥{$total}</span></p>
@@ -143,7 +144,14 @@
 			$(this).addClass("cur").siblings().removeClass("cur");
 			$(this).find("input").attr("checked","checked");
 		});
-
+        function ckIntegral(nums) {
+            var max_intes = {$integral};
+            if(nums){
+                if(max_intes < parseInt(nums)){
+                    $('input[name=integral]').val(max_intes);
+                }
+            }
+        }
 		/*选择支付方式*/
 		$(".payment_method ul li").on("click",function(){
 			$(this).find("input").attr("checked","checked");

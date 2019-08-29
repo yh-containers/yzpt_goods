@@ -103,7 +103,8 @@ class Order extends Common
         $spec_model = new \app\common\model\GoodsSpecValue();
         $goods_model = new \app\common\model\Goods();
         $total = 0;
-        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.*,g.goods_name,g.goods_image,g.price,g.status')->select();
+        $integral = 0;
+        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.*,g.goods_name,g.goods_image,g.price,g.status,g.integral')->select();
         if(count($cart_list) == 0){
             $this->error('未选择购物车商品');
         }
@@ -126,6 +127,14 @@ class Order extends Common
                 $this->error('购物车中存在下架的商品');
             }
             $total += $cart['price'] * $cart['num'];
+            $integral += $cart['integral'] * $cart['num'];
+        }
+        //查询用户可用积分
+        $use = \app\common\model\Users::field('raise_num')->get(session('uid'));
+        if($use['raise_num'] && $integral){
+            if($use['raise_num'] < $integral) $integral = $use['raise_num'];
+        }else{
+            $integral = 0;
         }
         $aid = $this->request->param('aid');
         $addr_default = '';
@@ -143,13 +152,14 @@ class Order extends Common
                 if(!$addr_default) $addr_default = $addr_list[0];
             }
         }
-        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'addr_default'=>$addr_default,'total'=>$total]);
+        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'addr_default'=>$addr_default,'total'=>$total,'integral'=>$integral,'use_integral'=>$use['raise_num']]);
     }
     //创建订单
     public function createorder(){
         if($this->request->isAjax()) {
             $res = ['code' => 0, 'msg' => ''];
             $php_input = $this->request->param();
+            $integral = $this->request->param('integral');
             $order_model = new \app\common\model\Order();
             $cart_model = new \app\common\model\Cart();
             $og_model = new \app\common\model\OrderGoods();
@@ -157,7 +167,7 @@ class Order extends Common
             try{
                 \think\Db::startTrans();
                 //检查购物车商品状态及库存
-                $goods_info = $cart_model->checkCartGoods();
+                $goods_info = $cart_model->checkCartGoods($integral);
                 /*if(!empty($php_input['address'])){
                     $res['msg'] = '未选择收货地址';
                     echo json_encode($res);die;
@@ -167,8 +177,15 @@ class Order extends Common
                 $inserts['uid'] = session('uid');
                 $inserts['money'] = $goods_info['total'];
                 $inserts['goods_money'] = $goods_info['total'];
+                $inserts['pay_money'] = $goods_info['total'] - $goods_info['dis_money'];
+                $inserts['dis_money'] = $goods_info['dis_money'];
                 $inserts['pay_way'] = ($php_input['pay'] == 'alipay') ? 1: 2;
                 $inserts['remark'] = $php_input['remark'];
+                if($goods_info['dis_money']){
+                    \app\common\model\UsersRaiseLogs::recordLog(session('uid'),-($goods_info['dis_money']*100),'','商品折扣：'.($goods_info['dis_money']*100));
+                    \app\common\model\Users::where(['id'=>session('uid')])->update(['raise_num'=>\app\common\model\Users::raw('raise_num-'.($goods_info['dis_money']*100))]);
+
+                }
                 $order_model->actionAdd($inserts);
                 $og_model->createOrderGoods($goods_info['goods_list'],$order_model->id);
                 $od_model->createOrderAddr($php_input['address'],$order_model->id);

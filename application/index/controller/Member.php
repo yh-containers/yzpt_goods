@@ -49,7 +49,7 @@ class Member extends Common
         $order_model = new \app\common\model\Order();
         $sku_model = new \app\common\model\GoodsSpecStock();
         $spec_model = new \app\common\model\GoodsSpecValue();
-        $order_list = $order_model->with('ownAddrs')->field('id,no,money,pay_time,cancel_time,complete_time,send_start_time,receive_start_time,create_time,step_flow,status,is_send,is_receive')->with('ownGoods')->where($sql_where)->order('create_time desc')->paginate();
+        $order_list = $order_model->with('ownAddrs')->field('id,no,money,pay_money,pay_time,cancel_time,complete_time,send_start_time,receive_start_time,create_time,step_flow,status,is_send,is_receive')->with('ownGoods')->where($sql_where)->order('create_time desc')->paginate();
         $page = $order_list->render();
         foreach ($order_list as &$order){
             $state = $order_model->getPropInfo('fields_mobile_step', $order['step_flow']);

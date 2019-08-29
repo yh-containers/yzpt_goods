@@ -35,10 +35,12 @@ class Cart extends BaseModel
         }
     }
     //检测商品状态及库存
-    public function checkCartGoods(){
-        $cart_list = self::alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.id,c.gid,c.uid,c.sid,c.num,g.goods_name,g.goods_image,g.price,g.stock,g.status')->select();
+    public function checkCartGoods($raise){
+        $cart_list = self::alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.id,c.gid,c.uid,c.sid,c.num,g.goods_name,g.goods_image,g.price,g.stock,g.status,g.integral')->select();
         empty($cart_list) && exception('未选中商品');
         $total = 0;
+        $dis_money = 0;
+        $integral = 0;
         $gmodel = new \app\common\model\GoodsSpecStock();
         foreach ($cart_list as &$cart){
             if($cart['sid']){
@@ -58,7 +60,19 @@ class Cart extends BaseModel
             ($cart['stock']<$cart['num']) && exception('商品库存不足');
             ($cart['status'] != 1) && exception('商品库存不足');
             $total += $cart['price']*$cart['num'];
+            $integral += $cart['integral']*$cart['num'];
         }
-        return ['goods_list'=>$cart_list,'total'=>$total];
+        if($raise){
+            //查询用户可用积分
+            $use = \app\common\model\Users::field('raise_num')->get(session('uid'));
+            if($use['raise_num'] && $integral){
+                if($use['raise_num'] < $integral) $integral = $use['raise_num'];
+                if($raise>$integral) $raise = $integral;
+                $normal_content = \app\common\model\SysSetting::getContent('normal');
+                $normal_content = empty($normal_content)?[]:json_decode($normal_content,true);
+                $dis_money = round((($raise/100)*$normal_content['integral_money']),2);
+            }
+        }
+        return ['goods_list'=>$cart_list,'total'=>$total,'dis_money'=>$dis_money];
     }
 }

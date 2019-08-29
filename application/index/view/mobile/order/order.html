@@ -46,7 +46,7 @@
 				<ul>
 					<li>金额<span>￥{$total}</span></li>
 					<li>运费<span>￥0.00</span></li>
-					<li>积分<span>无</span></li>
+					<li>养分<span>{if($integral)}使用养分：<input type="number" name="integral" min="0" max="{$integral}" placeholder="最多可使用{$integral}" style="width: 100px;height: 30px;border: 1px solid #ccc;" onblur="ckIntegral(this.value);">{else/}无{/if}</span></li>
 				</ul>
 			</div>
 			<div class="pay_method">
@@ -83,7 +83,14 @@
 			$(this).addClass('selected').find('input').prop("checked",true);
 			$(this).siblings().removeClass('selected').find('input').prop("checked",false);
 		});
-
+		function ckIntegral(nums) {
+			var max_intes = {$integral};
+			if(nums){
+				if(max_intes < parseInt(nums)){
+				    $('input[name=integral]').val(max_intes);
+				}
+			}
+        }
 		function toCreateOrder(){
 			var ajaxUrl = $("#createForm").attr('action');
 		  	var ajaxData = $("#createForm").serialize();

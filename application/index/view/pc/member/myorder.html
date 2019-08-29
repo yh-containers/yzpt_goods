@@ -36,7 +36,7 @@
 								</div>
 								<div class="receiver">{$order.own_addrs.username}</div>
 								<div class="num">X{$order.number}</div>
-								<div class="yuan">￥{$order.money}</div>
+								<div class="yuan">￥{$order.pay_money}</div>
 								<div class="status">
 									<p>{$order.status}</p>
 									<a href="{:url('Order/order_detail',['id'=>$order['id']])}">订单详情</a>
