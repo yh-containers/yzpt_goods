@@ -202,10 +202,12 @@ class Index extends Common
         //用户点赞
         if($on_praise_num){
             //粉丝
-            $fans_num = (int)\app\common\model\UsersFollow::where(['f_uid'=>$this->user_id])->count();
+            $fans_num = (int)\app\common\model\UsersFollow::where(['f_uid'=>$id])->count();
             //关注对象
-            $follow_num = (int)\app\common\model\UsersFollow::where(['uid'=>$this->user_id])->count();
-            $data['praise']=['num'=>(int)$user_model['praise_num'],'follow'=>$follow_num,'fans'=>$fans_num];
+            $follow_num = (int)\app\common\model\UsersFollow::where(['uid'=>$id])->count();
+            //是否关注
+            $is_follow = \app\common\model\UsersFollow::where(['uid'=>$this->user_id,'f_uid'=>$id])->find();
+            $data['praise']=['num'=>(int)$user_model['praise_num'],'follow'=>$follow_num,'fans'=>$fans_num,'is_follow'=>empty($is_follow)?0:1];
         }
         //身体状态
         if($on_user_body){
@@ -316,4 +318,33 @@ class Index extends Common
         return response($qrCode->writeString())->header('Content-Type',$qrCode->getContentType());
     }
 
+
+    //分享页面
+    public function share()
+    {
+        $req_code = input('req_code','','trim');
+        return view('share',[
+            'req_code'=>$req_code,
+        ]);
+    }
+    public function shareAction()
+    {
+        $phone = input('phone','');
+        $php_input = input();
+        try{
+            \app\common\model\Users::handleLogin($phone,'1234',1,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'绑定成功');
+
+
+
+    }
+
+    //分享页面
+    public function download()
+    {
+        return view('download');
+    }
 }

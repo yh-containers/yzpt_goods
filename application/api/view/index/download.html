@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name= "format-detection" content="telephone = no" />	
+	<title>APP下载-养众天使</title>
+	<style>
+	html,body,div,dl,dt,dd,ul,ol,li,p,span,a,img,form,input,h1,h2,h3,h4,h5,h6{margin: 0; padding: 0;}
+	html{
+		font-family: sans-serif;
+		font-size: calc(100vw/7.5)
+	}
+	body{font-size:16px; background: #fff; overflow-x: hidden;font-family:"Microsoft Yahei","微软雅黑",Helvetica,Arial,sans-serif;margin: 0 auto;}
+	body {width:100%;height: 100%;}
+	body:before {
+	  content: "";display: block; background: url(/assets/images/app_bg.jpg) no-repeat; background-size: cover; width: 100%;height: 100%; position: fixed;  top: 0;  left: 0;  bottom: 0;  right: 0; z-index: -1;
+	}
+	h1,h2,h3,h4,h5,h6{font-weight: normal;}
+
+	a{color: #333; text-decoration: none;}
+	img{max-width:100%;margin:auto;display:block;}
+	.clearfix:after {content: '.';display: block;clear: both;height: 0;visibility: hidden;}
+	.clearfix {*zoom:1;}
+	#wrap .top {width: 100%;height: 100%;position: fixed;right: 0px;top: 0px;text-align: right;background-color: rgba(0,0,0,0.8);z-index: 9;}
+	#wrap .top img {height: 120px;padding: 5px 10px;float: right;}
+	.content {width:88%;margin: 1.6rem auto 0.6rem;}
+	.content .wrap_logo {width: 1.8rem;height: 1.8rem;margin: auto;}
+	.content .con {margin-top: 2rem;}
+	.content .con .erweima .list {width:47%;margin-right:6%;float:left;}
+	.content .con .erweima .list:nth-child(2){margin-right:0;}
+	.content .con .erweima .list .h {width: 100%;height: 50px;margin-top:20px;}
+	.content .con .erweima .list .h a{width:100%;height:100%;float:left;}
+	.content .con .erweima .list .h.android {background: url("/assets/images/tit2.png") no-repeat center; background-size: contain;}
+	.content .con .erweima .list .h.iphone {background: url("/assets/images/tit1.png") no-repeat center;  background-size:contain;}
+	</style>
+</head>
+
+<body>
+<div id="wrap">
+	<div class="top"><img src="/assets/images/appdown_1.png"></div>
+	<div class="clearfix">
+		<div class="content clearfix">
+			<div class="wrap_logo"><img src="/assets/images/logo_icon.png" alt=""></div>
+			<div class="con">
+				<div class="erweima clearfix">
+					<div class="list">
+						<div class="pic"><img src="/assets/images/iphone.jpg" width="168px;" alt=""></div>
+						<div class="h android"><a href="" target="_blank"></a></div>
+					</div>
+					<div class="list">
+						<div class="pic"><img src="/assets/images/android.jpg" width="168px;" alt=""></div>
+						<div class="h iphone"><a href="" target="_blank"></a></div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="/assets/index/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+	var ua = window.navigator.userAgent.toLowerCase();
+    if (!ua.match(/MicroMessenger/i)) {
+        $(".top").remove()
+    }
+</script>
+
+</body></html>

@@ -104,6 +104,26 @@ class Users extends BaseModel
         }
         return $name;
     }
+
+    //用户邀请码
+    protected function setReqCodeAttr($value)
+    {
+        if(empty($value)){
+            return $value;
+        }
+        $model = self::where(['qr_code'=>$value])->find();
+        if(!empty($model)){
+            $this->setAttr('r_uid1',$model['id']);
+            !empty($model['r_uid1']) && $this->setAttr('r_uid2',$model['r_uid1']);
+            !empty($model['r_uid2']) && $this->setAttr('r_uid3',$model['r_uid2']);
+        }
+
+
+        return $value;
+
+    }
+
+
     //用户密码
     protected function setPasswordAttr($value)
     {
@@ -128,7 +148,7 @@ class Users extends BaseModel
     protected function getQrCodeInfoAttr()
     {
 
-        return url('index/req',['req_code'=>$this->qr_code],false,true);
+        return url('index/share',['req_code'=>$this->qr_code],false,true);
     }
 
 
@@ -230,6 +250,9 @@ class Users extends BaseModel
                 $model = new self();
                 //绑定手机号码
                 $data['phone'] = $account;
+                //邀请码
+                !empty($php_input['req_code']) && $data['req_code'] = $php_input['req_code'];
+
                 if(!empty($auth_info) && isset($auth_info['mode']) && isset($auth_info['open_id']) && isset($auth_info['access_token'])){
                     //新注册使用第三方基本信息
                     try{
