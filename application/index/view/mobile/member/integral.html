@@ -1,0 +1,55 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+<header class="header">
+    <a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+    <div class="header_title">我的养分</div>
+</header>
+<main class="main mgtop">
+    <div class="integral">
+        <div class="integral_top"><i class="icon iconfont icon-jifen"></i>{$integral}</div>
+        <div class="hd">
+            <ul>
+                <li><span>收入</span></li>
+                <li><span>支出</span></li>
+            </ul>
+        </div>
+        <div class="bd">
+            <div class="conWrap">
+                <div class="con">
+                    <ul>
+                        {volist name="addlog" id="alog"}
+                        <li>
+                            <div class="integral_left">
+                                <h3>{$alog.intro}</h3>
+                                <p><span>{$alog.create_time}</span></p>
+                            </div>
+                            <div class="integral_right">+{$alog.num}积分</div>
+                        </li>
+                        {/volist}
+                    </ul>
+                </div>
+                <div class="con">
+                    <ul>
+                        {volist name="lesslog" id="llog"}
+                        <li>
+                            <div class="integral_left">
+                                <h3>{$llog.create_time}</h3>
+                                <p><span>{$llog.create_time}</span></p>
+                            </div>
+                            <div class="integral_right">{$alog.num}积分</div>
+                        </li>
+                        {/volist}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script type="text/javascript" src="/assets/index/js/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript">
+    jQuery(".integral").slide({ mainCell:".conWrap", targetCell:".more a", effect:"fold"});
+</script>
+{/block}
+{block name="footer"}{/block}

@@ -13,11 +13,9 @@
 	<main class="main wrapper">
 		<div class="index_sort">
 			<ul class="clearfix">
-				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon01.png"><span>促销活动</span></a></li>
-				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon02.png"><span>维生素</span></a></li>
-				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon03.png"><span>母婴</span></a></li>
-				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon04.png"><span>保健器械</span></a></li>
-				<li><a href="{:url('Goods/goods_list')}"><img src="/assets/index/mobile/images/icon05.png"><span>滋补</span></a></li>
+				{volist name="$tuijianCate" id="cate"}
+				<li><a href="{:url('Goods/goods_list',['cate_id'=>$cate['id']])}"><img src="{$cate.image}"><span>{$cate.cate_name}</span></a></li>
+				{/volist}
 			</ul>
 		</div>
 		<div class="products">
