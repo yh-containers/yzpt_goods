@@ -104,7 +104,8 @@ class Order extends Common
         $goods_model = new \app\common\model\Goods();
         $total = 0;
         $integral = 0;
-        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.*,g.goods_name,g.goods_image,g.price,g.status,g.integral')->select();
+        $fare = 0;
+        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.*,g.goods_name,g.goods_image,g.price,g.status,g.integral,g.fare')->select();
         if(count($cart_list) == 0){
             $this->error('未选择购物车商品');
         }
@@ -128,6 +129,7 @@ class Order extends Common
             }
             $total += $cart['price'] * $cart['num'];
             $integral += $cart['integral'] * $cart['num'];
+            $fare += $cart['fare'] * $cart['num'];
         }
         //查询用户可用积分
         $use = \app\common\model\Users::field('raise_num')->get(session('uid'));
@@ -152,7 +154,7 @@ class Order extends Common
                 if(!$addr_default) $addr_default = $addr_list[0];
             }
         }
-        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'addr_default'=>$addr_default,'total'=>$total,'integral'=>$integral,'use_integral'=>$use['raise_num']]);
+        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'addr_default'=>$addr_default,'total'=>$total,'integral'=>$integral,'use_integral'=>$use['raise_num'],'fare'=>$fare]);
     }
     //创建订单
     public function createorder(){
@@ -175,10 +177,11 @@ class Order extends Common
                 $inserts = array();
                 $inserts['no'] = $order_model->getOrderSn();
                 $inserts['uid'] = session('uid');
-                $inserts['money'] = $goods_info['total'];
+                $inserts['money'] = $goods_info['total']+$goods_info['fare'];
                 $inserts['goods_money'] = $goods_info['total'];
-                $inserts['pay_money'] = $goods_info['total'] - $goods_info['dis_money'];
+                $inserts['pay_money'] = $goods_info['total'] + $goods_info['fare'] - $goods_info['dis_money'];
                 $inserts['dis_money'] = $goods_info['dis_money'];
+                $inserts['freight_money'] = $goods_info['fare'];
                 $inserts['pay_way'] = ($php_input['pay'] == 'alipay') ? 1: 2;
                 $inserts['remark'] = $php_input['remark'];
                 if($goods_info['dis_money']){

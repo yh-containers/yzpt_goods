@@ -123,13 +123,13 @@
 				</div>
 				<div class="total">
 					<p>商品总金额：<span>￥{$total}</span></p>
-					<p>运费：<span>￥0</span></p>
-					<p>优惠：<span>￥0</span></p>
+					<p>运费：<span>￥{$fare}</span></p>
+					<!--<p>优惠：<span>￥0</span></p>-->
 				</div>
 			</div>
 			<div class="order_btn">
 				<a href="javaScript:history.go(-1);" class="return">&lt; 返回购物车</a>
-				<div class="price">应付金额：<span>{$total}</span>元<a href="javascript:;" onclick="toCreateOrder();">提交订单</a></div>
+				<div class="price">应付金额：<span>{$total+$fare}</span>元<a href="javascript:;" onclick="toCreateOrder();">提交订单</a></div>
 			</div>
 			</form>
 		</div>

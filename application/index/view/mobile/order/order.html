@@ -45,7 +45,7 @@
 			<div class="orders_info">
 				<ul>
 					<li>金额<span>￥{$total}</span></li>
-					<li>运费<span>￥0.00</span></li>
+					<li>运费<span>￥{$fare}</span></li>
 					<li>养分<span>{if($integral)}使用养分：<input type="number" name="integral" min="0" max="{$integral}" placeholder="最多可使用{$integral}" style="width: 100px;height: 30px;border: 1px solid #ccc;" onblur="ckIntegral(this.value);">{else/}无{/if}</span></li>
 				</ul>
 			</div>
@@ -74,7 +74,7 @@
 	</main>
 
 	<footer class="orders_footer">
-		<p>应付金额：<span>￥{$total}</span></p>
+		<p>应付金额：<span>￥{$total+$fare}</span></p>
 		<a href="javascript:;" onclick="toCreateOrder();">提交订单</a>
 	</footer>
 	<script type="text/javascript">
