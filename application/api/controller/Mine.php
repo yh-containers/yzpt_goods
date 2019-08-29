@@ -319,7 +319,7 @@ class Mine extends Common
         $list = [];
         $info = \app\common\model\Users::getReqList($user_id, $php_input)->each(function($item,$index)use(&$list){
             array_push($list,[
-                'uid' => $item['uid'],
+                'id' => $item['id'],
                 'name' => $item['name'],
                 'face' => $item['face'],
                 'intro' => $item['intro'],

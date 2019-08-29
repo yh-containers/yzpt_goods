@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name= "format-detection" content="telephone = no" />	
+	<title>分享-养众天使</title>
+	<style>
+	html,body,div,dl,dt,dd,ul,ol,li,p,span,a,img,form,input,h1,h2,h3,h4,h5,h6{margin: 0; padding: 0;}
+	html{
+		font-family: sans-serif;
+		font-size: calc(100vw/7.5)
+	}
+	body{font-size:16px; background: #fff; overflow-x: hidden;font-family:"Microsoft Yahei","微软雅黑",Helvetica,Arial,sans-serif;margin: 0 auto;}
+	body {width:100%;height: 100%;}
+	body:before {
+	  content: "";display: block; background: url(/assets/images/app_bg.jpg) no-repeat; background-size: cover; width: 100%;height: 100%; position: fixed;  top: 0;  left: 0;  bottom: 0;  right: 0; z-index: -1;
+	}
+	h1,h2,h3,h4,h5,h6{font-weight: normal;}
+
+	a{color: #333; text-decoration: none;}
+	img{max-width:100%;margin:auto;display:block;}
+	.clearfix:after {content: '.';display: block;clear: both;height: 0;visibility: hidden;}
+	.clearfix {*zoom:1;}
+	.content {width:88%;margin: 1.6rem auto 0.6rem;}
+	.content .wrap_logo {width: 1.8rem;height: 1.8rem;margin: auto;}
+	.content .inviteForm {margin-top: 2rem;}
+	.content .inviteForm input {display: block;width:100%;height: 46px;line-height: 26px;border: 1px solid #e2e2e2;border-radius: 6px;padding: 10px;margin-bottom: 0.4rem;color: #333;font-size: 16px;box-sizing: border-box;}
+	.content .inviteForm input:focus{outline:none;}
+	.content .inviteForm input.inviteInput:focus{border-color: #38afcb}
+	.content .inviteForm input.inputSubmit {background-color: #38afcb;color: #fff;}
+	</style>
+</head>
+
+<body>
+<div id="wrap">
+	<div class="clearfix">
+		<div class="content fl clearfix">
+			<div class="wrap_logo"><img src="/assets/images/logo_icon.png" alt=""></div>
+			<div class="con">
+				<div class="inviteForm">
+
+					<input class="inviteInput" type="text" name="phone" maxlength="11" placeholder="输入你的手机号接受邀请" value="" />
+					<input class="inviteInput" type="hidden" name="req_code"  value="{$req_code}" />
+					<input class="inputSubmit" type="button" id="butotn" value="接受邀请" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="/assets/index/js/jquery-1.8.3.min.js"></script>
+<script>
+	$(function(){
+		$("#butotn").click(function(){
+			var obj = {};
+			obj.phone = $.trim($("input[name='phone']").val())
+			obj.req_code = $.trim($("input[name='req_code']").val())
+			$.ajax({
+				url:"{:url('shareAction')}",
+				type:'post',
+				data:obj,
+				success:function(res){
+					alert(res.msg)
+					if(res.code===1){
+						setTimeout(function(){location.href = "{:url('download')}"},1000);
+					}
+				},
+				error:function(res){
+					alert('网络异常')
+				}
+			})
+		})
+	})
+</script>
+</body>
+</html>

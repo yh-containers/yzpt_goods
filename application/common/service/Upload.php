@@ -29,6 +29,9 @@ class Upload
         ];
         // 初始化签权对象
         if(!empty(config('qiniu.is_use'))){
+            //预览地址
+            $data['preview_domain'] = config('qiniu.preview_domain');
+
             $auth = new Auth(config('qiniu.ak'), config('qiniu.sk'));
             //视频获取封面图
 //            if($type=='video'){
