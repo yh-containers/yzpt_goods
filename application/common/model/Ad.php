@@ -13,9 +13,10 @@ class Ad extends BaseModel
     public static $fields_type = [
         ['name'=>'启动图'],
         ['name'=>'引导页'],
-        ['name'=>'首页banner'],
+        ['name'=>'PC首页banner'],
         ['name'=>'活动推荐轮播'],
         ['name'=>'福利拓展'],
+        ['name'=>'PE首页banner'],
     ];
     protected function getImgAttr($value)
     {

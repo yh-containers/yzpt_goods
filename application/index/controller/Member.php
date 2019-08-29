@@ -224,6 +224,11 @@ class Member extends Common
             $php_input = $this->request->param();
             try{
                 $user_model->where(['id'=>session('uid')])->update($php_input);
+                if($php_input['face']){
+                    $uinfo = session('userinfo');
+                    $uinfo['face'] = $user_model->getFaceAttr($php_input['face']);
+                    session('userinfo',$uinfo);
+                }
             } catch (\Exception $e) {
                 $res['msg'] = $e->getMessage();
                 echo json_encode($res);
