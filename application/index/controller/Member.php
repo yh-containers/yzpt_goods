@@ -365,4 +365,12 @@ class Member extends Common
     public function message(){
         return view('message');
     }
+    //我的养分
+    public function myintegral(){
+        $integralModel = new \app\common\model\UsersRaiseLogs();
+        $addlog = $integralModel->where('num>0 and uid='.session('uid'))->select();
+        $lesslog = $integralModel->where('num<=0 and uid='.session('uid'))->select();
+        $integral =  $integralModel->where(['uid'=>session('uid')])->sum('num');
+        return view('integral',['addlog'=>$addlog,'lesslog'=>$lesslog,'integral'=>$integral]);
+    }
 }

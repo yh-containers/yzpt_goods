@@ -24,8 +24,10 @@ class Index extends Common
         //print_r($today_where);
         //首页banner
         $banner = \app\common\model\Ad::where('type=2 and status=1')->field('url,img')->select();
+        $tuijianCate = array();
         if(isMobile()){
             $banner = \app\common\model\Ad::where('type=5 and status=1')->field('url,img')->select();
+            $tuijianCate = \app\common\model\GoodsCategory::where(['status'=>1,'pid'=>0])->field('id,cate_name,pid,icon,image')->order('sort asc')->limit(5)->select();
         }
         //分类下商品
         $cate_lists = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
@@ -44,7 +46,7 @@ class Index extends Common
             $val['goods_list'] = $goods_list;
         }
         //print_r($cate_lists);
-        return view('index',['goods'=>$goods,'banner'=>$banner,'isIndex'=>1,'cate_goods'=>$cate_lists]);
+        return view('index',['goods'=>$goods,'banner'=>$banner,'isIndex'=>1,'cate_goods'=>$cate_lists,'tuijianCate'=>$tuijianCate]);
     }
 //登录登出
     public function login(){
