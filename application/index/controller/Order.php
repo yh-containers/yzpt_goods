@@ -184,12 +184,12 @@ class Order extends Common
                 $inserts['freight_money'] = $goods_info['fare'];
                 $inserts['pay_way'] = ($php_input['pay'] == 'alipay') ? 1: 2;
                 $inserts['remark'] = $php_input['remark'];
+                $order_model->actionAdd($inserts);
                 if($goods_info['dis_money']){
                     \app\common\model\UsersRaiseLogs::recordLog(session('uid'),-($goods_info['dis_money']*100),'','商品折扣：'.($goods_info['dis_money']*100));
                     \app\common\model\Users::where(['id'=>session('uid')])->update(['raise_num'=>\app\common\model\Users::raw('raise_num-'.($goods_info['dis_money']*100))]);
 
                 }
-                $order_model->actionAdd($inserts);
                 $og_model->createOrderGoods($goods_info['goods_list'],$order_model->id);
                 $od_model->createOrderAddr($php_input['address'],$order_model->id);
                 $res['order_id'] = $order_model->id;
@@ -227,6 +227,7 @@ class Order extends Common
         $order_model = new \app\common\model\Order();
         $sku_model = new \app\common\model\GoodsSpecStock();
         $spec_model = new \app\common\model\GoodsSpecValue();
+        $wlModel = new \app\common\model\OrderLogistics();
 
         $order = $order_model->with('ownGoods,ownAddr')->get($id);
         if(empty($order)) $this->error('订单不存在');
@@ -243,6 +244,9 @@ class Order extends Common
         if($order['step_flow'] == 1) $order['step'] = 3;
         if($order['step_flow'] == 2) $order['step'] = 4;
         if($order['status'] == 4) $order['step'] = 5;
+        if($order['step_flow'] == 2){
+            $order['wl'] = $wlModel->where(['oid'=>$id])->find();
+        }
         $order['number'] = 0;
         foreach ($order['own_goods'] as &$goods) {
             $order['number'] += $goods['num'];

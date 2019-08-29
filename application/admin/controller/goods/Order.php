@@ -36,6 +36,13 @@ class Order extends Common
                     $res['msg'] = '已确认';
                 }else if($handle == 'send'){//发货
                     $model->orderSend($u['uid'],$oid);
+                    $addinfo = array();
+                    $addinfo['oid'] = $oid;
+                    $addinfo['no'] = $this->request->param('no');
+                    $addinfo['company'] = $this->request->param('company');
+                    $addinfo['money'] = $this->request->param('money');
+                    $wlModel = new \app\common\model\OrderLogistics();
+                    $wlModel->actionAdd($addinfo);
                     $res['msg'] = '已确认';
                 }
                 \think\Db::commit();

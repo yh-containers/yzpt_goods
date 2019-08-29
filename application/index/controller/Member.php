@@ -21,7 +21,7 @@ class Member extends Common
     }
     //我的订单列表
     public function orderlist(){
-        $sql_where = 'uid='.session('uid');
+        $sql_where = 'uid='.session('uid').' and status<5';
         $step = $this->request->param('step');
         switch (intval($step)){
             case 1://待发货
@@ -98,6 +98,9 @@ class Member extends Common
                 }else if($handle == 'receive'){//收货
                     $order_model->orderReceive(session('uid'),$oid);
                     $res['msg'] = '已确认';
+                }else if($handle == 'retreat'){//退货
+                    $order_model->orderRetreat(session('uid'),$oid);
+                    $res['msg'] = '操作成功';
                 }
                 \think\Db::commit();
             }catch (\Exception $e){
@@ -194,7 +197,33 @@ class Member extends Common
     }
     //我的退款单
     public function myretreat(){
-        return view('myretreat',['active'=>'ret']);
+        $sql_where = 'uid='.session('uid').' and status=5';
+        $order_model = new \app\common\model\Order();
+        $sku_model = new \app\common\model\GoodsSpecStock();
+        $spec_model = new \app\common\model\GoodsSpecValue();
+        $order_list = $order_model->with('ownAddrs')->field('id,no,money,pay_money,pay_time,cancel_time,complete_time,send_start_time,receive_start_time,create_time,step_flow,status,is_send,is_receive')->with('ownGoods')->where($sql_where)->order('create_time desc')->paginate();
+        $page = $order_list->render();
+        foreach ($order_list as &$order){
+            $state = $order_model->getPropInfo('fields_mobile_step', $order['step_flow']);
+            $order['status'] = is_array($state['name']) ? $state['name'][$order['status']] : $state['name'];
+            $order['number'] = 0;
+            foreach ($order['own_goods'] as &$goods){
+                $order['number'] += $goods['num'];
+                $extra = explode(':',$goods['extra']);
+                if($extra[1]){
+                    $sku = $sku_model->where(['id'=>$extra[1]])->field('price,sv_ids')->find();
+                    $spec = $spec_model->where('id in('.$sku['sv_ids'].')')->field('value_name')->select();
+                    $goods['spec_name'] = ' ';
+                    foreach ($spec as $spv){
+                        $goods['spec_name'] .= $spv['value_name'].' + ';
+                    }
+                    $goods['spec_name'] = trim($goods['spec_name'],' + ');
+                }else{
+                    $goods['spec_name'] = '';
+                }
+            }
+        }
+        return view('myretreat',['active'=>'ret','order_list'=>$order_list,'page'=>$page]);
     }
     //我的首页 mobile
     public function user(){
@@ -213,7 +242,9 @@ class Member extends Common
         $where['status'] = 3;
         $order_count['com'] = $order_model->where($where)->count();
         //退货退款
-
+        unset($where['step_flow']);
+        $where['status'] = 5;
+        $order_count['ret'] = $order_model->where($where)->count();
         return view('user',['order_count'=>$order_count]);
     }
     //我的基本信息

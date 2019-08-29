@@ -40,10 +40,10 @@
 						</a>
 					</li>
 					<li>
-						<a href="{:url('Member/orderlist')}">
+						<a href="{:url('Member/myretreat')}">
 							<i><img src="/assets/index/mobile/images/icon15.png"></i>
 							<p>退货退款</p>
-							<!-- <span></span> -->
+							{if($order_count['ret'])}<span>{$order_count.ret}</span>{/if}
 						</a>
 					</li>
 				</ul>

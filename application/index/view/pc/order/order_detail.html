@@ -50,10 +50,10 @@
 									<dd>收货地址：{$order['own_addr'][0]['addr']} {$order['own_addr'][0]['addr_extra']}</dd>
 									<dd>联系电话：{$order['own_addr'][0]['phone']}</dd>
 								</dl>
-								<dl class="kuaidi_info" style="display: none">
+								<dl class="kuaidi_info" {if condition="$order['step_flow'] egt 2"}{else/}style="display: none"{/if}>
 									<dt>快递信息</dt>
-									<dd>物流公司：无</dd>
-									<dd>物流单号：无</dd>
+									<dd>物流公司：{$order.wl.company}</dd>
+									<dd>物流单号：{$order.wl.no}</dd>
 								</dl>
 							</div>
 						</div>
