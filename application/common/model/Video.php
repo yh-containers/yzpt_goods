@@ -49,6 +49,11 @@ class Video extends BaseModel
         return self::handleFile($value);
     }
 
+    protected function getFileAttr($value)
+    {
+        return self::handleFile($value);
+    }
+
 
     /**
      * 评论
