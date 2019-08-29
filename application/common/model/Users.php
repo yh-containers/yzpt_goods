@@ -13,7 +13,7 @@ class Users extends BaseModel
     //数据库表名
     protected $name = 'users';
     //自动完成
-    protected $insert=['face','name','status'=>1];
+    protected $insert=['face','name','status'=>1,'qr_code'];
 
     //养分变更自从
     protected $c_raise_type=0;//类型
@@ -47,6 +47,12 @@ class Users extends BaseModel
     {
         return self::handleFile($value);
     }
+
+    protected function setQrCodeAttr()
+    {
+        return create_invite_code();
+    }
+
     //自动完成头像
     protected function setFaceAttr($value)
     {
@@ -117,6 +123,12 @@ class Users extends BaseModel
     {
         $value = is_array($value)?$value:[$value];
         return implode("\r\n",$value);
+    }
+
+    protected function getQrCodeInfoAttr()
+    {
+
+        return url('index/req',['req_code'=>$this->qr_code],false,true);
     }
 
 
@@ -553,10 +565,32 @@ class Users extends BaseModel
         return $data;
     }
 
+    /**
+     * 列表数据
+     * @param array $php_input 数据
+     * @param int $user_id 用户id
+     * @throws
+     * @return \think\Paginator
+     * */
+    public static function getReqList($user_id,array $php_input=[])
+    {
+        $where = [];
+
+        $where[]=['r_uid1','=',$user_id];
+        $list = self::where($where)->order('id desc')->paginate();
+        return $list;
+    }
+
 
     //我是否关注
     public function linkHasFollow()
     {
         return $this->hasOne('UsersFollow','f_uid')->whereNotNull('follow_time');
+    }
+
+    //我邀请的用户
+    public function linkReqUser()
+    {
+        return $this->hasMany('Users','r_uid1');
     }
 }

@@ -26,6 +26,8 @@ class Mine extends Common
         $on_user_body = input('on_user_body',0,'intval');
         $on_user_money = input('on_user_money',0,'intval');
         $on_user_label = input('on_user_label',0,'intval');
+        $on_qr_code = input('on_qr_code',0,'intval'); //二维码
+        $on_req_info = input('on_req_info',0,'intval'); //邀请信息
         $off_user_info = input('off_user_info',0,'intval');//关闭用户基本信息
 
         $data=[];
@@ -74,6 +76,20 @@ class Mine extends Common
                 ];
             }
             $data['label']=$label_data;
+        }
+        //二维码
+        if($on_qr_code){
+            $data['qr_code']=[
+                'code'=>$this->user_model->qr_code_info,
+                'code_url'=>url('index/qrcode',['code'=>base64_encode($this->user_model->qr_code_info)],false,true)
+            ];
+        }
+        //邀请信息
+        if($on_req_info){
+            $data['req_info']=[
+                'num'=>$this->user_model->linkReqUser()->count(),
+                'req_raise_num'=>$this->user_model->req_raise_num,
+            ];
         }
         return $this->_resData(1,'获取成功',$data);
     }
@@ -273,4 +289,46 @@ class Mine extends Common
         $data = ['list'=>$list,'total_page'=>$info->lastPage()];
         return $this->_resData(1,'获取成功',$data);
     }
+
+    //关注列表
+    public function follow()
+    {
+        $php_input = input();
+        $list = [];
+        $info = \app\common\model\UsersFollow::getList($this->user_id, $php_input)->each(function($item,$index)use(&$list){
+            array_push($list,[
+                'uid' => $item['uid'],
+                'user_name' => $item['link_users']['name'],
+                'user_face' => $item['link_users']['face'],
+                'user_intro' => $item['link_users']['intro'],
+                'is_ftf' => 0,
+                'date' => $item['follow_time'],
+            ]);
+        });
+
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
+
+    //我邀请的用户
+    public function reqUsers()
+    {
+        $user_id = input('user_id',$this->user_id,'intval');
+        $php_input = input();
+        $list = [];
+        $info = \app\common\model\Users::getReqList($user_id, $php_input)->each(function($item,$index)use(&$list){
+            array_push($list,[
+                'uid' => $item['uid'],
+                'name' => $item['name'],
+                'face' => $item['face'],
+                'intro' => $item['intro'],
+                'date' => $item['create_time'],
+            ]);
+        });
+
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
 }

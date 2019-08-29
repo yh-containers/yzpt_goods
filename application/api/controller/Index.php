@@ -267,4 +267,32 @@ class Index extends Common
         ]);
     }
 
+    //生成二维码
+    public function qrcode()
+    {
+        $content = base64_decode(input('code'));
+        //资源路径
+//        $resource_path = str_replace('\\','/',\Env::get('vendor_path').'\\endroid\\qr-code');
+        // Create a basic QR code
+        $qrCode = new \QRcode($content);
+        $qrCode->setSize(300);
+
+// Set advanced options
+        $qrCode
+            ->setWriterByName('png')
+            ->setMargin(10)
+            ->setEncoding('UTF-8')
+            ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
+            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
+            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
+//            ->setLabel('Scan the code', 16, $resource_path.'/assets/noto_sans.otf', LabelAlignment::CENTER)
+//            ->setLogoPath($resource_path.'/assets/symfony.png')
+            ->setLogoWidth(100)
+            ->setValidateResult(false)
+        ;
+
+        // Directly output the QR code
+        return response($qrCode->writeString())->header('Content-Type',$qrCode->getContentType());
+    }
+
 }

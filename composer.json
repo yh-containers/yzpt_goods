@@ -22,7 +22,8 @@
         "topthink/think-image": "^1.0",
         "phpoffice/phpexcel": "^1.8",
         "qiniu/php-sdk": "^7.2",
-        "overtrue/pinyin": "~4.0"
+        "overtrue/pinyin": "~4.0",
+        "endroid/qr-code": "^2.5"
     },
     "autoload": {
         "psr-4": {
