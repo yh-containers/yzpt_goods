@@ -3,6 +3,9 @@ namespace app\api\controller;
 
 
 
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+
 class Index extends Common
 {
     public function index()
@@ -176,6 +179,9 @@ class Index extends Common
         $on_praise_num = input('on_praise_num',0,'intval');
         $on_user_body = input('on_user_body',0,'intval');
         $on_user_label = input('on_user_label',0,'intval');
+        $on_qr_code = input('on_qr_code',0,'intval'); //二维码
+        $on_req_info = input('on_req_info',0,'intval'); //邀请信息
+
         //用户信息
         $user_model = \app\common\model\Users::get($id);
 
@@ -217,6 +223,21 @@ class Index extends Common
             }
             $data['label']=$label_data;
         }
+        //二维码
+        if($on_qr_code){
+            $data['qr_code']=[
+                'code'=>$user_model->qr_code_info,
+                'code_url'=>url('index/qrcode',['code'=>base64_encode($user_model->qr_code_info)],false,true)
+            ];
+        }
+        //邀请信息
+        if($on_req_info){
+            $data['req_info']=[
+                'num'=>$user_model->linkReqUser()->count(),
+                'req_raise_num'=>$user_model->req_raise_num,
+            ];
+        }
+
         return $this->_resData(1,'获取成功',$data);
     }
 
@@ -274,7 +295,7 @@ class Index extends Common
         //资源路径
 //        $resource_path = str_replace('\\','/',\Env::get('vendor_path').'\\endroid\\qr-code');
         // Create a basic QR code
-        $qrCode = new \QRcode($content);
+        $qrCode = new QrCode($content);
         $qrCode->setSize(300);
 
 // Set advanced options
