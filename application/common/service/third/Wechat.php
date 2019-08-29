@@ -98,6 +98,18 @@ class Wechat implements IPay
         }
     }
 
+    public function h5Pay(\think\Model $model){
+        //引入第三方
+        require_once \think\facade\Env::get('vendor_path').'wechat/lib/WxPay.Api.php';
+
+        $input = $this->handleOrderInput($model,'MWEB');
+        //$input->SetBody(config('app.app_name'));
+
+        $config = self::configInstance();
+        $result = \WxPayApi::unifiedOrder($config, $input);
+//        print_r($result);die;
+        return $result;
+    }
     //二维码支付
     public function nativePay(\think\Model $model)
     {

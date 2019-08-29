@@ -24,6 +24,9 @@ class Index extends Common
         //print_r($today_where);
         //首页banner
         $banner = \app\common\model\Ad::where('type=2 and status=1')->field('url,img')->select();
+        if(isMobile()){
+            $banner = \app\common\model\Ad::where('type=5 and status=1')->field('url,img')->select();
+        }
         //分类下商品
         $cate_lists = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
             return $query->where(['status'=>1])->field('id,pid')->with('linkChildCate');

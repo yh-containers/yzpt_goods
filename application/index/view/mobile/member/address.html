@@ -15,8 +15,8 @@
 		<div class="address">
 			<ul>
 				{volist name="addr_list" id="addr"}
-				<li {if($from)}onclick="window.location.href='/Order/detail?aid={$addr.id}'"{/if}>
-					<a href="javascript:;">
+				<li>
+					<a href="javascript:;" {if($from)}onclick="window.location.href='/Order/detail?aid={$addr.id}'"{/if}>
 						<div class="address_text">
 							<p>{$addr.username}<span>{$addr.phone}</span></p>
 							<p>{$addr.addr} {$addr.addr_extra} </p>

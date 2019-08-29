@@ -6,7 +6,7 @@
             <ul class="clearfix">
                 {volist name="cate_list" id="cate"}
                 <li>
-                    <i class="icon"><img src="/assets/index/images/icon02.png"></i>
+                    <i class="icon"><img src="{$cate.icon}"></i>
                     <div class="text">
                         <h2><a href="{:url('Goods/goods_list',['cate_id'=>$cate['id']])}">{$cate.cate_name}</a></h2>
                         <!-- <p><a href="products.html">阿胶</a><span>|</span><a href="products.html">三七粉</a><span>|</span><a href="products.html">膳食汉方</a></p> -->

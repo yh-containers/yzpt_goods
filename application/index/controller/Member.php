@@ -222,8 +222,16 @@ class Member extends Common
         if($this->request->isAjax()) {
             $res = ['code' => 0, 'msg' => ''];
             $php_input = $this->request->param();
+            $face = $this->request->param('face');
+            $name = $this->request->param('name');
             try{
                 $user_model->where(['id'=>session('uid')])->update($php_input);
+                if($face || $name){
+                    $uinfo = session('userinfo');
+                    if($face) $uinfo['face'] = $user_model->getFaceAttr($face);
+                    if($name) $uinfo['uname'] = $name;
+                    session('userinfo',$uinfo);
+                }
             } catch (\Exception $e) {
                 $res['msg'] = $e->getMessage();
                 echo json_encode($res);

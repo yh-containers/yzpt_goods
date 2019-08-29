@@ -26,7 +26,7 @@ class Components
     {
         $list = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
             return $query->where(['status'=>1])->field('id,cate_name,pid')->with('linkChildCate');
-        }])->where(['status'=>1,'pid'=>0])->field('id,cate_name,pid')->order('sort asc')->select();
+        }])->where(['status'=>1,'pid'=>0])->field('id,cate_name,pid,icon')->order('sort asc')->select();
         return view('common/header_cate',[
             'is_show'=>$is_show,
             'cate_list'=>$list

@@ -195,6 +195,12 @@ class Order extends Common
         $order = $order_model->field('no,money')->get($id);
         return view('pay_order',['order'=>$order]);
     }
+    public function redurl(){
+        $order_model = new \app\common\model\Order();
+        $id = $this->request->param('oid');
+        $order = $order_model->field('id,no,money,pay_way')->get($id);
+        return view('pay',['order'=>$order]);
+    }
     //订单详情
     public function order_detail(){
         $id = $this->request->param('id');

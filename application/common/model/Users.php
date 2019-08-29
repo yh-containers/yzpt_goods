@@ -43,7 +43,7 @@ class Users extends BaseModel
         return sprintf('%06s', $this->id);
     }
     //用户头像获取
-    protected function getFaceAttr($value)
+    public function getFaceAttr($value)
     {
         return self::handleFile($value);
     }
