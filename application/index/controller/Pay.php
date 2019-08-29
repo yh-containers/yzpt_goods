@@ -24,7 +24,7 @@ class Pay extends Common
         }else{
             $mode = 'wechat';
             if(isMobile()){
-                $pay_way = 'appPay';
+                $pay_way = 'h5Pay';
             }else{
                 $pay_way = 'nativePay';
             }
@@ -43,8 +43,9 @@ class Pay extends Common
         }
         try{
             $html = $pay->$pay_way($model);
-            if($mode=='wechat' && !isMobile()){
-                return view('order/pay_order',['order'=>$model,'code_url'=>$html]);
+            if($mode=='wechat'){
+                //print_r($html['mweb_url']);
+                return view('order/pay_order',['order'=>$model,'code_url'=>$html,'payinfo'=>$html]);
             }
             return $html;
         }catch (\Exception $e){

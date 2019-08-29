@@ -13,7 +13,12 @@ class GoodsCategory extends BaseModel
     public static $fields_status = ['','正常','关闭'];
     //数据库表名
     protected $table = 'gd_category';
-
+    public function getImageAttr($value){
+        return self::handleFile($value);
+    }
+    public function getIconAttr($value){
+        return self::handleFile($value);
+    }
     public function linkChildCate()
     {
         return $this->hasMany('GoodsCategory','pid')->order('sort asc');

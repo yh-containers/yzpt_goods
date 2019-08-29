@@ -99,20 +99,6 @@ class Goods extends Common
         $collect_model = new \app\common\model\Collect();
         $collect_count = $collect_model->where(['gid'=>$id])->count();
         //总评价
-        $arr = [19,18];
-        $brr = [];
-        for($i=0;$i<count($arr);$i++){
-            $n = 0;
-            $brr[$n] = $arr[$i];
-            for($j=count($arr)-1;$j>=0;$j--){
-                if($arr[$i] != $arr[$j]){
-                    $n++;
-                    $brr[$n] = $arr[$j];
-                    print_r(implode(',',$brr));
-                    print_r('<br/>');
-                }
-            }
-        }
         $comment_count = \app\common\model\Comment::where(['gid'=>$id])->count();
         return view('goods_detail',['goods'=>$data,'bread'=>$bread['bread'],'like_list'=>$goods_list,'sku_arr'=>$sku,'collect_count'=>$collect_count,'comment_count'=>$comment_count]);
     }
@@ -140,7 +126,6 @@ class Goods extends Common
             }
             $sql_where = rtrim($sql_where,'or ');
             $sql_where .= ')';
-            //echo $sql_where;die;
             $sku = $addSpecStock->where($sql_where)->field('id,stock,price')->find();
             if($sku['id']){
                 $res['err'] = 0;
