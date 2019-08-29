@@ -45,7 +45,9 @@ class Pay extends Common
             $html = $pay->$pay_way($model);
             if($mode=='wechat'){
                 //print_r($html['mweb_url']);
-                return view('order/pay_order',['order'=>$model,'code_url'=>$html,'payinfo'=>$html]);
+                //&redirect_url=https%3A%2F%2Fwww.wechatpay.com.cn
+                $redirect_url = urlencode('http://'.$_SERVER['SERVER_NAME'].'/order/redurl?oid='.$order_id);
+                return view('order/pay_order',['order'=>$model,'code_url'=>$html,'payinfo'=>$html,'redirect_url'=>$redirect_url]);
             }
             return $html;
         }catch (\Exception $e){
