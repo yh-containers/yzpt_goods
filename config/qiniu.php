@@ -1,12 +1,12 @@
 <?php
 return [
-    'ak' => 'olmRsGTCDd-LH0WqdECsj63ZB-eXiFFhn86tTl8x',
-    'sk' => 'wytOU9F0_Z2N8Wjj7rNzqhf5qy7VPHf2EvklIAGq',
-    'bucket' => 'a1010174887',
+    'ak' => 'XVBkJ2CBdjQ2F-S7xE4cSzNRrtEBLf_wjHEbCYKF',
+    'sk' => 'd3QDliFoPC_MDyQPDuvwRW97e1obr8NE3x1IupxS',
+    'bucket' => 'photo',
     'expires' => 3600,
     'url' => 'https://up.qiniup.com',
     'fsizeLimit'=> 1024*1024*10,//文件上传大小 10M
     'is_use'=>1,//开启七牛上传
     'file_prefix'=> '/qn_',
-    'preview_domain'=> 'http://slhqn.liaozx.com/', //域名
+    'preview_domain'=> 'http://qiniu.chinacarechain.com/', //域名
 ];
