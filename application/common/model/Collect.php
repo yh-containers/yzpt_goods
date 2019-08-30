@@ -9,4 +9,7 @@ class Collect extends BaseModel
 {
     use SoftDelete;
     protected $table = 'gd_user_col';
+    public function getGoodsImageAttr($value){
+        return self::handleFile($value);
+    }
 }
