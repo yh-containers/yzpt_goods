@@ -12,7 +12,7 @@ class Index extends Common
         $et = strtotime(date('Y-m-d').' 23:59:59');
         $st = strtotime(date('Y-m-d').' 00:00:00');
         $today_where = 'status=1 and is_special=1 and update_time between '.$st.' and '.$et;
-        $goods['today'] = $goods_model->where($today_where)->field('id,goods_image')->order('sort asc')->limit(10)->select();
+        $goods['today'] = $goods_model->where($today_where)->field('id,goods_name,goods_image')->order('sort asc')->limit(10)->select();
         //新品推荐
         $goods['new'] = $goods_model->where(['status'=>1])->field('id,goods_name,price,original_price,goods_image')->order('create_time desc')->order('sort asc')->limit(10)->select();
         //banner下产品
