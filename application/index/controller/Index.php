@@ -26,9 +26,9 @@ class Index extends Common
         }
         $goods['bg_left'] = $bg_left;
         //特价
-        $goods['special'] = $goods_model->where(['status'=>1,'is_special'=>1])->field('id,goods_image')->limit(10)->select();
+        $goods['special'] = $goods_model->where(['status'=>1,'is_special'=>1])->field('id,goods_name,goods_image')->limit(10)->select();
         //人气
-        $goods['hot'] = $goods_model->where(['status'=>1,'is_hot'=>1])->field('id,goods_image')->limit(10)->select();
+        $goods['hot'] = $goods_model->where(['status'=>1,'is_hot'=>1])->field('id,goods_name,goods_image')->limit(10)->select();
         //print_r($today_where);
         //首页banner
         $banner = \app\common\model\Ad::where('type=2 and status=1')->field('url,img')->select();
