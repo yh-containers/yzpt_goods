@@ -56,9 +56,9 @@ class Mine extends Common
         //用户点赞
         if($on_praise_num){
             //粉丝
-            $fans_num = (int)\app\common\model\UsersFollow::where(['f_uid'=>$this->user_id])->count();
+            $fans_num = (int)\app\common\model\UsersFollow::whereNotNull('follow_time')->where(['f_uid'=>$this->user_id])->count();
             //关注对象
-            $follow_num = (int)\app\common\model\UsersFollow::where(['uid'=>$this->user_id])->count();
+            $follow_num = (int)\app\common\model\UsersFollow::whereNotNull('follow_time')->where(['uid'=>$this->user_id])->count();
             $data['praise']=['num'=>(int)$this->user_model['praise_num'],'follow'=>$follow_num,'fans'=>$fans_num];
         }
         //身体状态
@@ -331,5 +331,6 @@ class Mine extends Common
         $data = ['list'=>$list,'total_page'=>$info->lastPage()];
         return $this->_resData(1,'获取成功',$data);
     }
+
 
 }

@@ -362,14 +362,33 @@ class Info extends Common
     //活动
     public function activity()
     {
+        //查询我的活动
+        $is_mine = input('is_mine',0,'intval');
+        //我参加的活动
+        $is_join = input('is_join',0,'intval');
+
         $user_id = $this->user_id;
         $where = [];
-        $list =[];
-        $info=\app\common\model\Activity::with(['linkJoinCount','linkUsers'
-            ,'linkIsJoin'=>function($query)use($user_id){
+
+        //默认查询方式
+        $model=\app\common\model\Activity::with(['linkIsJoin'=>function($query)use($user_id){
                 $query->where('uid','=',$user_id);
-            }
-            ])->where($where)
+            } ]);
+
+        if($is_mine){
+            $where[] =['uid','=',$this->user_id];
+        }
+
+        if($is_join){
+            //我参加的活动
+            $model=\app\common\model\Activity::withJoin(['linkIsJoin'=>function($query)use($user_id){
+                $query->where('linkIsJoin.uid','=',$user_id);
+            }],'left');
+        }
+
+
+        $list =[];
+        $info=$model->with(['linkJoinCount','linkUsers'])->where($where)
             ->order('id desc')->paginate()
             ->each(function($item,$index)use(&$list){
 //                dump($item);exit;
@@ -448,7 +467,7 @@ class Info extends Common
             'comment_times'=> 0,
             'start_date'=> (string)$model['start_date'],
             'end_date'=> (string)$model['end_date'],
-            'date_str'=> $model['end_date'].'至'.$model['end_date'],
+            'date_str'=> $model['start_date'].'至'.$model['end_date'],
             'addr'=> $model['addr'],
             'addr_extra'=> $model['addr_extra'],
             'is_join'=>empty($model['link_is_join'])?0:1,

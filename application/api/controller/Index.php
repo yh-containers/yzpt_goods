@@ -202,9 +202,9 @@ class Index extends Common
         //用户点赞
         if($on_praise_num){
             //粉丝
-            $fans_num = (int)\app\common\model\UsersFollow::where(['f_uid'=>$id])->count();
+            $fans_num = (int)\app\common\model\UsersFollow::whereNotNull('follow_time')->where(['f_uid'=>$id])->count();
             //关注对象
-            $follow_num = (int)\app\common\model\UsersFollow::where(['uid'=>$id])->count();
+            $follow_num = (int)\app\common\model\UsersFollow::whereNotNull('follow_time')->where(['uid'=>$id])->count();
             //是否关注
             $is_follow = \app\common\model\UsersFollow::where(['uid'=>$this->user_id,'f_uid'=>$id])->find();
             $data['praise']=['num'=>(int)$user_model['praise_num'],'follow'=>$follow_num,'fans'=>$fans_num,'is_follow'=>empty($is_follow)?0:1];
