@@ -1,6 +1,58 @@
 {extend name="member" /}
 {block name="member_content"}
+    <div class="personal_content">
+    <h2>我的订单</h2>
+    <div class="orders">
+        <div class="orders_title clearfix">
+            <div class="det">商品详情</div>
+            <div class="receiver">收货人</div>
+            <div class="num">数量</div>
+            <div class="yuan">实付款/元</div>
+            <div class="status">订单状态</div>
+            <!--<div class="operating">交易操作</div>-->
+        </div>
+        {if(count($order_list))}
+        <ul>
+            {volist name="order_list" id="order"}
+            <li>
+                <div class="orders_number"><span>下单时间：{:$order.create_time} </span><span>订单编号：{$order.no}</span></div>
+                <div class="orders_content clearfix">
+                    <div class="det">
+                        {volist name="order.own_goods" id="child"}
+                        <a href="/goods/detail/id/{$child.gid}">
+                            <div class="pro_img"><img src="{$child.img}"></div>
+                            <div class="pro_name">{$child.name}</div>
+                        </a>
+                        {/volist}
+                    </div>
+                    <div class="receiver">{$order.own_addrs.username}</div>
+                    <div class="num">X{$order.number}</div>
+                    <div class="yuan">￥{$order.pay_money}</div>
+                    <div class="status">
+                        <p>{$order.status}</p>
+                        <a href="{:url('Order/order_detail',['id'=>$order['id']])}">订单详情</a>
+                    </div>
+                    <!--<div class="operating">-->
+                        <!--<div class="operating_content">-->
 
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+            </li>
+            {/volist}
+        </ul>
+        {else/}
+        <div class="orders_air">
+            <img src="/assets/index/images/air01.jpg"><span>您还没有购买任何产品，快去挑选合适的产品吧~</span>
+        </div>
+        {/if}
+        <div class="page">
+            <div class="page_num clearfix">
+                {$page|raw}
+            </div>
+        </div>
+    </div>
+</div>
 {/block}
 {block name="member_footer"}
 {/block}

@@ -1,0 +1,54 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+<header class="header">
+    <a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+    <div class="header_title">我的订单</div>
+</header>
+
+<main class="main mgtop">
+    <div class="orders_nav">
+    </div>
+    {if(count($order_list))}
+    <div class="orders_list">
+        <ul>
+            {volist name="order_list" id="order"}
+            <li>
+                <div class="orders_list_top">
+                    <p>{:$order.create_time}<span>{$order.status}</span></p>
+                </div>
+                <div class="orders_list_content clearfix">
+                    {volist name="order.own_goods" id="child"}
+                    <a href="{:url('Order/order_detail',['id'=>$order['id']])}">
+                        <div class="orders_img"><img src="{$child.img}"></div>
+                        <div class="orders_title">
+                            <p>{$child.name}</p>
+                            <span>{$child.spec_name}</span>
+                        </div>
+                        <div class="orders_price">
+                            <p>￥{$child.price}</p>
+                            <p>×{$child.num}</p>
+                        </div>
+                    </a>
+                    {/volist}
+                </div>
+                <div class="orders_list_bottom clearfix">
+                    <p>共{$order.number}件商品，合计：￥{$order.money} 含运费（0.00）</p>
+                    <div class="orders_status">
+
+                    </div>
+                </div>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+    {else}
+    <div class="air">
+        <p><img src="/assets/index/mobile/images/air05.png"></p>
+        <p>亲，您还没有相关订单哦~</p>
+    </div>
+    {/if}
+</main>
+
+{/block}
+{block name="footer"}{/block}

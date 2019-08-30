@@ -36,61 +36,69 @@ class Index extends Common
             $image_arr = $this->request->param('image_arr');
             $sku = $this->request->param('sku');
             $new_sku = $this->request->param('new_sku');
+            $spec['value_name'] = $this->request->param('value_name');
+            $spec['value_id'] = $this->request->param('value_id');
             //$php_input['goods_image'] = isset($image_arr[0])?$image_arr[0]:'';
             $php_input['image_arr'] = implode(',',$php_input['image_arr']);
             $validate = new \app\common\validate\Goods();
             //商品属性
-            if($php_input['value_name']){
-                $spec['value_name'] = $php_input['value_name'];
-                unset($php_input['value_name']);
-                $spec['value_id'] = $php_input['value_id'];
-                unset($php_input['value_id']);
-            }
+//            if($php_input['value_name']){
+//                unset($php_input['value_name']);
+//                unset($php_input['value_id']);
+//            }
             $model->actionAdd($php_input,$validate);
             $goods_id = $php_input['id'];
             if(empty($php_input['id'])){
                 $goods_id = $model->id;
             }
             $svIdsArr = array();
-            foreach ($spec['value_name'] as $sid=>$v){
-                foreach ($v as $k=>$sv){
-                    $specArr = array();
-                    $specArr['id'] = $spec['value_id'][$sid][$k];
-                    $specArr['spec_id'] = $sid;
-                    $specArr['goods_id'] = $goods_id;
-                    $specArr['value_name'] = $spec['value_name'][$sid][$k];
-                    $spec_model = new \app\common\model\GoodsSpecValue();
-                    $spec_model->actionAdd($specArr);
-                    $svIdsArr[$specArr['value_name']] = $specArr['id'];
-                    if(empty($specArr['id'])){
-                        $svIdsArr[$specArr['value_name']] = $spec_model->id;
+            if($spec['value_name']) {
+                foreach ($spec['value_name'] as $sid => $v) {
+                    if($v){
+                        foreach ($v as $k => $sv) {
+                            $specArr = array();
+                            $specArr['id'] = $spec['value_id'][$sid][$k];
+                            $specArr['spec_id'] = $sid;
+                            $specArr['goods_id'] = $goods_id;
+                            $specArr['value_name'] = $spec['value_name'][$sid][$k];
+                            $spec_model = new \app\common\model\GoodsSpecValue();
+                            $spec_model->actionAdd($specArr);
+                            $svIdsArr[$specArr['value_name']] = $specArr['id'];
+                            if (empty($specArr['id'])) {
+                                $svIdsArr[$specArr['value_name']] = $spec_model->id;
+                            }
+                        }
                     }
                 }
             }
-            if($sku['price'] || $sku['stock']){
-                foreach ($sku['price'] as $sk=>$row){
-                    $upinfo = array();
-                    $upinfo['price'] = $row;
-                    $upinfo['stock'] = $sku['stock'][$sk];
-                    $upinfo['id'] = $sku['id'][$sk];
-                    $addSpecStock = new \app\common\model\GoodsSpecStock();
-                    $addSpecStock->actionAdd($upinfo);
+            if($sku){
+                if($sku['price'] || $sku['stock']){
+                    foreach ($sku['price'] as $sk=>$row){
+                        $upinfo = array();
+                        $upinfo['price'] = $row;
+                        $upinfo['stock'] = $sku['stock'][$sk];
+                        $upinfo['id'] = $sku['id'][$sk];
+                        $addSpecStock = new \app\common\model\GoodsSpecStock();
+                        $addSpecStock->actionAdd($upinfo);
+                    }
                 }
             }
-            if($new_sku['price'] || $new_sku['stock']){
-                foreach ($new_sku['price'] as $sk1=>$sku_price){
-                    $addSku = array();
-                    $addSku['goods_id'] = $goods_id;
-                    $addSku['price'] = $sku_price;
-                    $addSku['stock'] = $new_sku['stock'][$sk1];
-                    $nameArr = explode('|',$new_sku['name'][$sk1]);
-                    $addSku['sv_ids'] = array();
-                    foreach ($nameArr as $nk=>$name){
-                        $addSku['sv_ids'][$nk] = $svIdsArr[trim($name)];
+            if($new_sku) {
+                if ($new_sku['price'] || $new_sku['stock']) {
+                    foreach ($new_sku['price'] as $sk1 => $sku_price) {
+                        $addSku = array();
+                        $addSku['goods_id'] = $goods_id;
+                        $addSku['price'] = $sku_price;
+                        $addSku['stock'] = $new_sku['stock'][$sk1];
+                        $nameArr = explode('|', $new_sku['name'][$sk1]);
+                        $addSku['sv_ids'] = array();
+                        foreach ($nameArr as $nk => $name) {
+                            $addSku['sv_ids'][$nk] = $svIdsArr[trim($name)];
+                        }
+                        $addSku['sv_ids'] = implode(',', $addSku['sv_ids']);
+                        $addSpecStockModel = new \app\common\model\GoodsSpecStock();
+                        $addSpecStockModel->actionAdd($addSku);
                     }
-                    $addSku['sv_ids'] = implode(',',$addSku['sv_ids']);
-                    $addSpecStockModel = new \app\common\model\GoodsSpecStock();
-                    $addSpecStockModel->actionAdd($addSku);
                 }
             }
             return json(['code'=>1,'msg'=>'操作成功']);
@@ -135,12 +143,12 @@ class Index extends Common
     {
         $id = $this->request->param('id',0,'int');
         $model = new \app\common\model\Goods();
-        $data = $model->field('goods_image,image_arr')->get($id);
-        @unlink($data['goods_image']);
-        $image_arr = explode(',',$data['image_arr']);
-        foreach ($image_arr as $iv){
-            @unlink($iv);
-        }
+//        $data = $model->field('goods_image,image_arr')->get($id);
+//        @unlink($data['goods_image']);
+//        $image_arr = explode(',',$data['image_arr']);
+//        foreach ($image_arr as $iv){
+//            @unlink($iv);
+//        }
         return $model->actionDel(['id'=>$id]);
     }
     //分类

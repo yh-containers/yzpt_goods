@@ -18,13 +18,19 @@
 							</div>
 							<div class="fr"><a href="javascript:;" class="pwd">修改</a></div>
 						</li>
+
 						<li>
 							<div class="fl">
 								<h3>微信绑定</h3>
 								<p>用于微信授权直接登录</p>
 							</div>
+							{if($member['wx_openid'])}
 							<div class="fr"><a href="javascript:;">解除绑定</a></div>
+							{else/}
+							<div class="fr"><a href="javascript:;" class="bind">立即绑定</a></div>
+							{/if}
 						</li>
+
 					</ul>
 				</div>
 			</div>
@@ -102,6 +108,15 @@
 					<a href="javascript:;" onclick="toChangePass();">提交</a>
 					<a href="javascript:;" class="close">取消</a>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="operating_pop wx_bind">
+		<div class="pop_content">
+			<div class="title">绑定微信<a href="javascript:;" class="close"><img src="/assets/index/images/close02.png"></a></div>
+			<div class="content">
+				<div id="login_container"></div>
 			</div>
 		</div>
 	</div>
@@ -184,6 +199,10 @@
 		  	})
 		}
 
+		$('.bind').click(function () {
+            $(".wx_bind").show();
+        });
+
 		/*关闭弹窗*/
 		$(".operating_pop .close").click(function(){
 			$(".operating_pop").hide();
@@ -259,4 +278,21 @@
 	        $(obj).attr('src',url);
 	    }
 	</script>
+	<!--微信绑定-->
+{if($member['wx_openid'])}
+{else/}
+	<script type="text/javascript" src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+	<script>
+		var obj = new WxLogin({
+			self_redirect:false,
+			id:"login_container",
+			appid: "{:\\app\\common\\service\\third\\OpenWx::config('web','app_id')}",
+			scope: "snsapi_login",
+			redirect_uri: "{:url('index/thirdlogin',['mode'=>'wechat'],false,true)}",
+			state: "",
+			style: "",
+			href: ""
+		});
+	</script>
+{/if}
 {/block}

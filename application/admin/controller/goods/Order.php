@@ -6,7 +6,7 @@ use app\admin\controller\Common;
 class Order extends Common
 {
 	public function index(){
-        $list = \app\common\model\Order::with('ownAddrs')->order('create_time asc')->paginate();
+        $list = \app\common\model\Order::with('ownAddrs')->order('create_time desc')->paginate();
         foreach ($list as &$v){
             $state = \app\common\model\Order::getPropInfo('fields_mobile_step', $v['step_flow']);
             $v['status'] = is_array($state['name']) ? $state['name'][$v['status']] : $state['name'];
@@ -36,6 +36,13 @@ class Order extends Common
                     $res['msg'] = '已确认';
                 }else if($handle == 'send'){//发货
                     $model->orderSend($u['uid'],$oid);
+                    $addinfo = array();
+                    $addinfo['oid'] = $oid;
+                    $addinfo['no'] = $this->request->param('no');
+                    $addinfo['company'] = $this->request->param('company');
+                    $addinfo['money'] = $this->request->param('money');
+                    $wlModel = new \app\common\model\OrderLogistics();
+                    $wlModel->actionAdd($addinfo);
                     $res['msg'] = '已确认';
                 }
                 \think\Db::commit();

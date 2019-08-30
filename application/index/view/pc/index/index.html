@@ -18,19 +18,17 @@
 <div class="main">
     <div class="advertising w1200 clearfix">
         {if($goods['bg'])}
-        <div class="img"><a href="{:url('Goods/detail',['id'=>$goods['bg'][0]['id']])}"><img src="{$goods['bg'][0]['goods_image']}"></a></div>
+        {if($goods['bg_left'])}<div class="img"><a href="{:url('Goods/detail',['id'=>$goods['bg_left']['id']])}"><img src="{$goods['bg_left']['goods_image']}"></a></div>{/if}
         <ul class="clearfix">
-            {php}unset($goods['bg'][0]);{/php}
             {volist name="goods.bg" id="bg_goods" key="bk"}
-            {if condition="$bk elt 5"}
             <li><a href="{:url('Goods/detail',['id'=>$bg_goods['id']])}"><img src="{$bg_goods.goods_image}"></a></li>
-            {/if}
             {/volist}
             <li>
                 <a href="javascript:;"><img src="/assets/index/images/adv07.jpg"></a>
                 <a href="javascript:;"><img src="/assets/index/images/adv08.jpg"></a>
             </li>
-        </ul>{/if}
+        </ul>
+        {/if}
     </div>
     <div class="see_today w1200">
         <div class="parHd">

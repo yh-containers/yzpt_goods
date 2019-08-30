@@ -120,6 +120,11 @@
 				sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'receive'},1);
 			}
 		}
+        function retreatOrder(oid){
+            if(oid){
+                sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'retreat'},1);
+            }
+		}
 		function sendAjax(ajaxUrl,ajaxData,isre){
 			$.ajax({
 		  		url:ajaxUrl, 

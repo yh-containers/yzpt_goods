@@ -45,6 +45,7 @@ class Order extends BaseModel
         ['name'=>'已取消','u_handle'=>[self::U_ORDER_HANDLE_DEL],'m_handle'=>[self::M_ORDER_HANDLE_DEL]],
         ['name'=>'已完成,待评价','u_handle'=>[self::U_ORDER_HANDLE_DEL],'m_handle'=>[]],
         ['name'=>'已完成','u_handle'=>[self::U_ORDER_HANDLE_DEL],'m_handle'=>[]],
+        ['name'=>'申请退款','u_handle'=>[],'m_handle'=>[]],
     ];
     //发货状态
     public static $fields_is_send = [
@@ -67,7 +68,7 @@ class Order extends BaseModel
     public static $fields_pay = ['','支付宝','微信'];
     public static $fields_mobile_step = [
         [
-            'name'=>['待支付','已支付','已取消'],
+            'name'=>['待支付','已支付','已取消','','','申请退款'],
             'handle'=>['<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="/pay/info?order_id={order_id}" class="red">立即付款</a>','<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="javascript:;" class="red" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel">已取消</a>'],
             'w_handle'=>['<a href="/Pay/info?order_id={order_id}" class="fukuan orange">立即付款</a><a href="javascript:;" class="cancel_order" onclick="orderCancel({order_id});">取消订单</a>','<a href="javascript:;" class="tixing orange_bg" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel_order">已取消</a>'],
             'field'=>'status'
@@ -80,13 +81,13 @@ class Order extends BaseModel
         ],
         [
             'name'=>'待收货',
-            'handle'=>'<a href="refund_reason.html">申请退款</a><a href="javascript:;" onclick="receiveOrder({order_id});" class="red">确认收货</a>',
-            'w_handle'=>'<a href="javascript:;" class="confirm orange_bg">确认收货</a><a href="javascript:;" class="sqth">申请退货</a>',
+            'handle'=>'<a href="javascript:;" onclick="retreatOrder({order_id});">申请退货</a><a href="javascript:;" onclick="receiveOrder({order_id});" class="red">确认收货</a>',
+            'w_handle'=>'<a href="javascript:;" onclick="receiveOrder({order_id});" class="confirm orange_bg">确认收货</a><a href="javascript:;" onclick="retreatOrder({order_id});" class="sqth">申请退货</a>',
             'field'=>'is_receive'
         ],
         [
             'name'=>['','','','待评价','已完成'],
-            'handle'=>['','','','<a href="refund_reason.html">申请退款</a><a href="/Member/comment/order_id/{order_id}" class="red">评价</a>','<a href="javascript:;">已完成</a>'],
+            'handle'=>['','','','<a href="javascript:;" onclick="retreatOrder({order_id});">申请退款</a><a href="/Member/comment/order_id/{order_id}" class="red">评价</a>','<a href="javascript:;">已完成</a>'],
             'w_handle'=>['','','','<a href="/Member/comment/order_id/{order_id}" class="orange">去评价</a>','<a href="javascript:;">已完成</a>'],
             'field'=>'status'
         ]
@@ -133,6 +134,21 @@ class Order extends BaseModel
         if($model['is_remind']==1) exception('已提醒过了');
         $model->is_remind = 1;
         $bool = $model->save();
+        !$bool && exception('操作异常');
+        return $model;
+    }
+    //
+    public function orderRetreat($uid,$order_id){
+        if(empty($order_id) || !is_numeric($order_id) || $order_id<=0) exception('订单信息异常:id');
+        if(empty($uid)) exception('用户资料异常');
+        $model = self::find($order_id);
+        if($model['uid'] != $uid || empty($model)) exception('订单信息异常');
+        if(($model['step_flow']!=2) && ($model['step_flow']!=3)) exception('无法操作');
+        $model->cancel_time = time();
+        $model->status = 5;
+        $model->step_flow = 0;
+        $bool = $model->save();
+
         !$bool && exception('操作异常');
         return $model;
     }

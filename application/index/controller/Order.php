@@ -104,7 +104,8 @@ class Order extends Common
         $goods_model = new \app\common\model\Goods();
         $total = 0;
         $integral = 0;
-        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.*,g.goods_name,g.goods_image,g.price,g.status,g.integral')->select();
+        $fare = 0;
+        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.*,g.goods_name,g.goods_image,g.price,g.status,g.integral,g.fare')->select();
         if(count($cart_list) == 0){
             $this->error('未选择购物车商品');
         }
@@ -128,6 +129,7 @@ class Order extends Common
             }
             $total += $cart['price'] * $cart['num'];
             $integral += $cart['integral'] * $cart['num'];
+            $fare += $cart['fare'] * $cart['num'];
         }
         //查询用户可用积分
         $use = \app\common\model\Users::field('raise_num')->get(session('uid'));
@@ -152,7 +154,7 @@ class Order extends Common
                 if(!$addr_default) $addr_default = $addr_list[0];
             }
         }
-        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'addr_default'=>$addr_default,'total'=>$total,'integral'=>$integral,'use_integral'=>$use['raise_num']]);
+        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'addr_default'=>$addr_default,'total'=>$total,'integral'=>$integral,'use_integral'=>$use['raise_num'],'fare'=>$fare]);
     }
     //创建订单
     public function createorder(){
@@ -175,18 +177,19 @@ class Order extends Common
                 $inserts = array();
                 $inserts['no'] = $order_model->getOrderSn();
                 $inserts['uid'] = session('uid');
-                $inserts['money'] = $goods_info['total'];
+                $inserts['money'] = $goods_info['total']+$goods_info['fare'];
                 $inserts['goods_money'] = $goods_info['total'];
-                $inserts['pay_money'] = $goods_info['total'] - $goods_info['dis_money'];
+                $inserts['pay_money'] = $goods_info['total'] + $goods_info['fare'] - $goods_info['dis_money'];
                 $inserts['dis_money'] = $goods_info['dis_money'];
+                $inserts['freight_money'] = $goods_info['fare'];
                 $inserts['pay_way'] = ($php_input['pay'] == 'alipay') ? 1: 2;
                 $inserts['remark'] = $php_input['remark'];
+                $order_model->actionAdd($inserts);
                 if($goods_info['dis_money']){
                     \app\common\model\UsersRaiseLogs::recordLog(session('uid'),-($goods_info['dis_money']*100),'','商品折扣：'.($goods_info['dis_money']*100));
                     \app\common\model\Users::where(['id'=>session('uid')])->update(['raise_num'=>\app\common\model\Users::raw('raise_num-'.($goods_info['dis_money']*100))]);
 
                 }
-                $order_model->actionAdd($inserts);
                 $og_model->createOrderGoods($goods_info['goods_list'],$order_model->id);
                 $od_model->createOrderAddr($php_input['address'],$order_model->id);
                 $res['order_id'] = $order_model->id;
@@ -224,6 +227,7 @@ class Order extends Common
         $order_model = new \app\common\model\Order();
         $sku_model = new \app\common\model\GoodsSpecStock();
         $spec_model = new \app\common\model\GoodsSpecValue();
+        $wlModel = new \app\common\model\OrderLogistics();
 
         $order = $order_model->with('ownGoods,ownAddr')->get($id);
         if(empty($order)) $this->error('订单不存在');
@@ -240,6 +244,9 @@ class Order extends Common
         if($order['step_flow'] == 1) $order['step'] = 3;
         if($order['step_flow'] == 2) $order['step'] = 4;
         if($order['status'] == 4) $order['step'] = 5;
+        if($order['step_flow'] == 2){
+            $order['wl'] = $wlModel->where(['oid'=>$id])->find();
+        }
         $order['number'] = 0;
         foreach ($order['own_goods'] as &$goods) {
             $order['number'] += $goods['num'];
