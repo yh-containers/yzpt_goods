@@ -277,7 +277,7 @@ class Member extends Common
     //账户安全
     public function mysafe(){
         $user_model = new \app\common\model\Users();
-        $member = $user_model->field('phone,salt')->get(session('uid'));
+        $member = $user_model->get(session('uid'));//->field('phone,salt,wx_openid')
         if($this->request->isAjax()) {
             $res = ['code' => 0, 'msg' => ''];
             $php_input = $this->request->param();
