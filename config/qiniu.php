@@ -4,7 +4,7 @@ return [
     'sk' => 'd3QDliFoPC_MDyQPDuvwRW97e1obr8NE3x1IupxS',
     'bucket' => 'photo',
     'expires' => 3600,
-    'url' => 'https://up.qiniup.com',
+    'url' => 'https://up-z2.qiniup.com',
     'fsizeLimit'=> 1024*1024*10,//文件上传大小 10M
     'is_use'=>1,//开启七牛上传
     'file_prefix'=> '/qn_',
