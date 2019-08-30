@@ -37,10 +37,14 @@
                     <div class="product_select">
                         <div class="product_det_title">{$goods.goods_name}</div>
                         <div class="product_det_price">
+                            <p>原　价：<s>￥{$goods.original_price}</s></p>
                             <p>价　格：<span id="goods_price">￥{$goods.price}</span></p>
                         </div>
                         <div class="product_det_eva">
-                            <p><span>累计评价：</span><a href="javascript:;">{$comment_count}</a></p>
+                            <p>
+                                <span>累计评价：</span><a href="javascript:;">{$comment_count}</a>
+                                <span>运费：</span><a href="javascript:;">{if($goods['fare']>0)}{$goods.fare}{else/}免运费{/if}</a>
+                            </p>
                         </div>
                         <div class="product_det_type">
                             <!-- 商品规格 -->
