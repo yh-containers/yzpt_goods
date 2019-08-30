@@ -208,8 +208,8 @@ class Order extends Common
         $order_model = new \app\common\model\Order();
         if($this->request->isAjax()){
             $no = $this->request->param('no');
-            $orderState = $order_model->where('no="'.$no.'"')->field('state')->find();
-            return json(['state'=>$orderState['state']]);
+            $orderState = $order_model->where('no='.$no)->field('status')->find();
+            return json(['state'=>$orderState['status']]);
         }
         $id = $this->request->param('order_id');
         $order = $order_model->field('no,money')->get($id);
@@ -244,6 +244,7 @@ class Order extends Common
         if($order['step_flow'] == 1) $order['step'] = 3;
         if($order['step_flow'] == 2) $order['step'] = 4;
         if($order['status'] == 4) $order['step'] = 5;
+        $order['wl'] = '';
         if($order['step_flow'] == 2){
             $order['wl'] = $wlModel->where(['oid'=>$id])->find();
         }

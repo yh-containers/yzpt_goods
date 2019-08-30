@@ -52,8 +52,8 @@
 								</dl>
 								<dl class="kuaidi_info" {if condition="$order['step_flow'] egt 2"}{else/}style="display: none"{/if}>
 									<dt>快递信息</dt>
-									<dd>物流公司：{$order.wl.company}</dd>
-									<dd>物流单号：{$order.wl.no}</dd>
+									<dd>物流公司：{if($order['wl'])}{$order.wl.company}{/if}</dd>
+									<dd>物流单号：{if($order['wl'])}{$order.wl.no}{/if}</dd>
 								</dl>
 							</div>
 						</div>

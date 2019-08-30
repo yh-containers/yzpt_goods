@@ -12,11 +12,11 @@ class Index extends Common
         $et = strtotime(date('Y-m-d').' 23:59:59');
         $st = strtotime(date('Y-m-d').' 00:00:00');
         $today_where = 'status=1 and is_special=1 and update_time between '.$st.' and '.$et;
-        $goods['today'] = $goods_model->where($today_where)->field('id,goods_image')->limit(10)->select();
+        $goods['today'] = $goods_model->where($today_where)->field('id,goods_name,goods_image')->order('sort asc')->limit(10)->select();
         //新品推荐
-        $goods['new'] = $goods_model->where(['status'=>1])->field('id,goods_name,price,original_price,goods_image')->order('create_time desc')->limit(10)->select();
+        $goods['new'] = $goods_model->where(['status'=>1])->field('id,goods_name,price,original_price,goods_image')->order('create_time desc')->order('sort asc')->limit(10)->select();
         //banner下产品
-        $goods['bg'] = $goods_model->where(['status'=>1,'tuijian'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(6)->select();
+        $goods['bg'] = $goods_model->where(['status'=>1,'tuijian'=>1])->field('id,goods_name,price,original_price,goods_image')->order('sort asc')->limit(6)->select();
         $bg_left = array();
         foreach($goods['bg'] as $k=>$bgv){
             if($k==0) {
@@ -26,9 +26,9 @@ class Index extends Common
         }
         $goods['bg_left'] = $bg_left;
         //特价
-        $goods['special'] = $goods_model->where(['status'=>1,'is_special'=>1])->field('id,goods_name,goods_image')->limit(10)->select();
+        $goods['special'] = $goods_model->where(['status'=>1,'is_special'=>1])->field('id,goods_name,goods_image')->order('sort asc')->limit(10)->select();
         //人气
-        $goods['hot'] = $goods_model->where(['status'=>1,'is_hot'=>1])->field('id,goods_name,goods_image')->limit(10)->select();
+        $goods['hot'] = $goods_model->where(['status'=>1,'is_hot'=>1])->field('id,goods_name,goods_image')->order('sort asc')->limit(10)->select();
         //print_r($today_where);
         //首页banner
         $banner = \app\common\model\Ad::where('type=2 and status=1')->field('url,img')->select();
@@ -50,7 +50,7 @@ class Index extends Common
                 }
             }
             unset($val['link_child_cate']);
-            $goods_list = $goods_model->where('status=1 and cate_id in('.$val['inids'].') and tuijian=1')->field('id,tuijian_img,goods_name')->limit(5)->select();
+            $goods_list = $goods_model->where('status=1 and cate_id in('.$val['inids'].') and tuijian=1')->field('id,tuijian_img,goods_name')->order('sort asc')->limit(5)->select();
             $val['goods_list'] = $goods_list;
         }
         //print_r($cate_lists);
@@ -199,11 +199,11 @@ class Index extends Common
         return view('register',['step'=>2]);
     }
     public function register3(){
-        if(session('uid')){
-            session('reg_info',null);
-            session('step',null);
-            $this->redirect(url('Index/index'));
-        }
+//        if(session('uid')){
+//            session('reg_info',null);
+//            session('step',null);
+//            $this->redirect(url('Index/index'));
+//        }
         if(session('step') != 3){
             $this->redirect(url('Index/register2'));
         }

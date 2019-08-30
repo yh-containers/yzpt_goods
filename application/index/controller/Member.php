@@ -116,6 +116,9 @@ class Member extends Common
     public function collect(){
         $col_model = new \app\common\model\Collect();
         $col_list = $col_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid'))->field('c.*,g.goods_name,g.goods_image,g.price,g.original_price')->paginate();
+        foreach ($col_list as &$v){
+            $v['goods_image'] = $col_model->getGoodsImageAttr($v['goods_image']);
+        }
         $page = $col_list->render();
         return view('mycollect',['col_list'=>$col_list,'page'=>$page,'active'=>'col']);
     }
