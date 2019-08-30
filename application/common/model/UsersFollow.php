@@ -11,7 +11,7 @@ class UsersFollow extends BaseModel
      * @param array $php_input 数据
      * @param int $user_id 用户id
      * @throws
-     * @return \think\Paginator
+     * @return array(\think\Paginator,$user_key)
      * */
     public static function getList($user_id,array $php_input=[])
     {
@@ -22,16 +22,26 @@ class UsersFollow extends BaseModel
         if($type==='follow'){
             //关注
             $where[] =['uid','=',$user_id];
+            $with = 'linkFollowUsers';
+            $return_key = 'link_follow_users';
         }else{
             //粉丝
             $where[]=['f_uid','=',$user_id];
+            $with = 'linkFansUsers';
+            $return_key = 'link_fans_users';
         }
-        $list = self::with(['linkUsers'])->whereNotNull('follow_time')->where($where)->order('follow_time desc')->paginate();
-        return $list;
+
+        $list = self::with([$with])->whereNotNull('follow_time')->where($where)->order('follow_time desc')->paginate();
+        return [$list,$return_key];
     }
 
 
-    public function linkUsers()
+    public function linkFollowUsers()
+    {
+        return $this->belongsTo('Users','f_uid');
+    }
+
+    public function linkFansUsers()
     {
         return $this->belongsTo('Users','uid');
     }

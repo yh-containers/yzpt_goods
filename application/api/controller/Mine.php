@@ -295,18 +295,19 @@ class Mine extends Common
     {
         $php_input = input();
         $list = [];
-        $info = \app\common\model\UsersFollow::getList($this->user_id, $php_input)->each(function($item,$index)use(&$list){
+        list($paginator,$user_key) = \app\common\model\UsersFollow::getList($this->user_id, $php_input);
+        $paginator->each(function($item,$index)use(&$list,$user_key){
             array_push($list,[
                 'uid' => $item['uid'],
-                'user_name' => $item['link_users']['name'],
-                'user_face' => $item['link_users']['face'],
-                'user_intro' => $item['link_users']['intro'],
+                'user_name' => $item[$user_key]['name'],
+                'user_face' => $item[$user_key]['face'],
+                'user_intro' => $item[$user_key]['intro'],
                 'is_ftf' => 0,
                 'date' => $item['follow_time'],
             ]);
         });
 
-        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        $data = ['list'=>$list,'total_page'=>$paginator->lastPage()];
         return $this->_resData(1,'获取成功',$data);
     }
 
