@@ -50,7 +50,7 @@ class Index extends Common
                 }
             }
             unset($val['link_child_cate']);
-            $goods_list = $goods_model->where('status=1 and cate_id in('.$val['inids'].') and tuijian=1')->field('id,tuijian_img,goods_name')->limit(5)->select();
+            $goods_list = $goods_model->where('status=1 and cate_id in('.$val['inids'].') and tuijian=1')->field('id,tuijian_img,goods_name')->order('sort asc')->limit(5)->select();
             $val['goods_list'] = $goods_list;
         }
         //print_r($cate_lists);
