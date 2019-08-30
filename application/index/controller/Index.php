@@ -199,11 +199,11 @@ class Index extends Common
         return view('register',['step'=>2]);
     }
     public function register3(){
-        if(session('uid')){
-            session('reg_info',null);
-            session('step',null);
-            $this->redirect(url('Index/index'));
-        }
+//        if(session('uid')){
+//            session('reg_info',null);
+//            session('step',null);
+//            $this->redirect(url('Index/index'));
+//        }
         if(session('step') != 3){
             $this->redirect(url('Index/register2'));
         }
