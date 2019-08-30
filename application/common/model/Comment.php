@@ -17,4 +17,7 @@ class Comment extends BaseModel
         }
         return $list;
     }
+    public function getGoodsImageAttr($value){
+        return self::handleFile($value);
+    }
 }

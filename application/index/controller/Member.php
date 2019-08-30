@@ -139,6 +139,9 @@ class Member extends Common
         $com_model = new \app\common\model\Comment();
         $com_list = $com_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->field('c.gid,c.create_time,c.content,g.goods_image,g.goods_name')->where('c.uid='.session('uid').' and c.status=1')->paginate();
         $page = $com_list->render();
+        foreach ($com_list as &$v){
+            $v['goods_image'] = $com_model->getGoodsImageAttr($v['goods_image']);
+        }
         //print_r($com_list);
         return view('mycom',['active'=>'com','com_list'=>$com_list,'page'=>$page]);
     }
@@ -185,7 +188,10 @@ class Member extends Common
                     }
                     $addInfo['content'] = $php_input['content'][$k];
                     $addInfo['grade'] = $php_input['star'][$k];
-                    if($img[$k]) $addInfo['imgs'] = implode(',',$img[$k]);
+                    if($img[$k]) {
+                        $addInfo['imgs'] = implode(',',$img[$k]);
+                        $addInfo['imgs'] = trim($addInfo['imgs'],',');
+                    }
                     $com_model->actionAdd($addInfo);
                 }
                 $order_model->where(['id'=>$php_input['oid'][1]])->update(['status'=>4]);
