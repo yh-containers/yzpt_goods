@@ -16,7 +16,7 @@ class Index extends Common
         //新品推荐
         $goods['new'] = $goods_model->where(['status'=>1])->field('id,goods_name,price,original_price,goods_image')->order('create_time desc')->order('sort asc')->limit(10)->select();
         //banner下产品
-        $goods['bg'] = $goods_model->where(['status'=>1,'tuijian'=>1])->field('id,goods_name,price,original_price,goods_image')->order('sort asc')->limit(6)->select();
+        $goods['bg'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,zd_img')->order('sort asc')->limit(6)->select();
         $bg_left = array();
         foreach($goods['bg'] as $k=>$bgv){
             if($k==0) {

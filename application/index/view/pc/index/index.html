@@ -18,10 +18,10 @@
 <div class="main">
     <div class="advertising w1200 clearfix">
         {if($goods['bg'])}
-        {if($goods['bg_left'])}<div class="img"><a href="{:url('Goods/detail',['id'=>$goods['bg_left']['id']])}"><img src="{$goods['bg_left']['goods_image']}"></a></div>{/if}
+        {if($goods['bg_left'])}<div class="img"><a href="{:url('Goods/detail',['id'=>$goods['bg_left']['id']])}"><img src="{$goods['bg_left']['zd_img']}"></a></div>{/if}
         <ul class="clearfix">
             {volist name="goods.bg" id="bg_goods" key="bk"}
-            <li><a href="{:url('Goods/detail',['id'=>$bg_goods['id']])}"><img src="{$bg_goods.goods_image}"></a></li>
+            <li><a href="{:url('Goods/detail',['id'=>$bg_goods['id']])}"><img src="{$bg_goods.zd_img}"></a></li>
             {/volist}
             <li>
                 <a href="javascript:;"><img src="/assets/index/images/adv07.jpg"></a>

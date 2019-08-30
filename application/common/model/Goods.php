@@ -23,6 +23,9 @@ class Goods extends BaseModel
     public function getTuijianImgAttr($value){
         return self::handleFile($value);
     }
+    public function getZdImgAttr($value){
+        return self::handleFile($value);
+    }
     public function getImageArrAttr($value){
         $list = empty($value)?[]:explode(',',$value);
         foreach ($list as &$vo){

@@ -121,6 +121,24 @@
                         </div>
                     </div>
                 </div>
+                <!-- 首页置顶图 -->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">首页置顶图</label>
+                    <div class="col-sm-10">
+                        <button type="button" class="layui-btn upload-img2" lay-data='{:action('upload/info',['type'=>'goods'])}'>
+                        <i class="layui-icon">&#xe67c;</i>选择
+                        </button>
+                        <div class="help-block goods-group">
+                            {if($model['zd_img'])}
+                            <div class="item">
+                                <i class="fa fa-fw fa-close"></i>
+                                <img src="{:\\app\\common\\model\\Goods::handleFile($model['zd_img'])}" width="100" height="100">
+                                <input value="{$model->getData('zd_img')}" name="zd_img" type="hidden">
+                            </div>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
 
                 <!--商品价格-->
                 <div class="form-group">
@@ -170,6 +188,17 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 control-label">是否置顶展示</label>
+                    <div class="col-sm-10">
+                        <label>
+                            <input type="radio" name="is_best" value="1" {:$model['is_best']==1?'checked':''} />是
+                        </label>
+                        <label>
+                            <input type="radio" name="is_best" value="2" {:$model['is_best']==2 || !$model['is_best']?'checked':''}>否
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label">是否热卖</label>
                     <div class="col-sm-10">
                         <label>
@@ -180,17 +209,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">是否精品</label>
-                    <div class="col-sm-10">
-                        <label>
-                            <input type="radio" name="is_best" value="1" {:$model['is_best']==1?'checked':''} />是
-                        </label>
-                        <label>
-                            <input type="radio" name="is_best" value="2" {:$model['is_best']==2 || !$model['is_best']?'checked':''}>否
-                        </label>
-                    </div>
-                </div>
+
                 <div class="form-group">
                     <label class="col-sm-2 control-label">是否特价</label>
                     <div class="col-sm-10">
@@ -409,6 +428,17 @@
                 '<i class="fa fa-fw fa-close"></i>' +
                 '<img src="'+preview_domain+res.key+'" width="100" height="100">' +
                 '<input value="'+res.key+'" name="goods_image" type="hidden">' +
+                '</div>'
+            query_select.parent().find('.help-block').append(html);
+        })
+
+        $.common.fileUpload(upload,'.upload-img2',(res,query_select)=>{
+            //图片显示域名
+            var preview_domain = res.hasOwnProperty('preview_domain')?res.preview_domain:'';
+            var html = ' <div class="item">' +
+                '<i class="fa fa-fw fa-close"></i>' +
+                '<img src="'+preview_domain+res.key+'" width="100" height="100">' +
+                '<input value="'+res.key+'" name="zd_img" type="hidden">' +
                 '</div>'
             query_select.parent().find('.help-block').append(html);
         })
