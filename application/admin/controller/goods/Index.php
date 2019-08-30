@@ -8,13 +8,41 @@ class Index extends Common
     //商品列表
     public function index()
     {
-        $list = \app\common\model\Goods::order('sort asc')->paginate();
+        $cate_model = new \app\common\model\GoodsCategory();
+        $cid = $this->request->param('cid');
+        $where = array();
+        if($cid){ //分类筛选
+            $ids = array();
+            $ids[] = $cid;
+            $child = $cate_model->with(['linkChildCate'=>function($query){
+                return $query->where(['status'=>1])->field('id,pid')->with('linkChildCate');
+            }])->where('id='.$cid)->field('id,pid')->select();
+            foreach ($child as $cv){
+                if($cv['link_child_cate']){
+                    foreach ($cv['link_child_cate'] as $lcv){
+                        $ids[] = $lcv['id'];
+                        if($lcv['link_child_cate']){
+                            foreach ($lcv['link_child_cate'] as $clcv) {
+                                $ids[] = $clcv['id'];
+                            }
+                        }
+                    }
+                }
+            }
+            $where = 'cate_id in('.implode(',',$ids).')';
+        }
+        $list = \app\common\model\Goods::where($where)->order('sort asc')->paginate();
         foreach ($list as &$v){
             $cate_name = \app\common\model\GoodsCategory::field('cate_name')->get($v['cate_id']);
             $v['cate_name'] = $cate_name['cate_name'];
         }
         $page = $list->render();
-        return view('index',['list'=>$list,'page'=>$page]);
+
+        $cate = $cate_model->with(['linkChildCate'=>function($query){
+            return $query->where(['status'=>1])->with('linkChildCate');
+        }])->where(['pid'=>0,'status'=>1])->order('sort asc')->select();
+
+        return view('index',['list'=>$list,'page'=>$page,'cate'=>$cate,'cid'=>$cid]);
     }
     //商品的新增/编辑
     public function goodsAdd(){
@@ -150,6 +178,16 @@ class Index extends Common
 //            @unlink($iv);
 //        }
         return $model->actionDel(['id'=>$id]);
+    }
+    //排序更改
+    public function editsort(){
+        if($this->request->isAjax()){
+            $id = $this->request->param('id',0,'int');
+            $sort = $this->request->param('sort',0,'int');
+            $model = new \app\common\model\Goods();
+            $model->where('id='.$id)->update(['sort'=>$sort]);
+            return json(['code'=>1]);
+        }
     }
     //分类
     public function category(){

@@ -4,8 +4,27 @@
 
     <div class="box box-primary">
         <div class="box-header with-border">
-            <div class="col-sm-3">
+            <div class="col-sm-1">
                 <a class="btn btn-sm btn-adn" href="{:url('goodsAdd')}">添加商品</a>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">分类筛选</label>
+                    <div class="col-sm-9">
+                        <select name="cid" class="form-control" onchange="xzCate(this.value);">
+                            <option value="0">请选择分类</option>
+                            {volist name="cate" id="vo"}
+                            <option value="{$vo['id']}"  {:$cid==$vo['id']?'selected':''} >{$vo['cate_name']}</option>
+                            {volist name="vo['link_child_cate']" id="child"}
+                            <option value="{$child['id']}"  {:$cid==$child['id']?'selected':''} >|—— {$child['cate_name']}</option>
+                            {volist name="child['link_child_cate']" id="childs"}
+                            <option value="{$childs['id']}"  {:$cid==$childs['id']?'selected':''} >|——|——  {$childs['cate_name']}</option>
+                            {/volist}
+                            {/volist}
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- /.box-header -->
@@ -15,13 +34,14 @@
                     <tr>
                         <th width="20">#</th>
                         <th width="80">商品名称</th>
-                        <th width="80">商品图片</th>
                         <th width="80">商品分类</th>
+                        <th width="80">商品图片</th>
                         <th width="80">商品价格</th>
                         <th width="80">是否上架</th>
                         <th width="80">是否热卖</th>
-                        <th width="80">是否精品</th>
+                        <!--<th width="80">是否精品</th>-->
                         <th width="80">是否特价</th>
+                        <th width="80">排序</th>
                         <th width="80">发布时间</th>
                         <th width="120">操作</th>
                     </tr>
@@ -31,13 +51,14 @@
                     <tr>
                         <td>{$vo.id}</td>
                         <td>{$vo['goods_name']}</td>
-                        <td> <img src="{$vo['goods_image']}" alt="" width="40" height="40"> </td>
                         <td>{$vo['cate_name']}</td>
+                        <td> <img src="{$vo['goods_image']}" alt="" width="40" height="40"> </td>
                         <td>{$vo['price']}</td>
                         <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_status',$vo['status'])}</td>
                         <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_hot',$vo['is_hot'])}</td>
-                        <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_best',$vo['is_best'])}</td>
+                        <!--<td>{:\\app\\common\\model\\Goods::getPropInfo('fields_best',$vo['is_best'])}</td>-->
                         <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_special',$vo['is_special'])}</td>
+                        <td><input type="text" value="{$vo['sort']}" class="form-control" onblur="editSort(this.value,{$vo.id});"></td>
                         <td>{:$vo['update_time']}</td>
                         <td>
                             <a class="layui-btn layui-btn-sm" href="{:url('goodsAdd',['id'=>$vo['id']])}">编辑</a>
@@ -54,5 +75,22 @@
                 {$page|raw}
             </div>
     </div>
+<script>
+    function editSort(sort,gid) {
+        console.log(sort);
+        console.log(gid);
+        $.ajax({
+            url: "{:url('editsort')}",
+            type: 'post',
+            data: {'sort':sort,'id':gid},
+            success:function (e) {
+            }
+        })
+    }
+    function xzCate(cid) {
+        if(cid)
+            window.location.href = window.location.href +'?cid='+cid;
+    }
+</script>
     <!-- /.error-page -->
 {/block}
