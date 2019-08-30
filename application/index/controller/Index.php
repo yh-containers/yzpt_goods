@@ -18,10 +18,10 @@ class Index extends Common
         //banner下产品
         $goods['bg'] = $goods_model->where(['status'=>1,'tuijian'=>1])->field('id,goods_name,price,original_price,goods_image')->limit(6)->select();
         $bg_left = array();
-        foreach($goods['bg'] as $k=>&$bgv){
+        foreach($goods['bg'] as $k=>$bgv){
             if($k==0) {
                 $bg_left = $bgv;
-                unset($bgv);
+                unset($goods['bg'][$k]);
             }
         }
         $goods['bg_left'] = $bg_left;
