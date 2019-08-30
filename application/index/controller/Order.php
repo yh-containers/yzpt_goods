@@ -208,7 +208,7 @@ class Order extends Common
         $order_model = new \app\common\model\Order();
         if($this->request->isAjax()){
             $no = $this->request->param('no');
-            $orderState = $order_model->where('no="'.$no.'"')->field('status')->find();
+            $orderState = $order_model->where('no='.$no)->field('status')->find();
             return json(['state'=>$orderState['status']]);
         }
         $id = $this->request->param('order_id');
