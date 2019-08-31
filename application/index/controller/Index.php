@@ -280,6 +280,7 @@ class Index extends Common
             dump($auth_info);
             $user_model = new \app\common\model\Users();
             $models = $user_model->where($where)->find();
+            print_r($where);
             dump($models);die;
             if($models['id']){
                 session('userinfo',[
