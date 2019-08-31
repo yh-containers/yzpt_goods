@@ -364,6 +364,9 @@ class Member extends Common
             unset($php_input['town']);
             $php_input['uid'] = session('uid');
             try{
+                if($php_input['is_default']){
+                    $addr_model->where(['is_default'=>1,'uid'=>session('uid')])->update(['is_default'=>0]);
+                }
                 $addr_model->actionAdd($php_input);
                 if(empty($php_input['id'])) $res['id'] = $addr_model->id;
             } catch (\Exception $e) {

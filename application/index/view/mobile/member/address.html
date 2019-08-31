@@ -31,7 +31,7 @@
 							{/if}							
 						</div>
 						<div class="address_btn_right fr">
-							<a href="javascript:;" data-id="{$addr.id}" data-username="{$addr.username}" data-zip_code="{$addr.zip_code}" data-phone="{$addr.phone}" data-addr_extra="{$addr.addr_extra}" onclick="addrEdit(this);" class="edit">编辑</a>
+							<a href="javascript:;" data-id="{$addr.id}" data-username="{$addr.username}" data-zip_code="{$addr.zip_code}" data-phone="{$addr.phone}" data-addr="{$addr.addr}" data-addr_extra="{$addr.addr_extra}" onclick="addrEdit(this);" class="edit">编辑</a>
 							<a href="javascript:;" onclick="addrDel({$addr.id});" class="del">删除</a>
 						</div>
 					</div>
@@ -109,6 +109,7 @@
 			$('#form_username').val($(Obj).attr('data-username'));
 			$('#form_phone').val($(Obj).attr('data-phone'));
 			$('#form_zip_code').val($(Obj).attr('data-zip_code'));
+			$('#J_Address').val($(Obj).attr('data-addr'));
 			$('#form_addr_extra').val($(Obj).attr('data-addr_extra'));
 			$(".new_address").show();
 		}
