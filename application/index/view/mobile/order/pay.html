@@ -3,12 +3,12 @@
 {block name="center"}
 <header class="header">
     <a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
-    <div class="header_title">支付成功</div>
+    <div class="header_title">支付{if condition="$order.status eq 1"}成功{else/}失败{/if}</div>
 </header>
 <main class="main mgtop">
     <div class="payment_success">
         <div class="payment_title">
-            <p>订单支付成功<br />我们会尽快安排发货哦！</p>
+            {if condition="$order.status eq 1"}<p>订单支付成功<br />我们会尽快安排发货哦！</p>{/if}
             <img src="/assets/index/mobile/images/wait03.png">
         </div>
         <dl>
