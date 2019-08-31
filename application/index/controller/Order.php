@@ -246,7 +246,7 @@ class Order extends Common
         if($order['step_flow'] == 2) $order['step'] = 4;
         if($order['status'] == 4) $order['step'] = 5;
         if($order['status'] == 5) $order['step'] = 1;
-        print_r($order['step']);
+//        print_r($order['status']);
         $order['wl'] = '';
         if($order['step_flow'] > 2){
             $order['wl'] = $wlModel->where(['oid'=>$id])->find();
