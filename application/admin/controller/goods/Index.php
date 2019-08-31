@@ -189,6 +189,15 @@ class Index extends Common
             return json(['code'=>1]);
         }
     }
+    public function editcatesort(){
+        if($this->request->isAjax()){
+            $id = $this->request->param('id',0,'int');
+            $sort = $this->request->param('sort',0,'int');
+            $model = new \app\common\model\GoodsCategory();
+            $model->where('id='.$id)->update(['sort'=>$sort]);
+            return json(['code'=>1]);
+        }
+    }
     //分类
     public function category(){
         $where = ['pid'=>0];

@@ -19,6 +19,9 @@ class GoodsCategory extends BaseModel
     public function getIconAttr($value){
         return self::handleFile($value);
     }
+    public function getIconImgAttr($value){
+        return self::handleFile($value);
+    }
     public function linkChildCate()
     {
         return $this->hasMany('GoodsCategory','pid')->order('sort asc');

@@ -14,7 +14,7 @@
 		<div class="index_sort">
 			<ul class="clearfix">
 				{volist name="$tuijianCate" id="cate"}
-				<li><a href="{:url('Goods/goods_list',['cate_id'=>$cate['id']])}"><img src="{$cate.image}"><span>{$cate.cate_name}</span></a></li>
+				<li><a href="{:url('Goods/goods_list',['cate_id'=>$cate['id']])}"><img src="{$cate.icon_img}"><span>{$cate.cate_name}</span></a></li>
 				{/volist}
 			</ul>
 		</div>

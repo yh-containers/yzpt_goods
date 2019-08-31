@@ -35,7 +35,7 @@ class Index extends Common
         $tuijianCate = array();
         if(isMobile()){
             $banner = \app\common\model\Ad::where('type=5 and status=1')->field('url,img')->select();
-            $tuijianCate = \app\common\model\GoodsCategory::where(['status'=>1,'pid'=>0])->field('id,cate_name,pid,icon,image')->order('sort asc')->limit(5)->select();
+            $tuijianCate = \app\common\model\GoodsCategory::where(['status'=>1,'pid'=>0])->field('id,cate_name,pid,icon_img')->order('sort asc')->limit(5)->select();
         }
         //分类下商品
         $cate_lists = \app\common\model\GoodsCategory::with(['linkChildCate'=>function($query){
@@ -277,8 +277,10 @@ class Index extends Common
                 $auth_info = \app\common\service\third\QQ::codeToAct($code);
                 $where['qq_openid'] = $auth_info['openid'];
             }
+            dump($auth_info);
             $user_model = new \app\common\model\Users();
             $models = $user_model->where($where)->find();
+            dump($models);die;
             if($models['id']){
                 session('userinfo',[
                     'uid' => $models['id'],

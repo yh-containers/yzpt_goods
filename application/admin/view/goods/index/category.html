@@ -20,6 +20,7 @@
                 <th width="100">图片</th>
                 <th width="80">发布时间</th>
                 <th width="60">状态</th>
+                <th width="60">排序</th>
                 <th width="120">操作</th>
             </tr>
             </thead>
@@ -31,6 +32,7 @@
                 <td> <img src="{$vo['image']}" alt="" width="40" height="40"> </td>
                 <td>{:$vo['update_time']}</td>
                 <td>{:\\app\\common\\model\\GoodsCategory::getPropInfo('fields_status',$vo['status'])}</td>
+                <td><input type="text" value="{$vo['sort']}" class="form-control" onblur="editSort(this.value,{$vo.id});"></td>
                 <td>
                     <a class="layui-btn layui-btn-sm" href="{:url('cateAdd',['id'=>$vo['id']])}">编辑</a>
                     <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("cateDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
@@ -44,6 +46,7 @@
                     <td> <img src="{$v1['image']}" alt="" width="40" height="40"> </td>
                     <td>{:$v1['update_time']}</td>
                     <td>{:\\app\\common\\model\\GoodsCategory::getPropInfo('fields_status',$v1['status'])}</td>
+                    <td><input type="text" value="{$v1['sort']}" class="form-control" onblur="editSort(this.value,{$v1.id});"></td>
                     <td>
                         <a class="layui-btn layui-btn-sm" href="{:url('cateAdd',['id'=>$v1['id']])}">编辑</a>
                         <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("cateDel",["id"=>$v1["id"]])}')" class="ml-5">  删除</a>
@@ -56,6 +59,7 @@
                         <td> <img src="{$v2['image']}" alt="" width="40" height="40"> </td>
                         <td>{:$v2['update_time']}</td>
                         <td>{:\\app\\common\\model\\GoodsCategory::getPropInfo('fields_status',$v2['status'])}</td>
+                        <td><input type="text" value="{$v2['sort']}" class="form-control" onblur="editSort(this.value,{$v2.id});"></td>
                         <td>
                             <a class="layui-btn layui-btn-sm" href="{:url('cateAdd',['id'=>$v2['id']])}">编辑</a>
                             <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("cateDel",["id"=>$v2["id"]])}')" class="ml-5">  删除</a>
@@ -72,5 +76,18 @@
         {$page|raw}
     </div>
 </div>
+<script>
+    function editSort(sort,gid) {
+        console.log(sort);
+        console.log(gid);
+        $.ajax({
+            url: "{:url('editcatesort')}",
+            type: 'post',
+            data: {'sort':sort,'id':gid},
+            success:function (e) {
+            }
+        })
+    }
+</script>
 <!-- /.error-page -->
 {/block}
