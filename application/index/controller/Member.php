@@ -370,6 +370,11 @@ class Member extends Common
             unset($php_input['province']);
             unset($php_input['city']);
             unset($php_input['town']);
+            if(empty($php_input['addr'])){
+                $res['msg'] = '请选择收货地址';
+                echo json_encode($res);
+                die;
+            }
             $php_input['uid'] = session('uid');
             try{
                 if($is_default){
