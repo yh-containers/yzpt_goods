@@ -132,15 +132,18 @@ class Index extends Common
                     $auth_info = session('auth_info');
                     $user_model = new \app\common\model\Users();
                     $data['phone'] = $phone;
-                    $data['password'] = 000000;
-                    if($auth_info['mode']=='weibo'){
-                        $data['wb_openid'] = $auth_info['uid'];
-                    }elseif($auth_info['mode']=='wechat'){
-                        $data['wx_openid'] = $auth_info['openid'];
-                    }elseif ($auth_info['mode']=='qq'){
-                        $data['qq_openid'] = $auth_info['openid'];
+                    $model = $user_model->where($data)->find();
+                    if(!$model) {
+                        $data['password'] = 000000;
+                        if ($auth_info['mode'] == 'weibo') {
+                            $data['wb_openid'] = $auth_info['uid'];
+                        } elseif ($auth_info['mode'] == 'wechat') {
+                            $data['wx_openid'] = $auth_info['openid'];
+                        } elseif ($auth_info['mode'] == 'qq') {
+                            $data['qq_openid'] = $auth_info['openid'];
+                        }
+                        $model = $user_model->handleReg($data);
                     }
-                    $model = $user_model->handleReg($data);
                     session('auth_info',null);
                     session('userinfo',[
                         'uid' => $model['id'],
