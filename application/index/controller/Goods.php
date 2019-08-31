@@ -39,9 +39,9 @@ class Goods extends Common
         $goods_model = new \app\common\model\Goods();
         $goods_list = $goods_model->where($sql_where)->field('id,goods_name,goods_image,price,original_price')->order($sort.' '.$lift)->paginate();
         $page = $goods_list->render();
-        $tz_url = url('Goods/goods_list');
+        $tz_url = url('Goods/goods_list').'?c=1';
         if($cate_id){
-            $tz_url .= '?cate_id='.$cate_id;
+            $tz_url .= '&cate_id='.$cate_id;
         }
         return view('goods_list',['goods_list'=>$goods_list,'bread'=>$bread['bread'],'page'=>$page,'auto_url'=>$tz_url,'lift'=>$lift,'sort'=>$sort]);
     }
