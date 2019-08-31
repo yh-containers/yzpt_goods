@@ -298,9 +298,13 @@ class Member extends Common
                 if($php_input['type'] == 'phone'){
                     if($verify){
                         if (!captcha_check($verify)) {
-                            $res['msg'] = '验证码错误';
+                            $res['msg'] = '图形验证码错误';
                             echo json_encode($res);die;
                         }
+                    }
+                    if($user_model->where(['phone'=>$php_input['phone']])->count()){
+                        $res['msg'] = '手机号也被使用';
+                        echo json_encode($res);die;
                     }
                     \app\common\model\Sms::validVerify(1,$php_input['phone'],$php_input['code']);
                     $user_model->where(['id'=>session('uid')])->update(['phone'=>$php_input['phone']]);
