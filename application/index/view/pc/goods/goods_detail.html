@@ -31,7 +31,7 @@
                         </div>
                         <div class="favorite_shar clearfix">
                             <div class="bdsharebuttonbox"><a href="#" class="bds_more" id="bds_more" data-cmd="more">分享</a></div>
-                            <a href="javascript:addCollect();" class="shar">收藏（{$collect_count}）</a>
+                            <a href="javascript:addCollect();" class="shar{if($collect_count)} on{/if}" id="col">收藏（{$collect_count}）</a>
                         </div>
                     </div>
                     <div class="product_select">
@@ -204,7 +204,12 @@
             sendAjax("{:url('Goods/addcart')}",{'gid':goods_id,'sid':sku_id,'num':num,'is_checked':isck});
         }
         function addCollect(){
-            sendAjax("{:url('Goods/collect')}",{'gid':goods_id});
+            sendAjax("{:url('Goods/collect')}",{'gid':goods_id},0);
+            if($('#col').hasClass('on')){
+                $('#col').removeClass('on');
+            }else{
+                $('#col').addClass('on');
+            }
         }
         /*加入购物车成功*/
         $(function(){            

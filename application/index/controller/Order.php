@@ -212,7 +212,7 @@ class Order extends Common
             return json(['state'=>$orderState['status']]);
         }
         $id = $this->request->param('order_id');
-        $order = $order_model->field('no,money')->get($id);
+        $order = $order_model->field('no,money,pay_money')->get($id);
         return view('pay_order',['order'=>$order]);
     }
     public function redurl(){
