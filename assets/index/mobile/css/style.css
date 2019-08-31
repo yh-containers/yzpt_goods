@@ -40,7 +40,7 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 
 
 /*空*/
-.air{margin-top: 30%;text-align: center;}
+.air{margin:30% 0 50px;text-align: center;}
 .air p{line-height:40px;font-size: 1.4rem;}
 .air p img{width:120px;}
 .air a{display:inline-block;width:80px;height:30px;line-height:30px;background:#e42347;color:#fff;-webkit-border-radius:6px;border-radius:6px;}
@@ -67,7 +67,7 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 .sort_search a{display: block;color:#fff;text-align: left;}
 .sort_search a i{float: left;line-height: 30px;padding:0 10px;color:#fff;font-size: 2rem;}
 
-.index_search{height:30px;line-height:30px;padding:10px 50px 10px 0px;background:#fff;font-size:1.5rem;}
+.index_search{height:30px;line-height:30px;padding:10px 50px 10px 0px;background:#fff;font-size:1.5rem;border-bottom: 1px #e5e5e5 solid;}
 .index_search a{display: block;color:#ababab;text-align: left;}
 .index_search a i{float: left;line-height: 30px;padding:0 10px;color:#888;font-size:2.4rem;}
 
@@ -171,9 +171,11 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 .product_description .bd .con h2{font-size:1.6rem;line-height:40px;}
 .product_description .bd .con p{font-size:1.4rem;color:#888;}
 
+.evaluation iframe{position: relative;z-index: 2000;}
 .evaluation .inHd{border-bottom:1px #e5e5e5 solid;padding:0 3% 10px;}
 .evaluation .inHd ul li{height:30px;line-height:30px;background:#eaf2f7;float: left;margin:0 10px 10px 0;padding:0 10px;color:#888;}
 .evaluation .inHd ul li.on{background:#e42347;color:#fff;}
+.evaluation .inHd ul li.on a{display:black;color:#fff;}
 .evaluation .inHd ul li:last-child{margin-right:0;}
 
 .evaluation .inBd .con .air{text-align:center;line-height:100px;margin:0;font-size:1.4rem;color:#666;}
@@ -220,6 +222,9 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 .det_footer a span{display: block;}
 .det_footer a i{font-size:2.2rem;margin-top:2px;display: block;color:#fff;}
 .det_footer a em{position: absolute;top:0;background-color:#fb3d3d;color:#fff;border-radius: 50%;height:16px;line-height: 16px;text-align:center;width:16px;right:20%;}
+.det_footer a.on{color:#ff0000;}
+.det_footer a.on i{color:#ff0000;}
+
 .det_footer .add_cart,.det_footer .buy_now{width:26%;line-height: 50px;font-size: 1.4rem;color:#fff;}
 .det_footer .add_cart{background: #e4a723;flex:1;}
 .det_footer .buy_now{background: #e42347;flex:1;}
@@ -316,7 +321,7 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 .new_address{position:fixed;width:100%;height:100vh;left:0;top:0;background:#f5f5f5;z-index:300;display:none;}
 .add_address p{padding:0 10px;background: #fff;height:50px;line-height: 50px;border-bottom: 1px #eee solid;position: relative;}
 .add_address p label{font-size: 1.4rem;width:60px;display: inline-block;}
-.add_address p input{width:calc(100% - 60px);padding:0 10px;line-height: 50px;font-size: 1.4rem;box-sizing: border-box;-webkit-box-sizing: border-box;}
+.add_address p input{width:calc(100% - 70px);padding:0 10px;line-height: 50px;font-size: 1.4rem;box-sizing: border-box;-webkit-box-sizing: border-box;}
 .add_address .cell-input input{color:#999;text-align:right;}
 .add_address .cell-input:after{content: ''; display: block;position: absolute;top: 0; bottom: 0;right:10px;margin: auto;width: 10px;height: 10px;border-top: 1px solid #999;border-right: 1px solid #999;-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-ms-transform: rotate(45deg);transform: rotate(45deg);}
 .add_address p.default{margin-top:10px;}
@@ -403,7 +408,7 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 .account_order ul li img{width:30px;height:30px;}
 .account_order ul li span{position:absolute;left:52%;top:15px;width:16px;height:16px;line-height:16px;background:#e42347;color:#fff;-webkit-border-radius:50%;border-radius:50%;font-size:1.2rem;}
 
-.account_list{background:rgba(255,255,255,0.3);}
+.account_list{background:rgba(255,255,255,0.3);margin-bottom:40px;}
 .account_list ul li{height:45px;line-height:45px;padding:0 3%;font-size:1.6rem;border-bottom:1px #fff solid;}
 .account_list ul li:last-child{border-bottom:none;}
 .account_list ul li a{display:block;overflow: hidden;*zoom:1;position:relative;}
@@ -616,7 +621,8 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 
 
 /*登录*/
-.login{height:100vh;background-image:url(../images/login_bg.jpg);background-repeat: no-repeat;background-size: cover;position:absolute;top:0;width:100%;left:0;overflow:hidden;}
+.login{height:100vh;background-image:url(../images/login_bg.jpg);background-repeat: no-repeat;background-size: cover;position:absolute;top:0;width:100%;left:0;overflow-y:auto;}
+.login::-webkit-scrollbar {display: none;}
 .login.pwd_login{display:none;}
 .login .logo{padding:100px 0 45px;}
 .login .logo img{width:80px;height:76px;}
@@ -632,6 +638,7 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 .login .login_box .btn input{display:block;width:100%;height:50px;line-height:50px;font-size:1.8rem;font-weight:bold;color:#fff;background:-webkit-linear-gradient(#e73358,#f5393a);background: linear-gradient(#e73358,#f5393a);-webkit-border-radius:5px;border-radius:5px;}
 .login .login_box .link a{display:inline-block;font-size:1.5rem;color:#fff;line-height:30px;}
 
+.login .other_login{padding-bottom:40px;}
 .login .other_login .title{padding:15px 0;line-height:30px;text-align: center;font-size:1.8rem;color:#fff;}
 .login .other_login ul li{width:33.3333%;text-align:center;float: left;}
 .login .other_login ul li a{display:block;text-align: center;}
