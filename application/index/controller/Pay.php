@@ -20,7 +20,7 @@ class Pay extends Common
             }else{
                 $pay_way = 'webPay';
             }
-            $pay_way = 'webPay';
+            //$pay_way = 'webPay';
         }else{
             $mode = 'wechat';
             if(isMobile()){
@@ -44,8 +44,6 @@ class Pay extends Common
         try{
             $html = $pay->$pay_way($model);
             if($mode=='wechat'){
-                //print_r($html['mweb_url']);
-                //&redirect_url=https%3A%2F%2Fwww.wechatpay.com.cn
                 $redirect_url = urlencode('http://'.$_SERVER['SERVER_NAME'].'/order/redurl?oid='.$order_id);
                 if(isMobile()){
                     $this->redirect($html['mweb_url'].'&redirect_url='.$redirect_url);
