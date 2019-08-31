@@ -118,6 +118,17 @@ class Index extends Common
 //注册三步
     public function register(){
         if(session('uid')){
+            if(session('auth_info')){
+                $auth_info = session('auth_info');
+                if ($auth_info['mode'] == 'weibo') {
+                    $data['wb_openid'] = $auth_info['uid'];
+                } elseif ($auth_info['mode'] == 'wechat') {
+                    $data['wx_openid'] = $auth_info['openid'];
+                } elseif ($auth_info['mode'] == 'qq') {
+                    $data['qq_openid'] = $auth_info['openid'];
+                }
+                \app\common\model\Users::where(['id'=>session('uid')])->update($data);
+            }
             $this->redirect(url('Index/index'));
         }
         session('step',1);
@@ -133,16 +144,19 @@ class Index extends Common
                     $user_model = new \app\common\model\Users();
                     $data['phone'] = $phone;
                     $model = $user_model->where($data)->find();
+                    if ($auth_info['mode'] == 'weibo') {
+                        $data['wb_openid'] = $auth_info['uid'];
+                    } elseif ($auth_info['mode'] == 'wechat') {
+                        $data['wx_openid'] = $auth_info['openid'];
+                    } elseif ($auth_info['mode'] == 'qq') {
+                        $data['qq_openid'] = $auth_info['openid'];
+                    }
                     if(!$model) {
                         $data['password'] = 000000;
-                        if ($auth_info['mode'] == 'weibo') {
-                            $data['wb_openid'] = $auth_info['uid'];
-                        } elseif ($auth_info['mode'] == 'wechat') {
-                            $data['wx_openid'] = $auth_info['openid'];
-                        } elseif ($auth_info['mode'] == 'qq') {
-                            $data['qq_openid'] = $auth_info['openid'];
-                        }
                         $model = $user_model->handleReg($data);
+                    }else{
+                        unset($data['phone']);
+                        $user_model->where(['id'=>$model['id']])->update($data);
                     }
                     session('auth_info',null);
                     session('userinfo',[

@@ -25,7 +25,7 @@
 								<p>用于微信授权直接登录</p>
 							</div>
 							{if($member['wx_openid'])}
-							<div class="fr"><a href="javascript:;">解除绑定</a></div>
+							<div class="fr"><a href="javascript:;" onclick="sendAjax('/Member/center',{'wx_openid':''},1);">解除绑定</a></div>
 							{else/}
 							<div class="fr"><a href="javascript:;" class="bind">立即绑定</a></div>
 							{/if}
@@ -198,7 +198,21 @@
 			  	}	
 		  	})
 		}
-
+        function sendAjax(ajaxUrl,ajaxData,isre){
+            $.ajax({
+                url:ajaxUrl,
+                data:ajaxData,
+                dataType:'json',
+                type:'post',
+                success:function (re){
+                    if(re.code && isre){
+                        history.go(0);
+                    }else{
+                        alert(re.msg);
+                    }
+                }
+            })
+        }
 		$('.bind').click(function () {
             $(".wx_bind").show();
         });

@@ -128,7 +128,10 @@ class Member extends Common
             $res = ['code' => 0, 'msg' => ''];
             $col_model = new \app\common\model\Collect();
             $ids = $this->request->param('ids');
-            $col_model->actionDel(['id'=>['in',$ids]]);
+            $ids = explode(',',$ids);
+            foreach ($ids as $id){
+                if($id) $col_model->actionDel(['id'=>['in',$id]]);
+            }
             $res['msg'] = '已移除收藏';
             $res['code'] = 1;
             echo json_encode($res);die;
