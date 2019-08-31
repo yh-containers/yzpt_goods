@@ -29,14 +29,14 @@ class Dynamic extends BaseModel
     {
         $data = ['type'=>'','data'=>[]];
         $file = $this->file;
-        $file = empty($file)?[]:explode(',',$file);
+//        $file = empty($file)?[]:explode(',',$file);
         $ext = $this->ext;
         $ext = empty($ext)?[]:explode(',',$ext);
         foreach ($file as $key=>$vo){
-            empty($data['type']) && $data['type']=self::checkImg($ext[$key])?'image':'video';
+            empty($data['type']) && $data['type']=isset($ext[$key])?(self::checkImg($ext[$key])?'image':'video'):'image';
             array_push($data['data'],[
                 'file' => self::handleFile($vo),
-                'ext'  => isset($ext[$key])?$ext[$key]:'',
+                'ext'  => isset($ext[$key])?$ext[$key]:'image',
             ]);
         }
 //        $size = $this->size;
