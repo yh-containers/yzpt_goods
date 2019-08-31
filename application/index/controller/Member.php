@@ -356,6 +356,7 @@ class Member extends Common
             $province = $this->request->param('province');
             $city = $this->request->param('city');
             $town = $this->request->param('town');
+            $is_default = $this->request->param('is_default');
             if(!$addr){
                 $php_input['addr'] = $php_input['province'].'-'.$php_input['city'].'-'.$php_input['town'];
             }
@@ -364,7 +365,7 @@ class Member extends Common
             unset($php_input['town']);
             $php_input['uid'] = session('uid');
             try{
-                if($php_input['is_default']){
+                if($is_default){
                     $addr_model->where(['is_default'=>1,'uid'=>session('uid')])->update(['is_default'=>0]);
                 }
                 $addr_model->actionAdd($php_input);
