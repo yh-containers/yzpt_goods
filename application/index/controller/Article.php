@@ -11,11 +11,18 @@ use think\Request;
 class Article extends Common
 {
     public function index(){
-        $list = \app\common\model\BottomColumn::with(['ownColumns'=>function($query){
+        $columnModel = new \app\common\model\BottomColumn();
+        $list = $columnModel->with(['ownColumns'=>function($query){
             return $query->where('status=1');
         }])->where('status=1 and pid=0')->select();
         $aid = $this->request->param('id');
-        $data = \app\common\model\BottomColumn::field('id,name,content,pid')->get($aid);
+        $search = $this->request->param('search');
+        $data = array();
+        if($aid){
+            $data = $columnModel->field('id,name,content,pid')->get($aid);
+        }else{
+            $data = $columnModel->where('name like "'.$search.'"')->field('id,name,content,pid')->find();
+        }
         $nk = 0;
         $acname = '';
         foreach ($list as $k=>$v){
