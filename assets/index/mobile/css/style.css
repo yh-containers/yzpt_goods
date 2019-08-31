@@ -2,7 +2,7 @@
 
 html{font-size:62.5%;}
 body,div,dl,dt,dd,ul,ol,li,p,span,a,img,form,input,h1,h2,h3,h4,h5,h6 {margin: 0;padding: 0;}
-body {width: 100%;min-width: 320px;font-size:12px;color:#333;background: #fff;font-family:Arial,"Microsoft YaHei","微软雅黑",sans-serif;line-height: 24px;word-wrap:break-word;word-break:break-all;-webkit-tap-highlight-color:rgba(0,0,0,0);background-image: url(../images/app_bg.jpg);background-repeat: no-repeat;background-position: center top;background-size: cover;background-attachment: fixed;}
+body {width: 100%;min-width: 320px;font-size:12px;color:#333;background-color: #fff;font-family:Arial,"Microsoft YaHei","微软雅黑",sans-serif;line-height: 24px;word-wrap:break-word;word-break:break-all;-webkit-tap-highlight-color:rgba(0,0,0,0);background-image: url(../images/app_bg.jpg);background-repeat: no-repeat;background-position: center top;background-size: cover;background-attachment: fixed;}
 ul li,ol li {list-style: none;}
 
 h1,h2,h3,h4,h5,h6 {font-weight: normal;}
@@ -80,7 +80,7 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 
 
 /*首页分类*/
-.index_sort{border-bottom: 10px #efeff4 solid;margin-top: 20px;padding:0 3%;}
+.index_sort{border-bottom: 10px #efeff4 solid;padding:20px 3% 0;background:#fff;}
 .index_sort ul li{width:20%;float: left;margin-bottom: 10px;}
 .index_sort ul li a{display: block;text-align: center;}
 .index_sort ul li a img{width:40px;height:40px;}
@@ -171,7 +171,6 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 .product_description .bd .con h2{font-size:1.6rem;line-height:40px;}
 .product_description .bd .con p{font-size:1.4rem;color:#888;}
 
-.evaluation iframe{position: relative;z-index: 2000;}
 .evaluation .inHd{border-bottom:1px #e5e5e5 solid;padding:0 3% 10px;}
 .evaluation .inHd ul li{height:30px;line-height:30px;background:#eaf2f7;float: left;margin:0 10px 10px 0;padding:0 10px;color:#888;}
 .evaluation .inHd ul li.on{background:#e42347;color:#fff;}
@@ -280,6 +279,7 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 .orders_info{background:#fff;margin-bottom:10px;}
 .orders_info ul li{line-height:40px;height:40px;border-bottom:1px #e5e5e5 solid;padding:0 3%;font-size:1.5rem;overflow: hidden;*zoom:1;}
 .orders_info ul li span{float:right;}
+.orders_info ul li input{float: right;width: 60%;height: 40px;text-align: right;}
 
 .pay_method{background:#fff;margin-bottom:60px;}
 .pay_method ul li{line-height:40px;height:40px;border-bottom:1px #e5e5e5 solid;padding:0 3%;font-size:1.5rem;overflow: hidden;*zoom:1;}
@@ -322,7 +322,6 @@ input, button, textarea, select {border:none;outline: none;background: none;font
 .add_address p{padding:0 10px;background: #fff;height:50px;line-height: 50px;border-bottom: 1px #eee solid;position: relative;}
 .add_address p label{font-size: 1.4rem;width:60px;display: inline-block;}
 .add_address p input{width:calc(100% - 70px);padding:0 10px;line-height: 50px;font-size: 1.4rem;box-sizing: border-box;-webkit-box-sizing: border-box;}
-.add_address .cell-input input{color:#999;text-align:right;}
 .add_address .cell-input:after{content: ''; display: block;position: absolute;top: 0; bottom: 0;right:10px;margin: auto;width: 10px;height: 10px;border-top: 1px solid #999;border-right: 1px solid #999;-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-ms-transform: rotate(45deg);transform: rotate(45deg);}
 .add_address p.default{margin-top:10px;}
 .add_address p.default input{float:right;width:16px;height:16px;border:1px #999 solid;-webkit-border-radius:50%;border-radius:50%;padding:0;margin-top:17px}
