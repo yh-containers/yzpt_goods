@@ -277,12 +277,12 @@ class Index extends Common
                 $auth_info = \app\common\service\third\QQ::codeToAct($code);
                 $where['qq_openid'] = $auth_info['openid'];
             }
-            dump($auth_info);
+//            dump($auth_info);
             $user_model = new \app\common\model\Users();
             $models = $user_model->where($where)->find();
-            print_r($where);
-            dump($models);die;
-            if($models['id']){
+//            print_r($where);
+//            dump($models);die;
+            if($models){
                 session('userinfo',[
                     'uid' => $models['id'],
                     'uname' => $models['name'],
