@@ -200,7 +200,8 @@
                 dataType:'json',
                 type:'post',
                 success:function(e){
-                    alert(e.msg);
+                    if(!ajaxData.is_checked)
+                    	alert(e.msg);
                     if(e.code && ajaxData.is_checked){
                         window.location.href="{:url('Order/detail')}";
                     }

@@ -222,10 +222,12 @@
                 dataType:'json',
                 type:'post',
                 success:function(e){
-                    $('#cart_msg').html('');
-                    $('#cart_msg').html(e.msg);
-                    $('.remind_popup').show();
-                    $("body").append("<div class='tips_bg'></div>");
+                    if(!ajaxData.is_checked) {
+                        $('#cart_msg').html('');
+                        $('#cart_msg').html(e.msg);
+                        $('.remind_popup').show();
+                        $("body").append("<div class='tips_bg'></div>");
+                    }
                     if(e.code && ajaxData.is_checked){
                         window.location.href="{:url('Order/detail')}";
                     }
