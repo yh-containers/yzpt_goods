@@ -31,6 +31,18 @@
 							{/if}
 						</li>
 
+						<li>
+							<div class="fl">
+								<h3>绑定微博</h3>
+								<p>用于微博授权直接登录</p>
+							</div>
+							{if($member['wb_openid'])}
+							<div class="fr"><a href="javascript:;" onclick="sendAjax('/Member/center',{'wb_openid':''},1);">解除绑定</a></div>
+							{else/}
+							<div class="fr"><a href="https://api.weibo.com/oauth2/authorize?client_id={:\\app\\common\\service\\third\\Weibo::config('web','app_id')}&response_type=code&redirect_uri={:url('index/thirdlogin',['mode'=>'weibo'],false,true)}">立即绑定</a></div>
+							{/if}
+						</li>
+
 					</ul>
 				</div>
 			</div>
