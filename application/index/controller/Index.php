@@ -289,11 +289,13 @@ class Index extends Common
                     'face' => $models['face']
                 ]);
                 session('uid',$models['id']);
-                $this->redirect(url('Index/index'));
+                //$this->redirect(url('Index/index'));
+                header("Location:/");exit;
             }else{
                 $auth_info['mode'] = $mode;
                 session('auth_info',$auth_info);
-                $this->redirect(url('Index/register'));
+                //$this->redirect(url('Index/register'));
+                header("Location:/index/register");exit;
             }
             //dump($auth_info);
         }catch (\Exception $e){
