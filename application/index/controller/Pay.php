@@ -20,7 +20,7 @@ class Pay extends Common
             }else{
                 $pay_way = 'webPay';
             }
-            //$pay_way = 'webPay';
+            $pay_way = 'webPay';
         }else{
             $mode = 'wechat';
             if(isMobile()){
