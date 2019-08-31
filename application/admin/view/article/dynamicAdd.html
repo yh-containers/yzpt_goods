@@ -1,0 +1,113 @@
+{extend name="base" /}
+
+{block name="style"}
+<style>
+
+    .goods-group{display: flex;flex-wrap: wrap;}
+    .goods-group .item{display: inline-block;position: relative;margin-right: 5px}
+    .goods-group .item i{position: absolute; top:0; size: 18px;color: white; background: red}
+
+</style>
+{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <!--<h3 class="box-title">Quick Example</h3>-->
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body">
+                <form id="form" action="" class="form-horizontal">
+                    <input type="hidden" name="id" value="{$model['id']}"/>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">内容</label>
+                        <div class="col-sm-10">
+                            <textarea name="content" class="form-control" rows="10">{$model['content']}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">图片</label>
+                        <div class="col-sm-10">
+                            <button type="button" class="layui-btn upload-img" lay-data='{:action('upload/info',['type'=>'dynamic'])}'>
+                                <i class="layui-icon">&#xe67c;</i>图片
+                            </button>
+                            <div class="help-block goods-group">
+                                {volist name="model['file']" id="vo"}
+                                    <div class="item">
+                                        <i class="fa fa-fw fa-close"></i>
+                                        <img src="{:\\app\\common\\model\\Goods::handleFile($vo)}" width="100" height="100">
+                                        <input value="{$vo}" name="file[]" type="hidden">
+                                    </div>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-10">
+                            <label>
+                                <input type="radio" name="status" value="1" {:$model['status']!=2?'checked':''} />
+                                正常
+                            </label>
+                            <label>
+                                <input type="radio" name="status" value="2" {:$model['status']==2?'checked':''}>
+                                关闭
+                            </label>
+                        </div>
+                    </div>
+
+
+
+                </form>
+
+            </div>
+            <!-- /.box-body -->
+
+        <div class="box-footer">
+            <button type="button" onclick="$.common.submitForm()" class="col-sm-offset-2 btn  btn-info">保存</button>
+        </div>
+    </div>
+
+{/block}
+
+
+{block name="script"}
+<!-- 配置文件 -->
+<script type="text/javascript" src="/assets/ueditor1_4_3_3/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/assets/ueditor1_4_3_3/ueditor.all.js"></script>
+
+<script>
+    var ue = UE.getEditor('container');
+    //引用上传组件
+    layui.use(['upload','laydate'],function(){
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        $.common.fileUpload(upload,'.upload-img',(res,query_select)=>{
+            //图片显示域名
+            var preview_domain = res.hasOwnProperty('preview_domain')?res.preview_domain:'';
+            var html = ' <div class="item">' +
+                '<i class="fa fa-fw fa-close"></i>' +
+                '<img src="'+preview_domain+res.key+'" width="100" height="100">' +
+                '<input value="'+res.key+'" name="file[]" type="hidden">' +
+                '</div>'
+            query_select.parent().find('.help-block').append(html);
+        })
+        //执行一个laydate实例
+        laydate.render({
+            elem: '.datetime' //指定元素
+            ,type: 'datetime' //默认，可不填
+            ,max: 1
+        });
+    })
+
+    //删除图片
+    $(".goods-group").on('click','i',function(){
+        $(this).parent().remove()
+    })
+</script>
+{/block}

@@ -124,6 +124,34 @@ class Article extends Common
     }
 
 
+    //
+    public function dynamicAdd()
+    {
+        $id = $this->request->param('id');
+        $model = new \app\common\model\Dynamic();
+
+        //表单提交
+        if($this->request->isAjax()){
+            $php_input = $this->request->param();
+            $php_input['uid'] = 1;
+            $php_input['file'] = empty($php_input['file'])?'':implode(',',$php_input['file']);
+//            dump($php_input);exit;
+            $validate = new \app\common\validate\Dynamic();
+            try{
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>0,'msg'=>'操作成功']);
+        }
+
+        $model = $model->get($id);
+        return view('dynamicAdd',[
+            'model' => $model,
+        ]);
+
+    }
+
     //活动列表
     public function activity()
     {
