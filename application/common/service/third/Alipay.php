@@ -76,6 +76,13 @@ class Alipay implements IPay
         return $result;
 
     }
+    //手机网站支付
+    public function  wapPay(\think\Model $model){
+        $request = new \AlipayTradeWapPayRequest ();
+        $this->handleOrderInput($model, $request,['product_code'=>'FAST_INSTANT_TRADE_PAY']);
+        $result = $this->aop->pageExecute ( $request);
+        return $result;
+    }
 
 
     protected function handleOrderInput($model,$request,array $mer_content = [])
