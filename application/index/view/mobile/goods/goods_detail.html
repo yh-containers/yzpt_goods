@@ -55,7 +55,7 @@
 
 	<footer class="det_footer">
 		<a href="tel:0755-12369987"><i class="icon iconfont icon-kefu"></i><span>联系客服</span></a>
-		<a href="javascript:addCollect();" class="coll"><i class="icon iconfont icon-xingxing"></i><span>收藏</span></a>
+		<a href="javascript:addCollect(this);" class="coll{if($collect_count)} on{/if}" id="col"><i class="icon iconfont icon-xingxing"></i><span>收藏</span></a>
 		<a href="{:url('Order/cart')}"><i class="icon iconfont icon-gouwuche"></i><span>购物车</span></a>
 		<a href="javascript:;" class="add_cart">加入购物车</a>
 		<a href="javascript:;" class="buy_now">立即购买</a>
@@ -175,8 +175,13 @@
             var num = $('#num').val();
             sendAjax("{:url('Goods/addcart')}",{'gid':goods_id,'sid':sku_id,'num':num,'is_checked':isck});
         }
-        function addCollect(){
+        function addCollect(obj){
             sendAjax("{:url('Goods/collect')}",{'gid':goods_id});
+            if($('#col').hasClass('on')){
+                $('#col').removeClass('on');
+			}else{
+                $('#col').addClass('on');
+			}
         }
 		/*加入购物车*/
 		$(".det_footer .add_cart").click(function(){

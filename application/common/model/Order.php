@@ -217,7 +217,7 @@ class Order extends BaseModel
             'attach' => 'attach',
             'no' => $this->getAttr('no'),
 //            'pay_money' => $this->getAttribute('pay_money'),
-            'pay_money' => 0.01,
+            'pay_money' => $this->getAttr('pay_money'),
             'expire_time' => self::ORDER_EXP_TIME,
             'goods_tag' => 'goods',
             'notify_url' => url('pay/notify',['mode'=>$mode],false,true),
