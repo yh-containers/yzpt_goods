@@ -216,6 +216,7 @@ class Order extends Common
         return view('pay_order',['order'=>$order]);
     }
     public function redurl(){
+        sleep(1);
         $order_model = new \app\common\model\Order();
         $id = $this->request->param('oid');
         $order = $order_model->field('id,no,money,pay_way,status')->get($id);
