@@ -371,6 +371,9 @@ class Users extends BaseModel
         unset($data['money'], $data['raise_num']);
         $model = new self();
         $model->data($data);
+        if($data['phone']){
+            if($model->where(['phone'=>$data['phone']])->count()) exception('手机号已被注册！');
+        }
         !empty($data['password']) && $model->password = $data['password'];
         $bool = $model->save();
         !$bool && exception('注册异常');

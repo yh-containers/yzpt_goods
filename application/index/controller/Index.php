@@ -127,6 +127,7 @@ class Index extends Common
                 } elseif ($auth_info['mode'] == 'qq') {
                     $data['qq_openid'] = $auth_info['openid'];
                 }
+                session('auth_info',null);
                 \app\common\model\Users::where(['id'=>session('uid')])->update($data);
             }
             $this->redirect(url('Index/index'));
