@@ -16,11 +16,11 @@ class Pay extends Common
         if($model['pay_way'] == 1){
             $mode = 'alipay';
             if(isMobile()){
-                $pay_way = 'appPay';
+                $pay_way = 'wapPay';
             }else{
                 $pay_way = 'webPay';
             }
-            $pay_way = 'webPay';
+//            $pay_way = 'webPay';
         }else{
             $mode = 'wechat';
             if(isMobile()){
@@ -51,6 +51,9 @@ class Pay extends Common
                 }
                 return view('order/pay_order',['order'=>$model,'code_url'=>$html,'payinfo'=>$html,'redirect_url'=>$redirect_url]);
             }
+            //elseif($mode=='alipay' && isMobile()){//
+
+            //}
             return $html;
         }catch (\Exception $e){
             dump($e->getMessage());

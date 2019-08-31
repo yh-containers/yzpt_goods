@@ -27,11 +27,11 @@
                                 </div>
                                 <div class="inHd">
                                     <ul class="clearfix">
-                                        <a href="{:url('Goods/comment',['id'=>$gid])}"><li>全部<span>（{$comment_count}）</span></li></a>
-                                        <a href="{:url('Goods/comment',['id'=>$gid,'state'=>1])}"><li>晒图<span>（{$pjnum.img}）</span></li></a>
-                                        <a href="{:url('Goods/comment',['id'=>$gid,'state'=>2])}"><li>好评<span>（{$pjnum.best}）</span></li></a>
-                                        <a href="{:url('Goods/comment',['id'=>$gid,'state'=>3])}"><li>中评<span>（{$pjnum.normal}）</span></li></a>
-                                        <a href="{:url('Goods/comment',['id'=>$gid,'state'=>4])}"><li>差评<span>（{$pjnum.bad}）</span></li></a>
+                                        <li {if($step)}{else/}class="no"{/if}><a href="{:url('Goods/comment',['id'=>$gid])}">全部<span>（{$comment_count}）</span></a></li>
+                                        <li {if condition="$step eq 1"}class="no"{/if}><a href="{:url('Goods/comment',['id'=>$gid,'state'=>1])}">晒图<span>（{$pjnum.img}）</span></a></li>
+                                        <li {if condition="$step eq 2"}class="no"{/if}><a href="{:url('Goods/comment',['id'=>$gid,'state'=>2])}">好评<span>（{$pjnum.best}）</span></a></li>
+                                        <li {if condition="$step eq 3"}class="no"{/if}><a href="{:url('Goods/comment',['id'=>$gid,'state'=>3])}">中评<span>（{$pjnum.normal}）</span></a></li>
+                                        <li {if condition="$step eq 4"}class="no"{/if}><a href="{:url('Goods/comment',['id'=>$gid,'state'=>4])}">差评<span>（{$pjnum.bad}）</span></a></li>
                                     </ul>
                                 </div>
                                 <div class="inBd">
@@ -64,7 +64,7 @@
                                         </ul>
                                         <div class="page">
                                             <div class="page_num clearfix">
-                                                {$page}
+                                                {$page|raw}
                                             </div>
                                         </div>
                                     </div>

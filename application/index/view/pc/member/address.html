@@ -11,7 +11,7 @@
 					<li>
 						<div class="recipient">收件人</div>
 						<div class="rec_adda">收货地址</div>
-						<div class="zip_code">邮编</div>
+						<!--<div class="zip_code">邮编</div>-->
 						<div class="phone">手机/电话</div>
 						<div class="operating">操作</div>
 					</li>
@@ -19,7 +19,7 @@
 					<li>
 						<div class="recipient">{$addr.username}</div>
 						<div class="rec_adda">{$addr.addr} {$addr.addr_extra} </div>
-						<div class="zip_code">{$addr.zip_code}</div>
+						<!--<div class="zip_code">{$addr.zip_code}</div>-->
 						<div class="phone">{$addr.phone}</div>
 						<div class="operating">
 							{if($addr['is_default'])}
@@ -56,13 +56,13 @@
 					<label><span>*</span>所在地区：</label>
 					<div class="area_select clearfix">
 						<select class="requires" name="province" id="provinces">
-							<option value="请选择">请选择</option>
+							<option value="">请选择</option>
 						</select>
 						<select class="requires" name="city" id="citys">
-							<option value="请选择">请选择</option>
+							<option value="">请选择</option>
 						</select>
 						<select class="requires" name="town" id="towns">
-							<option value="请选择">请选择</option>
+							<option value="">请选择</option>
 						</select>
 					</div>
 				</div>
@@ -70,10 +70,10 @@
 					<label><span>*</span>详细地址：</label>
 					<input type="text" class="requires" id="form_addr_extra" name="addr_extra" value="">
 				</div>
-				<div class="box">
+				<!--<div class="box">
 					<label><span>*</span>邮政编码：</label>
 					<input type="text" class="requires" id="form_zip_code" name="zip_code" value="">
-				</div>
+				</div>-->
 				</form>
 				<div class="operating">
 					<a href="javascript:;" onclick="toSubmit();">保存收货地址</a>
@@ -117,7 +117,7 @@
 			$('#form_id').val($(Obj).attr('data-id'));
 			$('#form_username').val($(Obj).attr('data-username'));
 			$('#form_phone').val($(Obj).attr('data-phone'));
-			$('#form_zip_code').val($(Obj).attr('data-zip_code'));
+			//$('#form_zip_code').val($(Obj).attr('data-zip_code'));
 			$('#form_addr_extra').val($(Obj).attr('data-addr_extra'));
 			$(".add_address").show();
 		}

@@ -128,7 +128,10 @@ class Member extends Common
             $res = ['code' => 0, 'msg' => ''];
             $col_model = new \app\common\model\Collect();
             $ids = $this->request->param('ids');
-            $col_model->actionDel(['id'=>['in',$ids]]);
+            $ids = explode(',',$ids);
+            foreach ($ids as $id){
+                if($id) $col_model->actionDel(['id'=>['in',$id]]);
+            }
             $res['msg'] = '已移除收藏';
             $res['code'] = 1;
             echo json_encode($res);die;
@@ -295,9 +298,13 @@ class Member extends Common
                 if($php_input['type'] == 'phone'){
                     if($verify){
                         if (!captcha_check($verify)) {
-                            $res['msg'] = '验证码错误';
+                            $res['msg'] = '图形验证码错误';
                             echo json_encode($res);die;
                         }
+                    }
+                    if($user_model->where(['phone'=>$php_input['phone']])->count()){
+                        $res['msg'] = '手机号也被使用';
+                        echo json_encode($res);die;
                     }
                     \app\common\model\Sms::validVerify(1,$php_input['phone'],$php_input['code']);
                     $user_model->where(['id'=>session('uid')])->update(['phone'=>$php_input['phone']]);
@@ -356,15 +363,21 @@ class Member extends Common
             $province = $this->request->param('province');
             $city = $this->request->param('city');
             $town = $this->request->param('town');
+            $is_default = $this->request->param('is_default');
             if(!$addr){
                 $php_input['addr'] = $php_input['province'].'-'.$php_input['city'].'-'.$php_input['town'];
             }
             unset($php_input['province']);
             unset($php_input['city']);
             unset($php_input['town']);
+            if(empty($php_input['addr'])){
+                $res['msg'] = '请选择收货地址';
+                echo json_encode($res);
+                die;
+            }
             $php_input['uid'] = session('uid');
             try{
-                if($php_input['is_default']){
+                if($is_default){
                     $addr_model->where(['is_default'=>1,'uid'=>session('uid')])->update(['is_default'=>0]);
                 }
                 $addr_model->actionAdd($php_input);

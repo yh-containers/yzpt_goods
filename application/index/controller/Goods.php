@@ -19,7 +19,6 @@ class Goods extends Common
         }else{
             $lift = 'desc';
         }
-        if($sort == 'sales') $sort = 'sort';//销量排序后续处理
         //获取面包屑导航及分类查询条件
         $bread = $this->breadcrumbs($cate_id);
         $sql_where = 'status=1';
@@ -37,7 +36,7 @@ class Goods extends Common
             cookie('search_goods',$search_goods);
         }
         $goods_model = new \app\common\model\Goods();
-        $goods_list = $goods_model->where($sql_where)->field('id,goods_name,goods_image,price,original_price')->order($sort.' '.$lift)->paginate();
+        $goods_list = $goods_model->where($sql_where)->field('id,goods_name,goods_image,price,original_price,(virtual_sales+sales) as sales')->order($sort.' '.$lift)->paginate();
         $page = $goods_list->render();
         $tz_url = url('Goods/goods_list').'?c=1';
         if($cate_id){
@@ -60,7 +59,8 @@ class Goods extends Common
     //商品详情
     public function detail(){
         $id  = $this->request->param('id');
-        $goods_model = new \app\common\model\Goods();
+        $goods_model = new \app\common\model\Goods();//click_num
+        $goods_model->where(['id'=>$id])->update(['click_num'=>$goods_model->raw('click_num+1')]);
         $data = $goods_model->with('ownSpecValue')->get($id);
         if($data['status'] != 1){
             $this->error('商品未上架');

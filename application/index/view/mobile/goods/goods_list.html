@@ -1,5 +1,6 @@
 {extend name="base" /}
 {block name="header_search"}{/block}
+{block name="bg"}style="background:#fff;"{/block}
 {block name="center"}
 	<header class="header">
 		<a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
@@ -7,13 +8,13 @@
 	</header>
 	<main class="main mgtop">
 		<div class="pro_search">
-			<a href="search.html" class="box"><i class="icon iconfont icon-search"></i>搜名称 关键字</a>
-			<a href="message.html" class="msg"><i class="icon iconfont icon-xiaoxi"></i><span></span></a>
+			<a href="{:url('/goods/search')}" class="box"><i class="icon iconfont icon-search"></i>搜名称 关键字</a>
+			<a href="{:url('/member/message')}" class="msg"><i class="icon iconfont icon-xiaoxi"></i><span></span></a>
 		</div>
 		<div class="filter_top">
 			<a href="{$auto_url}" {if condition="$sort eq 'sort'"}class="cur"{/if}>默认</a>
-			<a href="{$auto_url}">人气</a>
-			<a href="{$auto_url}">销量</a>
+			<a href="{$auto_url}&sort=click_num&lift={$lift}" {if condition="$sort eq 'click_num'"}class="cur"{/if}>人气</a>
+			<a href="{$auto_url}&sort=sales&lift={$lift}" {if condition="$sort eq 'sales'"}class="cur"{/if}>销量</a>
 			<a href="{$auto_url}&sort=price&lift={$lift}" class="jiage {if condition="$sort eq 'price'"}cur{/if}"><span>价格</span></a>
 		</div>
 		<div class="products list">
