@@ -39,7 +39,9 @@
                     <tr>
                         <td>{$i}</td>
                         <td>{$vo['link_users']['name']}</td>
-                        <td></td>
+                        <td title="{$vo['content']}">
+                            <div> {:mb_strlen($vo['content'],'utf-8')>20 ?(mb_substr($vo['content'],0,20,'utf-8').'...'):$vo['content']} </div>
+                        </td>
                         <td>{$vo['views']}</td>
                         <td>{$vo['create_time']}</td>
                         <td>{:\\app\\common\\model\\Dynamic::getPropInfo('fields_status',$vo['status'],'name')}</td>
