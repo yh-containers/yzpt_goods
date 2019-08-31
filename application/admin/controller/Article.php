@@ -152,6 +152,15 @@ class Article extends Common
 
     }
 
+
+    //删除数据
+    public function dynamicDel()
+    {
+        $id = $this->request->param('id',0,'int');
+        $model = new \app\common\model\Dynamic();
+        return $model->actionDel(['id'=>$id]);
+    }
+
     //活动列表
     public function activity()
     {
