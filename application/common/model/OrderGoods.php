@@ -16,6 +16,7 @@ class OrderGoods extends BaseModel
         empty($order_id) && exception('订单不存在');
         empty($goods_list) && exception('商品不存在');
         $cmodel = new \app\common\model\Cart();
+        $gmodel = new \app\common\model\Goods();
         foreach ($goods_list as $goods){
             $og = array();
             $og['oid'] = $order_id;
@@ -28,6 +29,7 @@ class OrderGoods extends BaseModel
             $model = new self();
             $model->data($og);
             $model->save();
+            $gmodel->where(['id'=>$goods['gid']])->update(['sales'=>$gmodel->raw('sales+'.$goods['num'])]);
             $cmodel->where(['id'=>$goods['id']])->delete();
         }
     }

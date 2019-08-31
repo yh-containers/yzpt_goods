@@ -13,7 +13,7 @@
 		<div class="filter_top">
 			<a href="{$auto_url}" {if condition="$sort eq 'sort'"}class="cur"{/if}>默认</a>
 			<a href="{$auto_url}">人气</a>
-			<a href="{$auto_url}">销量</a>
+			<a href="{$auto_url}&sort=sales&lift={$lift}" {if condition="$sort eq 'sales'"}class="cur"{/if}>销量</a>
 			<a href="{$auto_url}&sort=price&lift={$lift}" class="jiage {if condition="$sort eq 'price'"}cur{/if}"><span>价格</span></a>
 		</div>
 		<div class="products list">
