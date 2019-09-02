@@ -12,9 +12,10 @@ class Index extends Common
         $et = strtotime(date('Y-m-d').' 23:59:59');
         $st = strtotime(date('Y-m-d').' 00:00:00');
         $today_where = 'status=1 and is_special=1 and update_time between '.$st.' and '.$et;
-        $goods['today'] = $goods_model->where($today_where)->field('id,goods_name,goods_image')->order('sort asc')->limit(10)->select();
+        //今日特惠
+        $goods['today'] = $goods_model->where($today_where)->field('id,goods_name,goods_image')->order('update_time desc,sort asc')->limit(10)->select();
         //新品推荐
-        $goods['new'] = $goods_model->where(['status'=>1])->field('id,goods_name,price,original_price,goods_image')->order('create_time desc')->order('sort asc')->limit(10)->select();
+        $goods['new'] = $goods_model->where(['status'=>1,'is_ship'=>1])->field('id,goods_name,price,original_price,goods_image')->order('create_time desc')->order('sort asc')->limit(10)->select();
         //banner下产品
         $goods['bg'] = $goods_model->where(['status'=>1,'is_best'=>1])->field('id,goods_name,price,original_price,zd_img')->order('sort asc')->limit(6)->select();
         $bg_left = array();
@@ -28,7 +29,7 @@ class Index extends Common
         //特价
         $goods['special'] = $goods_model->where(['status'=>1,'is_special'=>1])->field('id,goods_name,goods_image')->order('sort asc')->limit(10)->select();
         //人气
-        $goods['hot'] = $goods_model->where(['status'=>1,'is_hot'=>1])->field('id,goods_name,goods_image')->order('sort asc')->limit(10)->select();
+        $goods['hot'] = $goods_model->where(['status'=>1,'is_hot'=>1])->field('id,goods_name,goods_image')->order('sales desc,sort asc')->limit(10)->select();
         //print_r($today_where);
         //首页banner
         $banner = \app\common\model\Ad::where('type=2 and status=1')->field('url,img')->select();
