@@ -417,7 +417,7 @@ class Index extends Common
     public function optInfo()
     {
         return $this->_resData(1,'操作成功',[
-            'lc'=>1,//理财状态
+            'lc'=>0,//理财状态
         ]);
     }
 }
