@@ -98,6 +98,9 @@ class Order extends Common
         }
         $id  = $this->request->param('id');
         $data = $model->with('ownGoods,ownReturn,ownAddrs')->get($id);
+        if(empty($data['own_return'])){
+            $this->error('该订单未填写退款单');
+        }
         return view('return_detail',['data'=>$data]);
     }
     protected function  addToMsg($uid,$oid,$content){
