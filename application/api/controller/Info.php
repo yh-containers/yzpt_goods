@@ -4,7 +4,7 @@ namespace app\api\controller;
 class Info extends Common
 {
     protected $need_login=true;
-    protected $ignore_action = ['dynamic','dydetail','dycomlist','activity','video','videodetail','videocomlist','welfare','welfareDetail'];
+    protected $ignore_action = ['dynamic','dydetail','dycomlist','activity','video','videodetail','videocomlist','welfare','welfareDetail','love'];
 
     /**
      * @var \app\common\model\Users
@@ -520,13 +520,26 @@ class Info extends Common
     //喜欢
     public function love()
     {
+        $php_input = input();
         $uid = input('user_id',0,'intval');
         $user_id = $this->user_id;
         $where = [];
-        !empty($uid) && $where[] = ['uid','=',$uid];
+        $where[] = ['uid','=',$uid];
         $list =[];
-
-        $data = ['list'=>$list,'total_page'=>0];
+        $info = \app\common\model\ViewLove::getList($php_input,$uid,$user_id)->each(function($item,$index)use(&$list){
+            array_push($list,[
+                'uid' => $item['uid'],
+                'user_name' => $item['link_users']['name'],
+                'user_face' => $item['link_users']['face'],
+                'cond_id' => $item['cond_id'],
+                'title' => \app\common\model\ViewLove::getPropInfo('fields_type',$item['type'],'name'),
+                'content' => $item['content'],
+                'image' => $item['image'],
+                'file' => $item['fileGroup'],
+                'date' => $item['date'],
+            ]);
+        });
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
         return $this->_resData(1,'获取成功',$data);
     }
 
