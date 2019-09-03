@@ -29,7 +29,7 @@
                 <td>{$vo.no}</td>
                 <td>{$vo['own_addrs']['username']}<br/>{$vo['own_addrs']['phone']}<br/>{$vo['own_addrs']['addr']} {$vo['own_addrs']['addr_extra']}</td>
                 <td>{$vo.money}</td>
-                <td>{:\\app\\common\\model\\OrderReturn::getPropInfo('fields_state',$vo['own_return']['state'])}</td>
+                <td>{if($vo['own_return']['state'])}{:\\app\\common\\model\\OrderReturn::getPropInfo('fields_state',$vo['own_return']['state'])}{/if}</td>
                 <td>{:$vo['own_return']['create_time']}</td>
                 <td>
                     <a class="layui-btn layui-btn-sm" href="{:url('returnDetail',['id'=>$vo['id']])}">编辑</a>
