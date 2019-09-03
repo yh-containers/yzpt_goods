@@ -4,7 +4,7 @@ namespace app\api\controller;
 class Info extends Common
 {
     protected $need_login=true;
-    protected $ignore_action = ['dynamic','dydetail','dycomlist','activity','video','videodetail','videocomlist','welfare','welfareDetail'];
+    protected $ignore_action = ['dynamic','dydetail','dycomlist','activity','video','videodetail','videocomlist','welfare','welfareDetail','love'];
 
     /**
      * @var \app\common\model\Users
@@ -520,13 +520,43 @@ class Info extends Common
     //喜欢
     public function love()
     {
+        $php_input = input();
         $uid = input('user_id',0,'intval');
         $user_id = $this->user_id;
         $where = [];
-        !empty($uid) && $where[] = ['uid','=',$uid];
+        $where[] = ['uid','=',$uid];
         $list =[];
+        $info = \app\common\model\ViewLove::getList($php_input,$uid,$user_id)->each(function($item,$index)use(&$list,$user_id){
+            if($item['type']==1){
+                //视频
+                $user_id && $praise_info = \app\common\model\VideoPraise::where(['uid'=>$user_id,'vid'=>$item['cond_id']])->find();
+                $is_praise = empty($praise_info)?0:1;
+            }else{
+                //动态
+                $user_id && $praise_info = \app\common\model\DyPraise::where(['uid'=>$user_id,'dy_id'=>$item['cond_id']])->find();
+                $is_praise = empty($praise_info)?0:1;
+            }
 
-        $data = ['list'=>$list,'total_page'=>0];
+            array_push($list,[
+                'id' => $item['cond_id'],
+                'type' => $item['type'],
+                'uid' => $item['uid'],
+                'user_name' => $item['link_users']['name'],
+                'face' => $item['link_users']['face'],
+                'title' => \app\common\model\ViewLove::getPropInfo('fields_type',$item['type'],'name'),
+                'content' => $item['content'],
+                'image' => $item['image'],
+                'file' => $item['fileGroup'],
+                'release_date' => $item['date'],
+                'share_times' => $item['share_times'],
+                'praise_times' => $item['praise_times'],
+                'views' => $item['views'],
+                'comment_times' => $item['comment_times'],
+                'is_follow' => empty($item['link_users']['link_has_follow'])?0:1,
+                'is_praise' => $is_praise,
+            ]);
+        });
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
         return $this->_resData(1,'获取成功',$data);
     }
 

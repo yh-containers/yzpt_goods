@@ -209,10 +209,9 @@ class Mine extends Common
             $last_times = $item['lx_times'];
         });
         //签到数据
-        $sing_model = \app\common\model\UsersSign::order('id desc')->find();
+        $sing_model = \app\common\model\UsersSign::order('id desc')->where(['uid'=>$this->user_id])->find();
         $last_times = empty($sing_model)?0:$sing_model['lx_times']; //连续签到次数
         $today_sign_status = $sing_model['date']==date('Y-m-d')?1:0; //今天是否签到
-
         return $this->_resData(1,'操作成功',[
             'sign_day'=>$sign_day,
             'last_times'=>$last_times,
