@@ -27,10 +27,12 @@ class ViewLove extends BaseModel
         $data = ['type'=>'','data'=>[]];
         $file = $this->file;
         $file = empty($file) ? [] : explode(',',$file);
+        $image = empty($this->image)?'':$this->image;
         foreach ($file as $key=>$vo){
             empty($data['type']) && $data['type']=self::checkImg($vo)?'image':'video';
             array_push($data['data'],[
                 'file' => self::handleFile($vo),
+                'img' => self::handleFile($image),
                 'ext'  => self::checkImg($vo)?'image':'video',
             ]);
         }
@@ -51,13 +53,17 @@ class ViewLove extends BaseModel
     {
         $where = [];
         if($user_id){
-            $where[] =['uid','=',$user_id];
+            $where[] =['praise_uid','=',$user_id];
         }
         if(!empty($php_input['type'])){
             $where[] =['type','=',$php_input['type']];
         }
 
-        $list = self::with(['linkUsers'])->where($where)->order('praise_date desc')->paginate();
+        $list = self::with(['linkUsers'=>function($query)use($praise_uid){
+            $query->with(['linkHasFollow'=>function($query)use($praise_uid){
+                $query->where('uid','=',$praise_uid);
+            }]);
+        }])->where($where)->order('praise_date desc')->paginate();
         return $list;
     }
 
