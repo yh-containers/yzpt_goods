@@ -200,9 +200,13 @@ class Info extends Common
     {
         //按用户查看
         $uid = input('user_id',0,'intval');
+        $keyword = input('keyword','','trim');
+
         $user_id = $this->user_id;
         $where = [];
         !empty($uid) && $where[] = ['uid','=',$uid];
+        !empty($keyword) && $where[] = ['title','like','%'.$keyword.'%'];
+        
         $list =[];
         $info=\app\common\model\Video::with(['linkCommentCount'
             //点赞
