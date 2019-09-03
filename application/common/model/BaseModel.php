@@ -72,6 +72,29 @@ class BaseModel extends Model
         }
     }
 
+
+    /**
+     * 评论删除
+     * @param Users $user_model|null;
+     * @param array $data;
+     * @throws
+     * */
+    public static function commentDel(Users $user_model,array $data=[])
+    {
+        empty($data['id']) && exception('参数异常:id');
+        $where[] = ['id', '=', $data['id']];
+        if(!empty($user_model)){
+            $where[] = ['uid','=',$user_model->id];
+        }
+
+        $model = self::where($where)->find();
+        if(empty($model)){
+            exception('评论已删除');
+        }
+        self::whereOr([['id','=',$model['id']],['pid','=',$model['id']]])->delete();
+    }
+
+
     //验证文件是否是图片
     public static function checkImg($file)
     {

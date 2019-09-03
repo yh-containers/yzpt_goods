@@ -216,7 +216,7 @@ class Index extends Common
         }
         //身体状态
         if($on_user_label){
-            $label = $user_model['label'];
+            $label = empty($user_model['label'])?[]:$user_model['label'];
             $label_data = [];
             foreach ($label as $key=>$vo){
                 $label_data[] = [
@@ -266,6 +266,28 @@ class Index extends Common
 
 
         return $this->_resData(1,'获取成功',['list'=>$list]);
+    }
+
+    //用户列表
+    public function userFollow()
+    {
+        $php_input = input();
+        $user_id = input('user_id',0,'intval');
+        $list = [];
+        list($paginator,$user_key) = \app\common\model\UsersFollow::getList($user_id, $php_input);
+        $paginator->each(function($item,$index)use(&$list,$user_key){
+            array_push($list,[
+                'uid' => $item['uid'],
+                'user_name' => $item[$user_key]['name'],
+                'user_face' => $item[$user_key]['face'],
+                'user_intro' => $item[$user_key]['intro'],
+                'is_ftf' => 0,
+                'date' => $item['follow_time'],
+            ]);
+        });
+
+        $data = ['list'=>$list,'total_page'=>$paginator->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
     }
 
     //分享信息

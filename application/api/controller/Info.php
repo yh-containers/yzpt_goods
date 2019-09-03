@@ -90,6 +90,19 @@ class Info extends Common
         return $this->_resData(1,'评论成功',['comment'=>$model->structInfo()]);
     }
 
+    //评论--
+    public function dyComDel()
+    {
+        $php_input = input();
+        try{
+            \app\common\model\DyComment::commentDel($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+
+        return $this->_resData(1,'删除成功');
+    }
+
 
     //评论列表
     public function dyComList()
@@ -265,6 +278,19 @@ class Info extends Common
         return $this->_resData(1,'获取成功',$data);
     }
 
+
+    //评论--
+    public function videoComDel()
+    {
+        $php_input = input();
+        try{
+            \app\common\model\VideoComment::commentDel($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+
+        return $this->_resData(1,'删除成功');
+    }
 
     //发布视频
     public function videoRelease()
