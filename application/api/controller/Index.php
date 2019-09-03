@@ -379,7 +379,7 @@ class Index extends Common
 
     public function sh()
     {
-        $shell = "ls -la";
+        $shell = "ffmpeg -version";
         echo "<pre>";
         system($shell, $status);
         echo "</pre>";
