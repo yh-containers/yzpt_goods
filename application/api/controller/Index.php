@@ -414,6 +414,23 @@ class Index extends Common
 
     }
 
+    //积分商品
+    public function goods()
+    {
+        $list = [];
+        $info=\app\common\model\Goods::where([['status','=',1],['integral','>',0]])->paginate()->each(function($item,$index)use(&$list){
+            array_push($list,[
+                'id'=>$item['id'],
+                'goods_name'=>$item['goods_name'],
+                'integral'=>$item['integral'],
+                'goods_image'=>$item['goods_image'],
+                'intro'=>'已有'.$item['sales'].'人兑换',
+            ]);
+        });
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
     public function optInfo()
     {
         return $this->_resData(1,'操作成功',[
