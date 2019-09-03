@@ -78,6 +78,7 @@ class DyComment extends BaseModel
     }
 
 
+
     //是否点过赞
     public function linkIsPraise()
     {
