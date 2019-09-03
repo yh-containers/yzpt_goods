@@ -391,4 +391,33 @@ class Index extends Common
             echo "shell命令{$shell}成功执行";
         }
     }
+
+    //分享
+    public function shareHandle()
+    {
+        $mode = input('mode');
+        $id = input('id',0,'intval');
+        $share_way = input('share_way');//分享方式 qq weixin weibo
+        $cond_mode = input('cond_mode');//分享方式 采用模式
+        try{
+            if($mode=='video' && $id){
+                //视频分享
+                \app\common\model\Video::where('id',$id)->setInc('share_times');
+            }elseif ($mode=='dynamic' && $id){
+                //动态
+                \app\common\model\Dynamic::where('id',$id)->setInc('share_times');
+            }
+        }catch (\Exception $e){
+
+        }
+        return $this->_resData(1,'分享成功');
+
+    }
+
+    public function optInfo()
+    {
+        return $this->_resData(1,'操作成功',[
+            'lc'=>1,//理财状态
+        ]);
+    }
 }
