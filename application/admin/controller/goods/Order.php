@@ -6,7 +6,7 @@ use app\admin\controller\Common;
 class Order extends Common
 {
 	public function index(){
-        $list = \app\common\model\Order::with('ownAddrs')->order('create_time desc')->paginate();
+        $list = \app\common\model\Order::with('ownAddrs')->where('status!=5')->order('create_time desc')->paginate();
         foreach ($list as &$v){
             $state = \app\common\model\Order::getPropInfo('fields_mobile_step', $v['step_flow']);
             $v['status'] = is_array($state['name']) ? $state['name'][$v['status']] : $state['name'];

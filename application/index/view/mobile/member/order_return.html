@@ -1,0 +1,223 @@
+{extend name="base" /}
+{block name="header_search"}{/block}
+{block name="center"}
+    <header class="header">
+        <a href="javascript:window.history.back()" class="header_left"><i class="icon iconfont icon-down"></i></a>
+        <div class="header_title">退货退款</div>
+    </header>
+    <main class="main mgtop wrapper">
+        <div class="{if condition="$return_order"}refund_det{else}refund_reason{/if}">
+            {if condition="$return_order"}
+            <div class="title">
+                {if condition="$return_order && $return_order['state'] eq 0"}您已发起退款申请，请耐心等待商家处理...{/if}
+                {if condition="$return_order && $return_order['state'] eq 1"}卖家已同意了您的退货申请，请填写货运单号！ {/if}
+                {if condition="$return_order && $return_order['state'] eq 2"}已收到您的物流单号，商家收到货后会把款项打给您。{/if}
+            </div>
+            {/if}
+            <div class="orders_list_content clearfix">
+                {volist name="order.own_goods" id='goods'}
+                <a href="javascript:;">
+                    <div class="orders_img"><img src="{$goods.img}"></div>
+                    <div class="orders_title">
+                        <p>{$goods.name}</p>
+                        <span>{$goods.spec_name}</span>
+                    </div>
+                    <div class="orders_price">
+                        <p>￥{$goods.price}</p>
+                        <p>×{$goods.num}</p>
+                    </div>
+                </a>
+                {/volist}
+            </div>
+            {if condition="$return_order"}
+                {if condition="$return_order && $return_order['state'] eq 0"}
+                <div class="refund_info">
+                    <ul>
+                        <li>
+                            <label>退款原因：</label>
+                            <span>{$return_order.reason}</span>
+                        </li>
+                        <li>
+                            <label>退款金额：</label>
+                            <span>{$return_order.money}</span>
+                        </li>
+                        <li>
+                            <label>申请时间：</label>
+                            <span>{:$return_order.create_time}</span>
+                        </li>
+
+                        <li>
+                            <label>退款编号：</label>
+                            <span>{$return_order.id}</span>
+                        </li>
+                        <li>
+                            <label>退款说明：</label>
+                            <span>{$return_order.remarks}</span>
+                        </li>
+                    </ul>
+                </div>
+                {elseif condition="$return_order && $return_order['state'] eq 1"/}
+                <div id="showdizhi">
+                    <div class="refund_info dizhi">
+                        <ul>
+                            <li>
+                                <label>收货人</label>
+                                <span>养众商城</span>
+                            </li>
+                            <li>
+                                <label>电话号码</label>
+                                <span>{$order.own_addrs.phone}</span>
+                            </li>
+                            <li>
+                                <label>申请时间</label>
+                                <span>{:$return_order.create_time}</span>
+                            </li>
+
+                            <li>
+                                <label>所在地区</label>
+                                <span>{$order.own_addrs.addr}</span>
+                            </li>
+                            <li>
+                                <label>详细地址</label>
+                                <span>{$order.own_addrs.addr_extra}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <footer class="refund_btn">
+                        <a href="javascript:;" onclick="$('#hidedizhi').show();$('#showdizhi').hide();">填写物流单号</a>
+                    </footer>
+                </div>
+                <div id="hidedizhi" style="display: none;">
+                    <div class="refund_info dizhi">
+                        <form  action="/Member/return_order">
+                        <ul>
+                            <li>
+                                <label>物流公司</label>
+                                <input type="text" name="company" class="requires" placeholder="物流公司">
+                            </li>
+                            <li>
+                                <label>物流单号</label>
+                                <input type="text" name="codes" class="requires" placeholder="物流单号">
+                            </li>
+                        </ul>
+                        <input type="hidden" name="oid" value="{$order.id}">
+                        <input type="hidden" name="state" value="2">
+                        <input type="hidden" name="id" value="{$return_order.id}">
+                        </form>
+                    </div>
+                    <footer class="refund_btn">
+                        <a href="javascript:;" onclick="toSubmit();">提交</a>
+                    </footer>
+                </div>
+                {elseif condition="$return_order && $return_order['state'] eq 2"/}
+                <div class="refund_info dizhi">
+                    <ul>
+                        <li>
+                            <label>退款金额：</label>
+                            <span>￥{$return_order.money}</span>
+                        </li>
+                        <li>
+                            <label>退回账户：</label>
+                            <span>￥{$return_order.money}</span>
+                        </li>
+                        <li>
+                            <label>物流公司：</label>
+                            <span>{$return_order.company}</span>
+                        </li>
+
+                        <li>
+                            <label>物流单号：</label>
+                            <span>{$return_order.codes}</span>
+                        </li>
+                    </ul>
+                </div>
+                {/if}
+            {else/}
+            <form action="/Member/return_order" id="toForm">
+                <input type="hidden" name="oid" value="{$order.id}">
+            <div class="refund_info">
+                <ul>
+                    <li>
+                        <label>退款原因</label>
+                        <select name="reason" class="requires">
+                            <option value="多拍/拍错了">多拍/拍错了</option>
+                            <option value="卖家发错货">卖家发错货</option>
+                            <option value="商品有瑕疵">商品有瑕疵</option>
+                            <option value="质量问题">质量问题</option>
+                            <option value="少件/漏发">少件/漏发</option>
+                            <option value="不想要了">不想要了</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label>退款金额</label>
+                        <input type="text" name="money" class="requires" value="{$order.pay_money}" readonly="readonly">
+                    </li>
+                    <li>
+                        <label>退款说明</label>
+                        <input type="text" name="remarks" placeholder="选填">
+                    </li>
+                </ul>
+            </div>
+            <div class="upload_image">
+                <p>上传凭证(最多三张图片)</p>
+                <div class="z_photo upimg-div clearfix">
+                    <section class="z_file fl">
+                        <img src="/assets/index/images/file02.jpg" class="add-img">
+                        <input type="file" name="file" id="file" class="file" value="" data-key="image" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
+                        <input type="hidden" name="img[image][]">
+                    </section>
+                </div>
+            </div>
+            </form>
+            <footer class="refund_btn">
+                <a href="javascript:;" onclick="toSubmit();">提交</a>
+            </footer>
+            {/if}
+        </div>
+    </main>
+{/block}
+{block name="footer"}
+<!-- 提示框 -->
+<div class="mask works-mask">
+    <div class="mask-content">
+        <p class="del-p ">您确定要删除图片吗？</p>
+        <p class="check-p"><span class="del-com wsdel-ok">确定</span><span class="wsdel-no">取消</span></p>
+    </div>
+</div>
+
+<script src="/assets/index/js/imgUp.js"></script>
+<script>
+    // $("form").submit(function(){
+    // })
+    function toSubmit() {
+        var _this = $('form');
+        var flag = true;
+        $('form .requires').each(function (k, v) {
+            if ($(this).val() == '') {
+                flag = false;
+                $(this).focus();
+            }
+        });
+        if (!flag) {
+            return false;
+        }
+        var url = _this.attr('action');
+        var data = _this.serialize();
+        $.ajax({
+            url: url,
+            data: data,
+            dataType: 'json',
+            type: 'post',
+            success: function (re) {
+                if (re.code) {
+                    window.location.href = "/Member/return_order?id={$order.id}";
+                    // history.go(0);
+                } else {
+                    alert(re.msg);
+                }
+            }
+        })
+        return false;
+    }
+</script>
+{/block}

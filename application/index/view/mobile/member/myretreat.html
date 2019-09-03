@@ -35,7 +35,8 @@
                 <div class="orders_list_bottom clearfix">
                     <p>共{$order.number}件商品，合计：￥{$order.money} 含运费（0.00）</p>
                     <div class="orders_status">
-
+                        {if($order['cancel'])}<a href="javascript:;" class="cancel" onclick="orderCancel({$order.id});">取消退款</a>{/if}
+                        <a href="/Member/return_order?id={$order.id}" class="red">查看详情</a>
                     </div>
                 </div>
             </li>
@@ -49,6 +50,21 @@
     </div>
     {/if}
 </main>
-
+<script>
+    function orderCancel(oid){
+        $.ajax({
+            url:"{:url('Member/handleorder')}",
+            data:{'order_id':oid,'handle':'cancel_retreat'},
+            dataType:'json',
+            type:'post',
+            success:function (re){
+                alert(re.msg);
+                if(re.code){
+                    history.go(0);
+                }
+            }
+        })
+    }
+</script>
 {/block}
 {block name="footer"}{/block}

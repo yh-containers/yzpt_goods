@@ -1,0 +1,186 @@
+{extend name="member" /}
+{block name="member_content"}
+<div class="personal_content">
+    <h2>我的订单</h2>
+    <div class="return">
+        <div class="return_process">
+            {if condition="$return_order && !$isedit"}
+                {if condition="$return_order && $return_order['state'] eq 0"}<ul class="clearfix process2">{/if}
+                {if condition="$return_order && $return_order['state'] eq 1"}<ul class="clearfix process3">{/if}
+                {if condition="$return_order && $return_order['state'] eq 2"}<ul class="clearfix process4">{/if}
+            {else/}
+                    <ul class="clearfix process1">
+            {/if}
+
+                <li><em>1</em><span>买家申请退货退款</span></li>
+                <li><em>2</em><span>卖家处理退货申请</span></li>
+                <li><em>3</em><span>买家退货</span></li>
+                <li><em>4</em><span>退货完毕</span></li>
+            </ul>
+        </div>
+        <div class="return_pro">
+            <div class="return_pro_title">
+                <div class="name">商品名称</div>
+                <div class="num">购买数量</div>
+                <div class="price">商品价格</div>
+            </div>
+            <ul>
+                {volist name="order.own_goods" id='goods'}
+                <li>
+                    <div class="name">
+                        <img src="{$goods.img}">
+                        <span>{$goods.name}</span>
+                    </div>
+                    <div class="num">{$goods.num}</div>
+                    <div class="price">￥{$goods.price}</div>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+        <!--<div class="return_add">-->
+            <!--<label><em>* </em>服务类型：</label>-->
+            <!--<input type="radio" name="" checked class="danxuan" id="dx">-->
+            <!--<label for="dx">退款退货</label>-->
+        <!--</div>-->
+        {if condition="$return_order && !$isedit"}
+            {if condition="$return_order.state eq 0"}
+            <div class="return_info">
+                <h2>请等待商家处理</h2>
+                <p>您已成功发起退款申请，请耐心等待商家处理</p>
+                <ul>
+                    <li>商家同意后，请按照给出的退货地址退货，并请记录退货运单号</li>
+                    <li>如商家拒绝，您可以修改申请后再次发起，商家会重新处理</li>
+                    <li>如商家超时未处理，退货申请将达成，请按系统给出的退货地址退货</li>
+                </ul>
+                <a href="/Member/return_order?id={$return_order.oid}&isedit=1">修改申请</a>
+            </div>
+            {elseif condition="$return_order.state eq 1"/}
+            <div class="return_info">
+                <h2>商家已同意退货</h2>
+                <p>商家已同意退货申请，请尽快退货，把商品邮寄到下方地址。</p>
+                <div class="return_dizhi">
+                    <p>收货人：{$order.own_addrs.username}</p>
+                    <p>收货地址：{$order.own_addrs.addr} {$order.own_addrs.addr_extra}</p>
+                    <p>联系电话：{$order.own_addrs.phone}</p>
+                </div>
+                <a href="javascript:;" class="logistics">我已寄出，填写物流单号</a>
+            </div>
+            {elseif condition="$return_order.state eq 2"/}
+            <div class="return_info">
+                <h2>买家退货成功</h2>
+                <p>已收到你的物流单号，商家收到货后会把款项打给你。</p>
+                <div class="return_dizhi">
+                    <p>快递公司：{$return_order.company}</p>
+                    <p>物流单号：{$return_order.codes}</p>
+                </div>
+            </div>
+            {/if}
+        {else/}
+        <form action="/Member/return_order" id="toForm">
+            {if condition="$return_order"}<input type="hidden" name="id" value="{$return_order.id}">{/if}
+            <input type="hidden" name="oid" value="{$order.id}">
+        <div class="return_add">
+            <label><em>* </em>退款原因：</label>
+            <select name="reason" class="requires">
+                <option value="我不想要了">我不想要了</option>
+                <option value="有质量问题">有质量问题</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+        <div class="return_add">
+            <label><em>* </em>退款金额：</label>
+            <input type="text" name="money" class="requires" value="{$order.pay_money}">
+            <!--<p>最多￥51.90，含发货邮费￥0.00 </p>-->
+        </div>
+        <div class="return_add">
+            <label>退款说明：</label>
+            <textarea name="remarks"  class="requires"></textarea>
+        </div>
+        <div class="return_add">
+            <label>上传图片：</label>
+            <div class="z_photo upimg-div clearfix">
+                <section class="z_file fl">
+                    <img src="/assets/index/images/file02.jpg" class="add-img">
+                    <input type="file" name="file" id="file" class="file" value="" data-key="image" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple />
+                    <input type="hidden" name="img[image][]">
+                </section>
+            </div>
+            <p>为了帮助您更好的解决问题，请上传图片（最多可上传5张图片）！</p>
+        </div>
+        <div class="return_btn">
+            <input type="submit" name="">
+        </div>
+        </form>
+        {/if}
+    </div>
+</div>
+{/block}
+{block name="member_footer"}
+<aside class="mask works-mask">
+    <div class="mask-content">
+        <p class="del-p ">您确定要删除图片吗？</p>
+        <p class="check-p"><span class="del-com wsdel-ok">确定</span><span class="wsdel-no">取消</span></p>
+    </div>
+</aside>
+<div class="tips logistics_popup">
+    <div class="tips_title"><strong>填写物流信息</strong><span class="tips_close"><i class="icon"><img src="/assets/index/images/close.png"></i></span></div>
+    <div class="logistics_content">
+        <form  action="/Member/return_order">
+            {if condition="$return_order"}<input type="hidden" name="id" value="{$return_order.id}">{/if}
+            <input type="hidden" name="oid" value="{$order.id}">
+            <input type="hidden" name="state" value="2">
+            <p><label>快递公司：</label><input type="text" name="company" placeholder="请输入快递公司名称"></p>
+            <p><label>快递单号：</label><input type="text" name="codes" placeholder="请输入快递单号"></p>
+            <div class="logistics_btn"><input type="submit" value="确认发货"></div>
+        </form>
+    </div>
+</div>
+<script src="/assets/index/js/imgUp.js"></script>
+<script>
+    $("form").submit(function(){
+        var _this = $(this);
+        var flag = true;
+        $('form .requires').each(function (k, v){
+            if($(this).val() == ''){
+                flag = false;
+                $(this).focus();
+            }
+        });
+        if(!flag){
+            return false;
+        }
+        var url = _this.attr('action');
+        //var tz_url = _this.attr('tz_url');
+        var data = _this.serialize();
+        $.ajax({
+            url:url,
+            data:data,
+            dataType:'json',
+            type:'post',
+            success:function (re){
+                if(re.code){
+                    window.location.href= "/Member/return_order?id={$order.id}";
+                    // history.go(0);
+                }else{
+                    alert(re.msg);
+                }
+            }
+        })
+        return false;
+    })
+    $(function(){
+        /*物流弹窗*/
+        $('.return_info .logistics').click(function(){
+            $('.logistics_popup').show();
+            $("body").append("<div class='tips_bg'></div>");
+        });
+
+        /*关闭弹窗*/
+        $('.tips_close').click(function(){
+            $('.logistics_popup').hide();
+            $(".tips_bg").remove();
+        });
+    })
+</script>
+
+{/block}

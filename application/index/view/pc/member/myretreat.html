@@ -9,7 +9,7 @@
             <div class="num">数量</div>
             <div class="yuan">实付款/元</div>
             <div class="status">订单状态</div>
-            <!--<div class="operating">交易操作</div>-->
+            <div class="operating">交易操作</div>
         </div>
         {if(count($order_list))}
         <ul>
@@ -32,11 +32,12 @@
                         <p>{$order.status}</p>
                         <a href="{:url('Order/order_detail',['id'=>$order['id']])}">订单详情</a>
                     </div>
-                    <!--<div class="operating">-->
-                        <!--<div class="operating_content">-->
-
-                        <!--</div>-->
-                    <!--</div>-->
+                    <div class="operating">
+                        <div class="operating_content">
+                            {if($order['cancel'])}<a href="javascript:;" class="cancel_order orange" onclick="orderCancel({$order.id})">取消退货</a>{/if}
+                            <a href="/Member/return_order?id={$order.id}" class="fukuan">查看详情</a>
+                        </div>
+                    </div>
                 </div>
             </li>
             {/volist}
@@ -55,4 +56,20 @@
 </div>
 {/block}
 {block name="member_footer"}
+<script>
+    function orderCancel(oid){
+        $.ajax({
+            url:"{:url('Member/handleorder')}",
+            data:{'order_id':oid,'handle':'cancel_retreat'},
+            dataType:'json',
+            type:'post',
+            success:function (re){
+                alert(re.msg);
+                if(re.code){
+                    history.go(0);
+                }
+            }
+        })
+    }
+</script>
 {/block}

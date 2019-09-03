@@ -137,7 +137,7 @@ class Order extends BaseModel
         !$bool && exception('操作异常');
         return $model;
     }
-    //
+    //退款退货
     public function orderRetreat($uid,$order_id){
         if(empty($order_id) || !is_numeric($order_id) || $order_id<=0) exception('订单信息异常:id');
         if(empty($uid)) exception('用户资料异常');

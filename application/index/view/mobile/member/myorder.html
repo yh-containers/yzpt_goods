@@ -132,7 +132,8 @@
 		}
         function retreatOrder(oid){
             if(oid){
-                sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'retreat'},1);
+                //sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'retreat'},1);
+                window.location.href = '/Member/return_order?id='+oid;
             }
 		}
 		function sendAjax(ajaxUrl,ajaxData,isre){

@@ -104,6 +104,15 @@ class Member extends Common
                 }else if($handle == 'del'){//用户删除
                     $order_model->where(['id'=>$oid])->update(['is_del'=>1]);
                     $res['msg'] = '已删除';
+                }else if($handle == 'cancel_retreat'){//取消退款
+                    $arr = $order_model->where(['id'=>$oid])->find();
+                    $data = array();
+                    //if($arr['receive_end_time']){
+                        $data['step_flow'] = 3;
+                        $data['status'] = 3;
+                    //}
+                    $order_model->where(['id'=>$oid])->update($data);
+                    $res['msg'] = '操作成功';
                 }
                 \think\Db::commit();
             }catch (\Exception $e){
@@ -216,6 +225,7 @@ class Member extends Common
         $order_model = new \app\common\model\Order();
         $sku_model = new \app\common\model\GoodsSpecStock();
         $spec_model = new \app\common\model\GoodsSpecValue();
+        $returnOrderModel = new \app\common\model\OrderReturn();
         $order_list = $order_model->with('ownAddrs')->field('id,no,money,pay_money,pay_time,cancel_time,complete_time,send_start_time,receive_start_time,create_time,step_flow,status,is_send,is_receive')->with('ownGoods')->where($sql_where)->order('create_time desc')->paginate();
         $page = $order_list->render();
         foreach ($order_list as &$order){
@@ -237,8 +247,65 @@ class Member extends Common
                     $goods['spec_name'] = '';
                 }
             }
+            $order['cancel'] = 1;
+            $returnOrder = $returnOrderModel->where(['oid'=>$order['id']])->field('state')->find();
+            if($returnOrder['state']>0){
+                $order['cancel'] = 0;
+            }
         }
         return view('myretreat',['active'=>'ret','order_list'=>$order_list,'page'=>$page]);
+    }
+    //退货单填写
+    public function return_order(){
+        $id = $this->request->param('id');
+        $order_model = new \app\common\model\Order();
+        $sku_model = new \app\common\model\GoodsSpecStock();
+        $spec_model = new \app\common\model\GoodsSpecValue();
+        $returnOrderModel = new \app\common\model\OrderReturn();
+        if($this->request->isAjax()){
+            $res = ['code' => 0, 'msg' => ''];
+            try{
+                \think\Db::startTrans();
+                $php_input = $this->request->param();
+                $rid = $this->request->param('id');
+                $img = $this->request->param('img');
+                unset($php_input['img']);
+                if(empty($rid)){
+                    $order_model->orderRetreat(session('uid'),$php_input['oid']);
+                }
+                if($img['image']) $php_input['image'] = trim(implode(',',$img['image']),',');
+                $php_input['uid'] = session('uid');
+                $returnOrderModel->actionAdd($php_input);
+                \think\Db::commit();
+            }catch (\Exception $e){
+                \think\Db::rollback();
+                $res['msg'] = $e->getMessage();
+                return json($res);
+            }
+            $res['code'] = 1;
+            return json($res);die;
+        }
+        $order = $order_model->with('ownGoods,ownAddrs')->get($id);
+        if(empty($order)) $this->error('订单不存在');
+        foreach ($order['own_goods'] as &$goods) {
+            //$order['number'] += $goods['num'];
+            $extra = explode(':',$goods['extra']);
+            if($extra[1]){
+                $sku = $sku_model->where(['id'=>$extra[1]])->field('price,sv_ids')->find();
+                $spec = $spec_model->where('id in('.$sku['sv_ids'].')')->field('value_name')->select();
+                $goods['spec_name'] = ' ';
+                foreach ($spec as $spv){
+                    $goods['spec_name'] .= $spv['value_name'].' + ';
+                }
+                $goods['spec_name'] = trim($goods['spec_name'],' + ');
+            }else{
+                $goods['spec_name'] = '';
+            }
+        }
+        $return_order = $returnOrderModel->where(['oid'=>$id])->find();
+        $edit = $this->request->param('isedit');
+        $isedit = $edit ? $edit:0;
+        return view('order_return',['active'=>'ret','order'=>$order,'return_order'=>$return_order,'isedit'=>$isedit]);
     }
     //我的首页 mobile
     public function user(){
