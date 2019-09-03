@@ -43,6 +43,7 @@ class Mine extends Common
                 'intro' => $this->user_model['intro'],
                 'address' => $this->user_model['address'],
                 'birthday' => $this->user_model->birthday,
+                'flag' => empty($this->user_model->py)?'':$this->user_model->py[0],
             ];
         }
 

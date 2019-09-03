@@ -105,12 +105,12 @@ class Info extends Common
             ,'linkChild'=>function($query)use($user_id){
                 $query->with(['linkUsers','linkToUsers','linkPraise','linkIsPraise'=>function($query)use($user_id){
                     $query->where('uid','=',$user_id);
-                }]);
+                }])->order('id desc');
             }
             ,'linkIsPraise'=>function($query)use($user_id){
                 $query->where('uid','=',$user_id);
             }
-        ])->where($where)->paginate()->each(function($item,$index)use(&$list){
+        ])->where($where)->order('id desc')->paginate()->each(function($item,$index)use(&$list){
                 $child_comment = [];
                 foreach ($item['link_child'] as $vo){
                     array_push($child_comment, $vo->structInfo());
@@ -338,12 +338,12 @@ class Info extends Common
             ,'linkChild'=>function($query)use($user_id){
                 $query->with(['linkUsers','linkToUsers','linkPraise','linkIsPraise'=>function($query)use($user_id){
                     $query->where('uid','=',$user_id);
-                }]);
+                }])->order('id desc');
             }
             ,'linkIsPraise'=>function($query)use($user_id){
                 $query->where('uid','=',$user_id);
             }
-        ])->where($where)->paginate()->each(function($item,$index)use(&$list){
+        ])->where($where)->order('id desc')->paginate()->each(function($item,$index)use(&$list){
             $child_comment = [];
             foreach ($item['link_child'] as $vo){
                 array_push($child_comment, $vo->structInfo());

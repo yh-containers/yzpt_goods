@@ -197,6 +197,7 @@ class Index extends Common
             'intro' => (string)$user_model['intro'],
             'address' => (string)$user_model['address'],
             'birthday' => empty($user_model)?'':$user_model->birthday,
+            'flag' => empty($user_model->py)?'':$user_model->py[0],
         ];
 
         //用户点赞

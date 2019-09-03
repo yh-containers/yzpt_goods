@@ -69,9 +69,6 @@ class Wechat implements IPay
         $result = \WxPayApi::unifiedOrder($config, $input);
 
         if(isset($result['result_code']) && $result['result_code']=='SUCCESS' && isset($result['return_code']) && $result['return_code']=='SUCCESS'){
-            $wx_result_obj =new \WxPayDataBase();
-
-
             $result_data = array(
                 'appid'  => $config->GetAppId(),
                 'partnerid' => $config->GetAppSecret(),
@@ -80,11 +77,21 @@ class Wechat implements IPay
                 'timestamp' => time(),
                 'package' => 'Sign=WXPay',
             );
-
+            ksort($result_data,SORT_STRING);
+            $str = '';
             foreach($result_data as $key=>$vo){
-                $wx_result_obj->SetData($key,$vo);
+                $str.=$key.'='.$vo.'&';
             }
-            $result_data['sign'] = $wx_result_obj->SetSign($config);
+            $str.=$config->GetKey();
+            if($config->GetSignType()=='MD5'){
+                $sign = strtoupper(md5($str));
+            }elseif($config->GetSignType()=='HMAC-SHA256'){
+                $sign = strtoupper(hash_hmac("sha256",$str ,$config->GetKey()));
+            }else{
+                throw new \Exception('签名类型不支持!!');
+            }
+
+            $result_data['sign'] =$sign;
 //            dump($result_data);exit;
             return $result_data;
         }else{
@@ -135,7 +142,7 @@ class Wechat implements IPay
         isset($pay_info['body']) &&$input->SetBody($pay_info['body']);
         isset($pay_info['attach']) &&$input->SetAttach($pay_info['attach']);
         isset($pay_info['no']) &&$input->SetOut_trade_no($pay_info['no']);
-        isset($pay_info['pay_money']) && $input->SetTotal_fee($pay_info['pay_money']*100);
+        $input->SetTotal_fee($pay_info['pay_money']*100);
         $input->SetTime_start(date("YmdHis"));
         $input->SetTime_expire(date("YmdHis", time() + (isset($pay_info['expire_time'])?$pay_info['expire_time']:600)));
         isset($pay_info['goods_tag']) && $input->SetGoods_tag($pay_info['goods_tag']);

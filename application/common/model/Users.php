@@ -162,7 +162,8 @@ class Users extends BaseModel
             if(!empty($config_chat_url)){
                 //注册聊天用户
                 if(isset($config_chat_route['reg'])){
-                    $url = $config_chat_url.$config_chat_route['reg'].'?user_id='.$model['id'].'&user_name='.$model['name'].'&user_face='.self::handleFile($model['face']);
+                    $user_py_first = empty($model['py'])?'':$model['py'][0];
+                    $url = $config_chat_url.$config_chat_route['reg'].'?user_id='.$model['id'].'&user_name='.$model['name'].'&user_flag='.$user_py_first.'&user_face='.self::handleFile($model['face']);
                     try{ file_get_contents($url);  }catch (\Exception $e){}
                 }
             }
