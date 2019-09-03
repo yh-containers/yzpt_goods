@@ -1,0 +1,104 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}order,order.return_order/index{/block}
+{block name="content"}
+<style>
+    #z{display: none;position: fixed;top: 0;width: 100%;height: 100%;z-index: 1000;background-color: rgba(204, 204, 204, 0.25);}
+    #showimport{position: fixed;top: 40%;left: 30%;z-index: 10000; background-color: #fff;border: 1px solid #ccc;border-radius: 5px;padding:20px 0;}
+</style>
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">退单详情</h3>
+    </div>
+
+    <div class="box-body">
+        <form class="form-horizontal" action="" id="form" onsubmit="return false;">
+            <div class="box-body clearfix">
+                <table class="table table-bordered table-hover noborder">
+                    <thead>
+                        <tr>
+                            <th colspan="2">退单信息</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span>退款单号：{$data.no}</span></td>
+                            <td><span>退单人：{$data.own_addrs.username}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>申请时间：{:$data.own_return.create_time}</span></td>
+                            <td><span>状态：{:\\app\\common\\model\\OrderReturn::getPropInfo('fields_state',$data['own_return']['state'])}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>退款原因：</span>￥{$data.own_return.reason}</td>
+                            <td><span>退款说明：</span><span>{$data.own_return.remarks}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>快递公司：</span>￥{$data.own_return.company}</td>
+                            <td><span>快递单号：</span><span>{$data.own_return.codes}</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>退款金额：</span>￥{$data.own_return.money}</td>
+                            <td><span>图片说明：</span>
+                                {php}
+                                foreach($data['own_return']['image'] as $v){
+                                echo '<a href="'.$v.'" target="_blank"><img src="'.$v.'" width="50"></a>';
+                                }
+                                {/php}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered table-hover" style="margin:15px 0px;">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>商品名称</th>
+                        <th>商品图片</th>
+                        <th>数量</th>
+                        <th>商品单价</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach name="data.own_goods" item="val" key="k"}
+                    <tr>
+                        <td>{$val.id}</td>
+                        <td>{$val.name}</td>
+                        {php}$goodsModel = new \app\common\model\Goods();{/php}
+                        <td><img src="{:$goodsModel->getGoodsImageAttr($val['img'])}" width="50" height="50"></td>
+                        <td>x{$val.num}</td>
+                        <td>{$val.price}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+
+                <div class="form-group" style="width:100%;">
+                    <div class="col-sm-12" style="padding:0px;margin:0px;margin-left: 15px;">
+                        {if condition="$data['own_return']['state'] eq 0"}
+                        <input type="submit" value="同意申请" class="btn btn-info" onclick="$.common.submitForm()">
+                        <input type="hidden" name="state" value="1" id="type">
+                        {/if}
+                    </div>
+                </div>
+                <div class="form-group" style="width:100%;">
+                    <div class="col-sm-12" style="padding:0px;margin:0px;margin-left: 15px;">
+                        <input type="button" class="btn btn-block  btn-default" onclick="javascript:history.back(-1);" value="返回">
+                    </div>
+                </div>
+
+            </div>
+            <input type="hidden" name="rid" value="{$data.own_return.id}">
+        </form>
+    </div>
+    <!-- /.box-body -->
+
+    <div class="box-footer">
+        <!-- <button type="button" onclick="$.common.submitForm()" class="col-sm-offset-2 btn  btn-info">保存</button> -->
+    </div>
+</div>
+<script>
+
+</script>
+{/block}

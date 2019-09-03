@@ -63,4 +63,36 @@ class Order extends Common
 //        print_r($data['own_addr']);
         return view('order_detail',['data'=>$data,'handle'=>$handle['m_handle']]);
     }
+
+    public function return_order(){
+        //$list = \app\common\model\OrderReturn::with('ownUser,ownOrder')->order('create_time desc')
+        $list = \app\common\model\Order::with('ownAddrs,ownReturn')->where('status=5')->order('create_time desc')->paginate();
+        $page = $list->render();
+        return view('return_order',['list'=>$list,'page'=>$page]);
+    }
+    //退款单详情
+    public function returndetail(){
+        $model = new \app\common\model\Order();
+        if($this->request->isAjax()){
+            $res = ['code'=>0,'msg'=>''];
+            $returnOrderModel = new \app\common\model\OrderReturn();
+            $rid  = $this->request->param('rid');
+            $state  = $this->request->param('state');
+            try{
+                \think\Db::startTrans();
+                $returnOrderModel->where(['id'=>$rid])->update(['state'=>$state]);
+                \think\Db::commit();
+            }catch (\Exception $e){
+                \think\Db::rollback();
+                $res['msg'] = $e->getMessage();
+                return json($res);
+            }
+            $res['code'] = 1;
+            $res['msg'] = '操作成功';
+            return json($res);
+        }
+        $id  = $this->request->param('id');
+        $data = $model->with('ownGoods,ownReturn,ownAddrs')->get($id);
+        return view('return_detail',['data'=>$data]);
+    }
 }
