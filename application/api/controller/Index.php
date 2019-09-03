@@ -445,7 +445,7 @@ class Index extends Common
 
         $content  = \app\common\model\SysSetting::getContent('other');
         $content = json_decode($content,true);
-        $hot_key = isset($content['video_hot_key'])?explode('\r\n',$content['video_hot_key']):[];
+        $hot_key = isset($content['video_hot_key'])?explode("\r\n",$content['video_hot_key']):[];
         return $this->_resData(1,'操作成功',[
             'hot_key'=>$hot_key,
         ]);
