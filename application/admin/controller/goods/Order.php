@@ -35,7 +35,7 @@ class Order extends Common
                     $res['msg'] = '已取消';
                 }else if($handle == 'del'){//删除订单
                     $model->actionDel(['id'=>$oid]);
-                    $res['msg'] = '已提醒';
+                    $res['msg'] = '已删除';
                 }else if($handle == 'sure-pay'){//确认付款
                     $model->orderPay($u['uid'],$oid);
                     $res['msg'] = '已确认';
