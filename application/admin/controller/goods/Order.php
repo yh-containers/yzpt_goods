@@ -6,14 +6,19 @@ use app\admin\controller\Common;
 class Order extends Common
 {
 	public function index(){
-        $list = \app\common\model\Order::with('ownAddrs')->where('status!=5')->order('create_time desc')->paginate();
+        $where = [];
+	    $t_id = $this->request->param('t_id');
+	    if(is_numeric($t_id)){
+            $where['step_flow'] = $t_id;
+        }
+        $list = \app\common\model\Order::with('ownAddrs')->where('status!=5')->where($where)->order('create_time desc')->paginate();
         foreach ($list as &$v){
             $state = \app\common\model\Order::getPropInfo('fields_mobile_step', $v['step_flow']);
             $v['status'] = is_array($state['name']) ? $state['name'][$v['status']] : $state['name'];
         }
 //        print_r($list);
         $page = $list->render();
-        return view('index',['list'=>$list,'page'=>$page]);
+        return view('index',['list'=>$list,'page'=>$page,'t_id'=>$t_id]);
     }
     //订单详情
     public function orderdetail(){
@@ -67,7 +72,7 @@ class Order extends Common
 
     public function return_order(){
         //$list = \app\common\model\OrderReturn::with('ownUser,ownOrder')->order('create_time desc')
-        $list = \app\common\model\Order::with('ownAddrs,ownReturn')->where('status=5')->order('create_time desc')->paginate();
+        $list = \app\common\model\Order::with('ownAddrs,ownReturn')->where('status=5')->order('update_time desc')->paginate();
         $page = $list->render();
         return view('return_order',['list'=>$list,'page'=>$page]);
     }
