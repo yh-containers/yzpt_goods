@@ -105,6 +105,10 @@ class Order extends BaseModel
     {
         return $this->hasOne('OrderAddr','oid')->order('id asc');
     }
+    public function ownReturn()
+    {
+        return $this->hasOne('OrderReturn','oid')->order('id asc');
+    }
     public function getOrderSn(){
         return date('YmdHis').mt_rand(1000,9999).self::count();
     }
