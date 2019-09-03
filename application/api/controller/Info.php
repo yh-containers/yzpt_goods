@@ -206,7 +206,7 @@ class Info extends Common
         $where = [];
         !empty($uid) && $where[] = ['uid','=',$uid];
         !empty($keyword) && $where[] = ['title','like','%'.$keyword.'%'];
-        
+
         $list =[];
         $info=\app\common\model\Video::with(['linkCommentCount'
             //点赞
