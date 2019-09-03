@@ -489,7 +489,14 @@ class Member extends Common
     }
     //我的消息
     public function message(){
-        return view('message');
+        $model = new \app\common\model\OrderMsg();
+        $orderModel = new \app\common\model\Order();
+        $list = $model->where(['uid'=>session('uid')])->select();
+        foreach ($list as &$v){
+            $v['own_order'] = $orderModel->find($v['oid']);
+        }
+//        print_r($list);
+        return view('message',['list'=>$list]);
     }
     //我的养分
     public function myintegral(){

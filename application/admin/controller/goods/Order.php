@@ -44,6 +44,7 @@ class Order extends Common
                     $wlModel = new \app\common\model\OrderLogistics();
                     $wlModel->actionAdd($addinfo);
                     $res['msg'] = '已确认';
+                    $this->addToMsg($u['uid'],$oid,'您的订单已发货，快递员正在派送中~');
                 }
                 \think\Db::commit();
             }catch (\Exception $e){
@@ -80,7 +81,11 @@ class Order extends Common
             $state  = $this->request->param('state');
             try{
                 \think\Db::startTrans();
+                $arr = $returnOrderModel->find($rid);
                 $returnOrderModel->where(['id'=>$rid])->update(['state'=>$state]);
+                if($state==1){
+                    $this->addToMsg($arr['uid'],$arr['oid'],'您的退款单商家已同意');
+                }
                 \think\Db::commit();
             }catch (\Exception $e){
                 \think\Db::rollback();
@@ -94,5 +99,13 @@ class Order extends Common
         $id  = $this->request->param('id');
         $data = $model->with('ownGoods,ownReturn,ownAddrs')->get($id);
         return view('return_detail',['data'=>$data]);
+    }
+    protected function  addToMsg($uid,$oid,$content){
+	    $addinfo = array();
+	    $addinfo['uid'] = $uid;
+	    $addinfo['oid'] = $oid;
+	    $addinfo['content'] = $content;
+	    $model = new \app\common\model\OrderMsg();
+        $model->actionAdd($addinfo);
     }
 }

@@ -6,7 +6,7 @@
 namespace app\common\model;
 class OrderReturn extends BaseModel
 {
-    protected $table = 'gd_order_return';//，1 ，2 ，3
+    protected $table = 'gd_order_return';
     public static $fields_state = ['新申请退货款','商家同意申请','用户货品寄出','商家拒绝'];
     public function ownUser()
     {
