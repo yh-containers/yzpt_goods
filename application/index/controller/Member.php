@@ -21,7 +21,7 @@ class Member extends Common
     }
     //我的订单列表
     public function orderlist(){
-        $sql_where = 'uid='.session('uid').' and status<5';
+        $sql_where = 'uid='.session('uid').' and status<5 and is_del!=1';
         $step = $this->request->param('step');
         switch (intval($step)){
             case 1://待发货
@@ -101,6 +101,9 @@ class Member extends Common
                 }else if($handle == 'retreat'){//退货
                     $order_model->orderRetreat(session('uid'),$oid);
                     $res['msg'] = '操作成功';
+                }else if($handle == 'del'){//用户删除
+                    $order_model->where(['id'=>$oid])->update(['is_del'=>1]);
+                    $res['msg'] = '已删除';
                 }
                 \think\Db::commit();
             }catch (\Exception $e){

@@ -80,7 +80,7 @@
 			</div>
 			<div class="operating">
 				<a href="javascript:;" class="close">我再想想</a>
-				<a href="javascript:;" class="determine">确定删除</a>
+				<a href="javascript:;" class="determine" onclick="handleDel(this);">确定删除</a>
 			</div>
 		</div>
 	</div>
@@ -96,9 +96,19 @@
 			$(".cancel_pop").show();
 		}
 		/*删除订单*/
-		$(".orders_list_bottom .del").click(function(){
-			$(".del_pop").show();
-		});
+		// $(".orders_list_bottom .del").click(function(){
+		// 	$(".del_pop").show();
+		// });
+		function orderDel(order_id){
+            $(".del_pop").find('.determine').attr('data-id',order_id);
+            $(".del_pop").show();
+		}
+		function handleDel(obj){
+            var oid = $(obj).attr('data-id');
+            if(oid){
+                sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'del'},1);
+            }
+		}
 
 		$(".tip_popup .close").click(function(){
 			$(".cancel_pop").hide();

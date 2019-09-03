@@ -167,7 +167,11 @@
 					sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'remind'},1);
 				}
 			}
-	        
+        function orderDel(oid){
+            if(oid && confirm('确认删除订单？')){
+                sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'del'},1);
+            }
+        }
 	        /*关闭弹窗*/
 	        $('.tips_close').click(function(){
 	            $('.confirm_popup').hide();

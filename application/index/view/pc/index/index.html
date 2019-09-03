@@ -34,25 +34,13 @@
         <div class="parHd">
             <h2>今日必看</h2>
             <ul>
-                <li>今日特惠</li>
                 <li>新品推荐</li>
                 <li>特价促销</li>
                 <li>人气热卖</li>
+                <li>今日特惠</li>
             </ul>
         </div>
         <div class="parBd">
-            <div class="slideBox">
-                <ul>
-                    {volist name="goods.today" id="goods_today"}
-                    <li>
-                        <a href="{:url('Goods/detail',['id'=>$goods_today['id']])}">
-                            <img src="{$goods_today.goods_image}">
-                            <span>{$goods_today.goods_name}</span>
-                        </a>
-                    </li>
-                    {/volist}
-                </ul>
-            </div><!-- slideBox End -->
 
             <div class="slideBox">
                 <ul>
@@ -74,6 +62,19 @@
                 <ul>
                     {volist name="goods.hot" id="goods_hot"}
                     <li><a href="{:url('Goods/detail',['id'=>$goods_hot['id']])}"><img src="{$goods_hot.goods_image}"><span>{$goods_hot.goods_name}</span></a></li>
+                    {/volist}
+                </ul>
+            </div><!-- slideBox End -->
+
+            <div class="slideBox">
+                <ul>
+                    {volist name="goods.today" id="goods_today"}
+                    <li>
+                        <a href="{:url('Goods/detail',['id'=>$goods_today['id']])}">
+                            <img src="{$goods_today.goods_image}">
+                            <span>{$goods_today.goods_name}</span>
+                        </a>
+                    </li>
                     {/volist}
                 </ul>
             </div><!-- slideBox End -->
