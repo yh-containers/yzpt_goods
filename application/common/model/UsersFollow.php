@@ -32,7 +32,7 @@ class UsersFollow extends BaseModel
         }
 
         $list = self::with([$with])->whereNotNull('follow_time')->where($where)->order('follow_time desc')->paginate();
-        return [$list,$return_key];
+        return [$list,$return_key,$type];
     }
 
 

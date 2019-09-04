@@ -295,14 +295,21 @@ class Mine extends Common
     {
         $php_input = input();
         $list = [];
-        list($paginator,$user_key) = \app\common\model\UsersFollow::getList($this->user_id, $php_input);
-        $paginator->each(function($item,$index)use(&$list,$user_key){
+        $user_id = $this->user_id;
+        list($paginator,$user_key,$type) = \app\common\model\UsersFollow::getList($user_id, $php_input);
+        $paginator->each(function($item,$index)use(&$list,$user_key,$user_id,$type){
+            $is_ftf_str = '已关注';
+            if($type=='fans'){
+                //自己有没有关注对方
+                $is_ftf_info = \app\common\model\UsersFollow::where(['uid'=>$user_id,'f_uid'=>$item['uid']])->whereNotNull('follow_time')->find();
+                $is_ftf_str = empty($is_ftf_info)?'未关注':'已关注';
+            }
             array_push($list,[
                 'uid' => $item['uid'],
                 'user_name' => $item[$user_key]['name'],
                 'user_face' => $item[$user_key]['face'],
                 'user_intro' => $item[$user_key]['intro'],
-                'is_ftf' => 0,
+                'is_ftf_str' => $is_ftf_str,
                 'date' => $item['follow_time'],
             ]);
         });
