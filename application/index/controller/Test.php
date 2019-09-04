@@ -38,4 +38,8 @@ class Test extends Common
 //        $wechat->nativePay(\app\common\model\Order::get(3));
     }
 
+    public function phpinfo()
+    {
+        phpinfo();
+    }
 }
