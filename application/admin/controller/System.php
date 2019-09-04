@@ -144,6 +144,13 @@ class System extends Common
             'content' =>  $this->_allProtocol('act_protocol'),
         ]);
     }
+    //注册协议
+    public function secretProtocol()
+    {
+        return view('secretProtocol',[
+            'content' =>  $this->_allProtocol('secret_protocol'),
+        ]);
+    }
 
     //查询协议
     private function _allProtocol($type)

@@ -16,9 +16,12 @@ class Protocol extends Common
     {
         $type = input('type','','trim');
         $protocol_type = 'reg_protocol';
-        if($type==='active'){
+        if($type=='active'){
             //活动协议
             $protocol_type = 'act_protocol';
+        }elseif ($type=='secret'){
+            //隐私政策
+            $protocol_type = 'secret_protocol';
         }
 
         $content=\app\common\model\SysSetting::getContent($protocol_type);
