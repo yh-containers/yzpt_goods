@@ -49,7 +49,7 @@ class AwResult extends BaseModel
             ],true);
             $model->save();
             //增加养分
-            $award_info['num']>0 && $users->recordRaise($award_info['num'],4,'每日抽奖获得:'.$award_info['num'].'养分');
+            $award_info['num']>0 && $users->recordRaise($award_info['num'],1,'每日抽奖获得:'.$award_info['num'].'养分');
 
             \think\Db::commit();
         }catch (\Exception $e){

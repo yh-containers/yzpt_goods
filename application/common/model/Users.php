@@ -20,6 +20,11 @@ class Users extends BaseModel
     protected $c_raise_num=0;//数量
     protected $c_raise_intro='';//介绍
 
+    /**
+     * @var self
+     * */
+    public static $req_user_model;//邀请者用户对象
+
     protected function  getIntroAttr($value)
     {
         return empty($value)?'':$value;
@@ -75,6 +80,8 @@ class Users extends BaseModel
             $this->setAttr('birth_y',$birthday[0]);
             $this->setAttr('birth_m',$birthday[1]);
             $this->setAttr('birth_d',$birthday[2]);
+            //年龄
+            $this->setAttr('age',date('Y')-$birthday[0]);
         }
         return $value;
     }
@@ -111,11 +118,11 @@ class Users extends BaseModel
         if(empty($value)){
             return $value;
         }
-        $model = self::where(['qr_code'=>$value])->find();
-        if(!empty($model)){
-            $this->setAttr('r_uid1',$model['id']);
-            !empty($model['r_uid1']) && $this->setAttr('r_uid2',$model['r_uid1']);
-            !empty($model['r_uid2']) && $this->setAttr('r_uid3',$model['r_uid2']);
+        self::$req_user_model = self::where(['qr_code'=>$value])->find();
+        if(!empty(self::$req_user_model)){
+            $this->setAttr('r_uid1',self::$req_user_model['id']);
+            !empty(self::$req_user_model['r_uid1']) && $this->setAttr('r_uid2',self::$req_user_model['r_uid1']);
+            !empty(self::$req_user_model['r_uid2']) && $this->setAttr('r_uid3',self::$req_user_model['r_uid2']);
         }
 
 
@@ -166,6 +173,14 @@ class Users extends BaseModel
                     $url = $config_chat_url.$config_chat_route['reg'].'?user_id='.$model['id'].'&user_name='.$model['name'].'&user_flag='.$user_py_first.'&user_face='.self::handleFile($model['face']);
                     try{ file_get_contents($url);  }catch (\Exception $e){}
                 }
+            }
+
+            //验证是邀请用户
+            if(!empty(self::$req_user_model)){
+                //增加邀请人数
+                self::$req_user_model->setInc('req_num');
+                $num = 50;
+                self::$req_user_model->recordRaise($num,2,'邀请用户获得:'.$num.'养分');
             }
         });
         //养分日志记录

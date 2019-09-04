@@ -8,6 +8,12 @@ class UsersRaiseLogs extends BaseModel
     protected $name='users_raise_logs';
     protected $autoWriteTimestamp = 'datetime';
 
+    public static $fields_type = [
+        ['name'=>'签到'],
+        ['name'=>'抽奖'],
+        ['name'=>'邀请用户'],
+    ];
+
     /**
      * 记录养分日志
      * @param int $user_id 用户id

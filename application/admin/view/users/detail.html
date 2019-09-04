@@ -1,0 +1,122 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}system,system/flowImg{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">用户{ <span class="text-red">{$model['name']}</span> }的资料</h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <div class="box-body">
+
+            <div class="col-sm-8">
+                <table class="layui-table no-padding">
+                    <colgroup>
+                        <col width="80">
+                        <col width="100">
+                        <col width="80">
+                        <col width="100">
+                        <col width="80">
+                        <col width="100">
+                        <col width="80">
+                        <col width="100">
+                    </colgroup>
+
+                    <tbody>
+                    <tr>
+                        <td>用户名</td>
+                        <td>{$model['name']}</td>
+                        <td>手机号</td>
+                        <td>{$model['phone']}</td>
+                        <td>性别</td>
+                        <td>{:\\app\\common\\model\\Users::getPropInfo('fields_sex',$model['sex'])}</td>
+                        <td>状态</td>
+                        <td>{:\\app\\common\\model\\Users::getPropInfo('fields_status',$model['status'])}</td>
+                    </tr>
+                    <tr>
+                        <td>养分</td>
+                        <td>{$model['raise_num']}</td>
+                        <td>余额</td>
+                        <td>{$model['money']}</td>
+                        <td></td>
+                        <td></td>
+                        <td>注册时间</td>
+                        <td>{$model['create_time']}</td>
+                    </tr>
+                    <tr>
+                        <td>年龄</td>
+                        <td>{$model['age']}</td>
+                        <td>出生日期</td>
+                        <td>{$model['birth_day']}</td>
+                        <td>地址</td>
+                        <td colspan="3">{$model['address']}</td>
+                    </tr>
+                    <tr>
+                        <td>绑定微信号</td>
+                        <td>{:empty($model['wx_openid'])?'否':'是'}</td>
+                        <td>绑定qq</td>
+                        <td>{:empty($model['qq_openid'])?'否':'是'}</td>
+                        <td>绑定微博</td>
+                        <td>{:empty($model['wb_openid'])?'否':'是'}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>邀请人数</td>
+                        <td>{$model['req_num']}</td>
+                        <td>邀请养分</td>
+                        <td>{$model['req_raise_num']}</td>
+                        <td>邀请码</td>
+                        <td class="text-blue">{$model['qr_code']}</td>
+                        <td></td>
+                        <td></td>
+
+
+                    </tr>
+                    <tr>
+                        <td>用户标签</td>
+                        <td colspan="7">{:empty($model)?'':$model->getData('label')}</td>
+
+                    </tr>
+                    <tr>
+                        <td>简介</td>
+                        <td colspan="7">{$model['intro']}</td>
+
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="col-sm-4">
+
+
+            </div>
+
+
+        </div>
+            <!-- /.box-body -->
+
+        <div class="box-footer">
+        </div>
+    </div>
+
+{/block}
+
+
+{block name="script"}
+<script>
+    //引用上传组件
+    layui.use(['laydate'],function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '.datetime' //指定元素
+            ,type: 'date' //默认，可不填
+            ,max: 1
+        });
+    })
+</script>
+{/block}

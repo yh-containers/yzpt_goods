@@ -1,0 +1,134 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}system,system/flowImg{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <!--<h3 class="box-title">Quick Example</h3>-->
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body">
+                <form id="form" action="" class="form-horizontal">
+                    <input type="hidden" name="id" value="{$model['id']}"/>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="用户名" name="name" value="{$model['name']}" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户真实姓名</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="用户真实姓名" name="real_name" value="{$model['real_name']}" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户手机号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="用户手机号" name="phone" value="{$model['phone']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" placeholder="*****" name="password" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">性别</label>
+                            <div class="col-sm-10">
+                                <label>
+                                    <input type="radio" name="sex" value="1" {:$model['sex']!=2?'checked':''} />
+                                    男
+                                </label>
+                                <label>
+                                    <input type="radio" name="sex" value="2" {:$model['sex']==2?'checked':''}>
+                                    女
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">生日</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control datetime" placeholder="生日" name="birth_day" value="{$model['birth_day']}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户所在地</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" placeholder="用户所在地" name="address" value="{$model['address']}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户简介</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" placeholder="用户简介" name="intro">{$model['intro']}</textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">状态</label>
+                            <div class="col-sm-10">
+                                <label>
+                                    <input type="radio" name="status" value="1" {:$model['status']!=2?'checked':''} />
+                                    正常
+                                </label>
+                                <label>
+                                    <input type="radio" name="status" value="2" {:$model['status']==2?'checked':''}>
+                                    禁用
+                                </label>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">养分</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" placeholder="养分" name="raise_num" value="{:empty($model['raise_num'])?0:$model['raise_num']}" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">余额</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" placeholder="余额" name="money" value="{:empty($model['money'])?0:$model['money']}" maxlength="50">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+            <!-- /.box-body -->
+
+        <div class="box-footer">
+            <button type="button" onclick="$.common.submitForm()" class="col-sm-offset-2 btn  btn-info">保存</button>
+        </div>
+    </div>
+
+{/block}
+
+
+{block name="script"}
+<script>
+    //引用上传组件
+    layui.use(['laydate'],function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '.datetime' //指定元素
+            ,type: 'date' //默认，可不填
+            ,max: 1
+        });
+    })
+</script>
+{/block}
