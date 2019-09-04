@@ -14,7 +14,14 @@ class Protocol extends Common
     }
     public function index()
     {
-        $content=\app\common\model\SysSetting::getContent('reg_protocol');
+        $type = input('type','','trim');
+        $protocol_type = 'reg_protocol';
+        if($type==='active'){
+            //活动协议
+            $protocol_type = 'act_protocol';
+        }
+
+        $content=\app\common\model\SysSetting::getContent($protocol_type);
         return view('index',[
             'content'=>$content
         ]);
