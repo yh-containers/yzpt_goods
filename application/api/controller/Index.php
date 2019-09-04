@@ -311,7 +311,7 @@ class Index extends Common
 
         $follow_msg_content = \app\common\model\SysSetting::getContent('follow_msg');
         $follow_msg_content = json_decode($follow_msg_content,true);
-        $msg_content = empty($follow_msg_content['content'])?[]:$follow_msg_content['content'];
+        $msg_content = empty($follow_msg_content['content'])?[]:explode("\r\n",$follow_msg_content['content']);
         $list = [];
         foreach ($msg_content as $vo){
             array_push($list,[
