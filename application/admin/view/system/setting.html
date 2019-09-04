@@ -19,7 +19,7 @@
                                 <input type="text" class="form-control" placeholder="地址" name="content[addr]" value="{:isset($normal_content['addr'])?$normal_content['addr']:''}" >
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label class="col-sm-2 control-label">传真</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" placeholder="传真" name="content[fax]" value="{:isset($normal_content['fax'])?$normal_content['fax']:''}" >
@@ -66,8 +66,8 @@
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" placeholder="wb" name="content[wb]" value="{:isset($normal_content['wb'])?$normal_content['wb']:''}" >
                             </div>
-                        </div>
-                        <div class="form-group">
+                        </div>-->
+                       <!-- <div class="form-group">
                             <label class="col-sm-2 control-label">二维码</label>
                             <div class="col-sm-10">
                                 <input type="hidden" name="content[qr_code]" value="{:isset($normal_content['qr_code'])?$normal_content['qr_code']:''}" />
@@ -86,7 +86,7 @@
                                 </button>
                                 <img width="80" height="80" src="{:isset($normal_content['qr_code_wx'])?$normal_content['qr_code_wx']:''}" />
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备案信息</label>
                             <div class="col-sm-10">
@@ -96,8 +96,15 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">养分兑换比例</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" placeholder="integral_money" name="content[integral_money]" value="{:isset($normal_content['integral_money'])?$normal_content['integral_money']:''}" >
+                                <input type="text" class="form-control" placeholder="0" name="content[integral_money]" value="{:isset($normal_content['integral_money'])?$normal_content['integral_money']:'0'}" >
                                 <span class="help-block text-red">每100养分可兑换的金额</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邀请奖励养分</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="0" name="content[req_raise_num]" value="{:isset($normal_content['req_raise_num'])?$normal_content['req_raise_num']:'0'}" >
+                                <span class="help-block text-red">每邀请一位用户获得养分</span>
                             </div>
                         </div>
                     </form>

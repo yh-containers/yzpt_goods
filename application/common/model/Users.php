@@ -179,8 +179,10 @@ class Users extends BaseModel
             if(!empty(self::$req_user_model)){
                 //增加邀请人数
                 self::$req_user_model->setInc('req_num');
-                $num = 50;
-                self::$req_user_model->recordRaise($num,2,'邀请用户获得:'.$num.'养分');
+                $setting_content = SysSetting::getContent('normal');
+                $setting_content = json_decode($setting_content,true);
+                $num = isset($setting_content['req_raise_num'])?$setting_content['req_raise_num']:0;
+                $num>0 && self::$req_user_model->recordRaise($num,2,'邀请用户获得:'.$num.'养分');
             }
         });
         //养分日志记录
