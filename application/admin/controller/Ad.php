@@ -62,8 +62,11 @@ class Ad extends Common
 
     public function message()
     {
-        return view('message',[
+        $follow_msg_content = \app\common\model\SysSetting::getContent('follow_msg');
+        $follow_msg_content = json_decode($follow_msg_content,true);
 
+        return view('message',[
+            'follow_msg_content' => $follow_msg_content
         ]);
     }
 

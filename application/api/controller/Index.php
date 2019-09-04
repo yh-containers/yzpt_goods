@@ -308,13 +308,19 @@ class Index extends Common
 
     //系统通知
     public function notice(){
+
+        $follow_msg_content = \app\common\model\SysSetting::getContent('follow_msg');
+        $follow_msg_content = json_decode($follow_msg_content,true);
+        $msg_content = empty($follow_msg_content['content'])?[]:$follow_msg_content['content'];
+        $list = [];
+        foreach ($msg_content as $vo){
+            array_push($list,[
+                'content'=>$vo
+            ]);
+        }
+
         return $this->_resData(1,'获取成功',[
-            'list'=>[
-                ['content'=>'我的通知1'],
-                ['content'=>'我的通知2'],
-                ['content'=>'我的通知3'],
-                ['content'=>'我的通知4'],
-            ]
+            'list' => $list
         ]);
     }
 
