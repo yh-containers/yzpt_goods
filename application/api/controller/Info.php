@@ -269,7 +269,7 @@ class Info extends Common
                     'user_name'=>$model['link_users']['name'],
                     'release_date'=>$model['releaseDate'],
                     'title'=>$model['title'],
-                    'addr'=>'',
+                    'addr'=>$model['addr'],
                     'file'=>$model['fileGroup'],
                     'share_times'=>$model['share_times'],
                     'praise_times'=>$model['praise_times'],
