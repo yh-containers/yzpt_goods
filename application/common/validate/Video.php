@@ -21,6 +21,6 @@ class Video extends Validate
 
     public function sceneApi_release()
     {
-        return $this->only(['file','size','mime_type']);
+        return $this->only(['file']);
     }
 }

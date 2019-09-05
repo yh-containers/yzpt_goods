@@ -118,6 +118,7 @@ class Users extends BaseModel
         if(empty($value)){
             return $value;
         }
+
         self::$req_user_model = self::where(['qr_code'=>$value])->find();
         if(!empty(self::$req_user_model)){
             $this->setAttr('r_uid1',self::$req_user_model['id']);
