@@ -27,6 +27,19 @@ class Video extends BaseModel
         return empty($value)?'00:00:00':sprintf('%02d:%02d:%02d',substr(intval($value/60/60*100),0,-2),intval($value/60%60),intval($value%60));
     }
 
+    //定位信息
+    protected function setLocationPoiAttr($value)
+    {
+        if(!empty($value)){
+//            exception($value);
+            $poi = json_decode($value,true);
+
+            $this->setAttr('coordinate',(isset($poi['lng']) && isset($poi['lat'])) ? ($poi['lng'].','. $poi['lat'] ):'');
+            $this->setAttr('addr',isset($poi['address'])?$poi['address']:'');
+        }
+        return $value;
+    }
+
     //发布的文件组合
     protected function getFileGroupAttr()
     {
