@@ -94,13 +94,25 @@ class Create extends Common {
 	 * 背景音乐列表
 	 */
 	public function musicList ($cid = 0) {
-		$page = input('page', 1);
-		$pagesize = input('pagesize', 10);
+        $where = [];
+        $where[] = ['status','=',1];
+        $list =[];
+        $info=\app\common\model\Music::where($where)
+            ->order('sort asc')->paginate()
+            ->each(function($item,$index)use(&$list){
+                array_push($list,[
+                    'id'=>$item['id'],
+                    'title'=>$item['name'],
+                    'singer'=>'未知',
+                    'cover'=>'http://www.chinacarechain.com/uploads/music/001.jpg',
+                    'url'=>'http://www.chinacarechain.com/uploads/music/001.mp3',
+                ]);
+            });
+//        $data = ['list'=>$list,'total'=>$info->total()];
+//		$lists = [
+//			['id'=>1,'title'=>'测试音乐','singer'=>'未知','cover'=>'http://www.chinacarechain.com/uploads/music/001.jpg','url'=>'http://www.chinacarechain.com/uploads/music/001.mp3']
+//		];
 		
-		$lists = [
-			['id'=>1,'title'=>'测试音乐','singer'=>'未知','cover'=>'http://www.chinacarechain.com/uploads/music/001.jpg','url'=>'http://www.chinacarechain.com/uploads/music/001.mp3']
-		];
-		
-		return ['code'=>0,'msg'=>'success','lists'=>$lists];
+		return ['code'=>0,'msg'=>'success','lists'=>$list,'total'=>$info->total()];
 	}
 }
