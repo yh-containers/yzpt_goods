@@ -306,6 +306,7 @@ class Mine extends Common
             }
             array_push($list,[
                 'uid' => $item['uid'],
+                'f_uid' => $item['f_uid'],
                 'user_name' => $item[$user_key]['name'],
                 'user_face' => $item[$user_key]['face'],
                 'user_intro' => $item[$user_key]['intro'],

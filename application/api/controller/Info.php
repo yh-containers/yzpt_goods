@@ -173,6 +173,12 @@ class Info extends Common
             ,'linkIsPraise'=>function($query)use($user_id){
                 $query->where('uid','=',$user_id);
             }
+            //用户
+            ,'linkUsers'=>function($query)use($user_id){
+                $query->with(['linkHasFollow'=>function($query)use($user_id){
+                    $query->where('uid','=',$user_id);
+                }]);
+            }
             ])->get($id);
         //数据
         $data = [];
