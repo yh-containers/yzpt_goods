@@ -23,8 +23,32 @@ class Info extends Common
     {
         //按用户查看
         $uid = input('user_id',0,'intval');
+        $is_new = input('is_new',0,'intval');//最新
+        $is_hot = input('is_hot',0,'intval');//热门
+        $is_mine = input('is_mine',0,'intval');//关注
+        $is_course = input('is_course',0,'intval');//课堂
+
         $user_id = $this->user_id;
         $where = [];
+        $order = 'id desc';
+        if($is_new){
+
+        }
+
+        if($is_hot){
+            $order = 'share_times desc,praise_times desc';
+        }
+
+        if($is_mine){
+            //关注
+            $f_uid = \app\common\model\UsersFollow::where(['uid'=>$this->user_id])->whereNotNull('follow_time')->column('f_uid');
+            $where[]=['uid','in',$f_uid];
+        }
+
+        if($is_course){
+
+        }
+
         !empty($uid) && $where[] = ['uid','=',$uid];
         $list =[];
         $info=\app\common\model\Dynamic::with(['linkCommentCount'
@@ -38,7 +62,7 @@ class Info extends Common
                 $query->where('uid','=',$user_id);
             }]);
         }])->where($where)
-            ->order('id desc')->paginate()
+            ->order($order)->paginate()
             ->each(function($item,$index)use(&$list){
                 array_push($list,[
                     'id'=>$item['id'],

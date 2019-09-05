@@ -173,4 +173,5 @@ class Dynamic extends BaseModel
         return $this->hasOne('DyPraise','dy_id')->whereNotNull('praise_date');
     }
 
+
 }
