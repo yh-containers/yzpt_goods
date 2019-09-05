@@ -294,11 +294,8 @@ class Index extends Common
     public function shareInfo(){
         $redirect_url =url('index/share',[],false,true);
         if(!empty($this->user_id)){
-            dump($this->user_id);
             $model = \app\common\model\Users::get($this->user_id);
-            dump($model);
             $redirect_url = empty($model)?$redirect_url:$model->qr_code_info;
-            dump($redirect_url);exit;
         }
         return $this->_resData(1,'获取成功',[
             'type'=>'page',
