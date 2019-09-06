@@ -357,7 +357,8 @@ class Info extends Common
                 $upload = new \app\common\service\Upload($this->user_id);
                 $data = $upload->info('video_cover');
                 if(isset($data['token'])){
-                    $filePath = base64_image_content($img);
+                    $file = base64_image_content($img);
+                    $filePath = \think\facade\Env::get('root_path').$file;
                     if($filePath){
                         $uploadMgr = new \Qiniu\Storage\UploadManager();
                         list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
