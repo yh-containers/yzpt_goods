@@ -335,43 +335,54 @@ class Info extends Common
             $img = input('img');
             $input_data['uid'] = $this->user_id;
             if(preg_match('/^https?:\/\//',$file)){
-                $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
-                $filePath = \think\facade\Env::get('root_path').$file;
-                //上传七牛
-                $upload = new \app\common\service\Upload($this->user_id);
-                $data = $upload->info('video');
-                if(isset($data['token'])){
-                    $uploadMgr = new \Qiniu\Storage\UploadManager();
-                    list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
-                    if($err !== null) {
-                        //处理失败
-                    } else {
-                        if(isset($ret['data'])){
-                            $input_data['file'] = $ret['data']['key'];
-                        }
-                    }
-                }
-            }
-            if(preg_match('/^data:',$img)){
-                //上传七牛
-                $upload = new \app\common\service\Upload($this->user_id);
-                $data = $upload->info('video_cover');
-                if(isset($data['token'])){
-                    $file = base64_image_content($img);
+                try{
+                    $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
                     $filePath = \think\facade\Env::get('root_path').$file;
-                    if($filePath){
+                    //上传七牛
+                    $upload = new \app\common\service\Upload($this->user_id);
+                    $data = $upload->info('video');
+                    if(isset($data['token'])){
                         $uploadMgr = new \Qiniu\Storage\UploadManager();
                         list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
                         if($err !== null) {
                             //处理失败
                         } else {
                             if(isset($ret['data'])){
-                                $input_data['img'] = $ret['data']['key'];
+                                $input_data['file'] = $ret['data']['key'];
                             }
                         }
                     }
+                }catch (\Exception $e){
 
                 }
+
+            }
+
+            if(preg_match('/^data:/',$img)){
+                //上传七牛
+                try{
+                    $upload = new \app\common\service\Upload($this->user_id);
+                    $data = $upload->info('video_cover');
+                    if(isset($data['token'])){
+                        $file = base64_image_content($img);
+                        $filePath = \think\facade\Env::get('root_path').$file;
+                        if($filePath){
+                            $uploadMgr = new \Qiniu\Storage\UploadManager();
+                            list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
+                            if($err !== null) {
+                                //处理失败
+                            } else {
+                                if(isset($ret['data'])){
+                                    $input_data['img'] = $ret['data']['key'];
+                                }
+                            }
+                        }
+
+                    }
+                }catch (\Exception $e){
+
+                }
+
             }
             $validate =new \app\common\validate\Video();
             $validate->scene('api_release');

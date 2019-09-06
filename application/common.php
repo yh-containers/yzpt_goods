@@ -66,7 +66,6 @@ function base64_image_content($base64_image_content,$type='video_cover')
 {
     //匹配出图片的格式
     if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_image_content, $result)) {
-
         $new_file = md5($type.time().create_invite_code());
         $root_path = \think\facade\Env::get('root_path');
         $dir = '/uploads/'.$type.'/';
@@ -74,7 +73,7 @@ function base64_image_content($base64_image_content,$type='video_cover')
 
         //$new_file = $new_file . time() . ".{$type}";
         if (file_put_contents($root_path.$dir.$new_file, base64_decode(str_replace($result[1], '', $base64_image_content)))) {
-            return  $dir.$new_file;
+            return  $dir.$new_file.'.jpg';
         } else {
             return false;
         }
