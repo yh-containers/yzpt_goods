@@ -334,7 +334,7 @@ class Info extends Common
             $file = input('file');
             $input_data['uid'] = $this->user_id;
             //清空上传的图片信息
-            unset($input_data['img']);
+            $input_data['img']='';
             if(preg_match('/^https?:\/\//',$file)){
                 try{
                     $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
