@@ -69,7 +69,7 @@ function base64_image_content($base64_image_content,$type='video_cover')
         $new_file = md5($type.time().create_invite_code());
         $root_path = \think\facade\Env::get('root_path');
         $dir = '/uploads/'.$type.'/';
-        is_dir($dir) OR mkdir($dir, 0777, true);
+//        is_dir($dir) OR mkdir($dir, 0777, true);
 
         //$new_file = $new_file . time() . ".{$type}";
         if (file_put_contents($root_path.$dir.$new_file, base64_decode(str_replace($result[1], '', $base64_image_content)))) {
