@@ -33,14 +33,11 @@ class Upload
             $data['preview_domain'] = config('qiniu.preview_domain');
 
             $auth = new Auth(config('qiniu.ak'), config('qiniu.sk'));
-            //视频获取封面图
-//            if($type=='video'){
-//
-//            }
 
 
+            $save_key = config('qiniu.file_prefix').$type.'/'.date('Ymd').'/'.uniqid($this->user_id.'_'.'$(sec)_$(x:up_index)'.'_').'$(ext)';
             $police = [
-                'saveKey' => config('qiniu.file_prefix').$type.'/'.date('Ymd').'/'.uniqid($this->user_id.'_'.'$(sec)_$(x:up_index)'.'_').'$(ext)',
+                'saveKey' => $save_key,
                 'forceSaveKey' => true,
                 'fsizeLimit' => $this->fsizeLimit,
                 'callbackBody'=>json_encode([
@@ -58,6 +55,12 @@ class Upload
                     'preview_domain' => config('qiniu.preview_domain'),
                 ]])
             ];
+
+            //视频获取封面图
+            if($type=='video'){
+                $police['persistentOps'] = 'vframe/jpg/offset/0.2/w/750/h/1334|saveas/'.\Qiniu\base64_urlSafeEncode(config('qiniu.bucket').':'.$save_key.'.jpg');
+                $police['persistentNotifyUrl'] = request()->domain().'/api/upload/notify';
+            }
             $upload_token = $auth->uploadToken(config('qiniu.bucket'),null,config('qiniu.expires'),$police);
 
             $data['token'] =$upload_token;

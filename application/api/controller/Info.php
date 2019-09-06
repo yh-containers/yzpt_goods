@@ -332,8 +332,9 @@ class Info extends Common
         try{
             $input_data = input();
             $file = input('file');
-            $img = input('img');
             $input_data['uid'] = $this->user_id;
+            //清空上传的图片信息
+            unset($input_data['img']);
             if(preg_match('/^https?:\/\//',$file)){
                 try{
                     $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
@@ -355,37 +356,7 @@ class Info extends Common
                 }catch (\Exception $e){
 
                 }
-
             }
-
-            if(preg_match('/^data:/',$img)){
-                //上传七牛
-                try{
-                    $upload = new \app\common\service\Upload($this->user_id);
-                    $data = $upload->info('video_cover');
-                    if(isset($data['token'])){
-                        $file = base64_image_content($img);
-                        $filePath = \think\facade\Env::get('root_path').$file;
-                        if($filePath){
-                            $uploadMgr = new \Qiniu\Storage\UploadManager();
-                            list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
-                            if($err !== null) {
-                                //处理失败
-                                $input_data['img']='';
-                            } else {
-                                if(isset($ret['data'])){
-                                    $input_data['img'] = $ret['data']['key'];
-                                }
-                            }
-                        }
-
-                    }
-                }catch (\Exception $e){
-                    $input_data['img']='';
-                }
-
-            }
-
             $validate =new \app\common\validate\Video();
             $validate->scene('api_release');
             $model = new \app\common\model\Video();

@@ -2,6 +2,8 @@
 namespace app\api\controller;
 
 
+use function Qiniu\base64_urlSafeEncode;
+
 class Test extends Common
 {
     public function __construct()
@@ -44,6 +46,11 @@ class Test extends Common
         } else {
             echo "shell命令{$shell}成功执行";
         }
+    }
+
+    public function qiniu()
+    {
+        dump(\Qiniu\base64_urlSafeEncode('qbucket:qkey'));
     }
 
 }

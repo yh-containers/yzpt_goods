@@ -43,8 +43,6 @@ class Video extends BaseModel
     //发布的文件组合
     protected function getFileGroupAttr()
     {
-
-
         $data=[
             'type'=>'video',
             'data'=>[
@@ -56,6 +54,17 @@ class Video extends BaseModel
         ];
         return $data;
     }
+
+    //视频封面图
+    protected function setImgAttr($value,$data)
+    {
+        if($value){
+            return $value;
+        }
+        $file = isset($data['file'])?$data['file']:'';
+        return empty($file)?'/uploads/video_cover/default.jpg':$file.'.jpg';
+    }
+
 
     protected function getImgAttr($value)
     {
