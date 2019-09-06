@@ -48,6 +48,7 @@ class Test extends Common
         }
     }
 
+
     public function qiniu()
     {
         dump(\Qiniu\base64_urlSafeEncode('qbucket:qkey'));
