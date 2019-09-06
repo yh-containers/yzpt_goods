@@ -72,8 +72,9 @@ function base64_image_content($base64_image_content,$type='video_cover')
 //        is_dir($dir) OR mkdir($dir, 0777, true);
 
         //$new_file = $new_file . time() . ".{$type}";
-        if (file_put_contents($root_path.$dir.$new_file, base64_decode(str_replace($result[1], '', $base64_image_content)))) {
-            return  $dir.$new_file.'.jpg';
+        $ext = '.jpg';
+        if (file_put_contents($root_path.$dir.$new_file.$ext, base64_decode(str_replace($result[1], '', $base64_image_content)))) {
+            return  $dir.$new_file.$ext;
         } else {
             return false;
         }

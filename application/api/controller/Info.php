@@ -371,6 +371,7 @@ class Info extends Common
                             list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
                             if($err !== null) {
                                 //处理失败
+                                $input_data['img']='';
                             } else {
                                 if(isset($ret['data'])){
                                     $input_data['img'] = $ret['data']['key'];
@@ -380,10 +381,11 @@ class Info extends Common
 
                     }
                 }catch (\Exception $e){
-
+                    $input_data['img']='';
                 }
 
             }
+
             $validate =new \app\common\validate\Video();
             $validate->scene('api_release');
             $model = new \app\common\model\Video();
