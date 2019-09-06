@@ -366,7 +366,6 @@ class Info extends Common
                     if(isset($data['token'])){
                         $file = base64_image_content($img);
                         $filePath = \think\facade\Env::get('root_path').$file;
-                        dump($filePath);exit;
                         if($filePath){
                             $uploadMgr = new \Qiniu\Storage\UploadManager();
                             list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
