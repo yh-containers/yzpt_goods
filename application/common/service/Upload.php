@@ -58,7 +58,7 @@ class Upload
 
             //视频获取封面图
             if($type=='video'){
-                $police['persistentOps'] = 'vframe/jpg/offset/0.2/w/750/h/1334|saveas/'.\Qiniu\base64_urlSafeEncode(config('qiniu.bucket').':'.$save_key.'.jpg');
+                $police['persistentOps'] = 'vframe/jpg/offset/0.2/w/375/h/670|saveas/'.\Qiniu\base64_urlSafeEncode(config('qiniu.bucket').':'.$save_key.'.jpg');
                 $police['persistentNotifyUrl'] = request()->domain().'/api/upload/notify';
             }
             $upload_token = $auth->uploadToken(config('qiniu.bucket'),null,config('qiniu.expires'),$police);
