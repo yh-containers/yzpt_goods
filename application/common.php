@@ -83,3 +83,26 @@ function base64_image_content($base64_image_content,$type='video_cover')
     }
 }
 
+/**
+ * 保存音频文件
+ * @return array
+ * */
+function save_music($audio){
+    if(empty($audio)){
+        return [-1,'文件不存在'];
+    }
+    $audio_arr = explode('/',$audio);
+    $music_name = end($audio_arr);
+    //下载音乐文件
+    $root_path = \think\facade\Env::get('root_path');
+    $music_save_path = $root_path.'uploads'.DIRECTORY_SEPARATOR.'music'.DIRECTORY_SEPARATOR.$music_name;
+    if(!file_exists($music_save_path)){
+        //下
+        $status = file_put_contents($music_save_path, file_get_contents($audio));
+        return [(int)$status,'保存状态:('.$status.')'];
+    }else{
+        return [2,'文件已存在'];
+    }
+}
+
+

@@ -54,10 +54,22 @@ class Create extends Common {
 	 */
 	public function music () {
 		if ($this->request->isPost()) {
-			$audio = str_replace('http://www.chinacarechain.com/uploads/', '../uploads/', input('audio', ''));
+            $audio = input('audio');
+            if(!empty($audio)){
+                $audio_arr = explode('/',$audio);
+                $music_name = end($audio_arr);
+                $path = '/uploads/music/'.$music_name;
+                $audio = '..'.$path;
+                $audio_ab_path = \think\facade\Env::get('root_path').$audio;
+                if(!file_exists($audio_ab_path)){
+                    unset($audio);//销毁实例
+                }
+            }
+
+//			$audio = str_replace('http://www.chinacarechain.com/uploads/', '../uploads/', input('audio', ''));
 			$video = str_replace('http://www.chinacarechain.com/uploads/', '../uploads/', input('video', ''));
 			$save = '';
-			
+
 			if (empty($audio)) {
 				$save = $video;
 			} else {
@@ -105,7 +117,7 @@ class Create extends Common {
                     'title'=>$item['name'],
                     'singer'=>'未知',
                     'cover'=>'http://www.chinacarechain.com/uploads/music/001.jpg',
-                    'url'=>$item['file'],
+                    'url'=>'http://www.chinacarechain.com/uploads/music/001.mp3',
                 ]);
             });
 //        $data = ['list'=>$list,'total'=>$info->total()];

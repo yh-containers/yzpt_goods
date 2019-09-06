@@ -53,4 +53,9 @@ class Test extends Common
         dump(\Qiniu\base64_urlSafeEncode('qbucket:qkey'));
     }
 
+    public function down()
+    {
+        $audio = input('audio');
+        save_music($audio);
+    }
 }
