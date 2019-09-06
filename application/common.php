@@ -52,3 +52,34 @@ function create_invite_code() {
     );
     return $d;
 }
+
+/**
+ * [将Base64图片转换为本地图片并保存]
+ * @E-mial wuliqiang_aa@163.com
+ * @TIME   2017-04-07
+ * @WEB    http://blog.iinu.com.cn
+ * @param  [Base64] $base64_image_content [要保存的Base64]
+ * @param  [目录] $path [要保存的路径]
+ * @return bool
+ */
+function base64_image_content($base64_image_content,$type='video_cover')
+{
+    //匹配出图片的格式
+    if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_image_content, $result)) {
+
+        $new_file = md5($type.time().create_invite_code());
+        $root_path = \think\facade\Env::get('root_path');
+        $dir = '/uploads/'.$type.'/';
+        is_dir($dir) OR mkdir($dir, 0777, true);
+
+        //$new_file = $new_file . time() . ".{$type}";
+        if (file_put_contents($root_path.$dir.$new_file, base64_decode(str_replace($result[1], '', $base64_image_content)))) {
+            return  $dir.$new_file;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+

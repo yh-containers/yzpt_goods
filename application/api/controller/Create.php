@@ -105,7 +105,7 @@ class Create extends Common {
                     'title'=>$item['name'],
                     'singer'=>'未知',
                     'cover'=>'http://www.chinacarechain.com/uploads/music/001.jpg',
-                    'url'=>'http://www.chinacarechain.com/uploads/music/001.mp3',
+                    'url'=>$item['file'],
                 ]);
             });
 //        $data = ['list'=>$list,'total'=>$info->total()];

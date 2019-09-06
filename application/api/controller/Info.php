@@ -332,6 +332,7 @@ class Info extends Common
         try{
             $input_data = input();
             $file = input('file');
+            $img = input('img');
             $input_data['uid'] = $this->user_id;
             if(preg_match('/^https?:\/\//',$file)){
                 $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
@@ -349,6 +350,26 @@ class Info extends Common
                             $input_data['file'] = $ret['data']['key'];
                         }
                     }
+                }
+            }
+            if(preg_match('/^data:',$img)){
+                //上传七牛
+                $upload = new \app\common\service\Upload($this->user_id);
+                $data = $upload->info('video_cover');
+                if(isset($data['token'])){
+                    $filePath = base64_image_content($img);
+                    if($filePath){
+                        $uploadMgr = new \Qiniu\Storage\UploadManager();
+                        list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
+                        if($err !== null) {
+                            //处理失败
+                        } else {
+                            if(isset($ret['data'])){
+                                $input_data['img'] = $ret['data']['key'];
+                            }
+                        }
+                    }
+
                 }
             }
             $validate =new \app\common\validate\Video();
