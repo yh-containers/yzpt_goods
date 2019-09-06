@@ -334,29 +334,29 @@ class Info extends Common
             $file = input('file');
             $img = input('img');
             $input_data['uid'] = $this->user_id;
-//            if(preg_match('/^https?:\/\//',$file)){
-//                try{
-//                    $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
-//                    $filePath = \think\facade\Env::get('root_path').$file;
-//                    //上传七牛
-//                    $upload = new \app\common\service\Upload($this->user_id);
-//                    $data = $upload->info('video');
-//                    if(isset($data['token'])){
-//                        $uploadMgr = new \Qiniu\Storage\UploadManager();
-//                        list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
-//                        if($err !== null) {
-//                            //处理失败
-//                        } else {
-//                            if(isset($ret['data'])){
-//                                $input_data['file'] = $ret['data']['key'];
-//                            }
-//                        }
-//                    }
-//                }catch (\Exception $e){
-//
-//                }
-//
-//            }
+            if(preg_match('/^https?:\/\//',$file)){
+                try{
+                    $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
+                    $filePath = \think\facade\Env::get('root_path').$file;
+                    //上传七牛
+                    $upload = new \app\common\service\Upload($this->user_id);
+                    $data = $upload->info('video');
+                    if(isset($data['token'])){
+                        $uploadMgr = new \Qiniu\Storage\UploadManager();
+                        list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
+                        if($err !== null) {
+                            //处理失败
+                        } else {
+                            if(isset($ret['data'])){
+                                $input_data['file'] = $ret['data']['key'];
+                            }
+                        }
+                    }
+                }catch (\Exception $e){
+
+                }
+
+            }
 
             if(preg_match('/^data:/',$img)){
                 //上传七牛
@@ -381,7 +381,7 @@ class Info extends Common
 
                     }
                 }catch (\Exception $e){
-                    
+
                 }
 
             }
