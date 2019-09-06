@@ -57,6 +57,6 @@ class Test extends Common
     public function down()
     {
         $audio = input('audio');
-        save_music($audio);
+        dump(save_music($audio));
     }
 }

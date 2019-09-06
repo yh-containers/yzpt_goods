@@ -60,7 +60,7 @@ class Create extends Common {
                 $music_name = end($audio_arr);
                 $path = '/uploads/music/'.$music_name;
                 $audio = '..'.$path;
-                $audio_ab_path = \think\facade\Env::get('root_path').$audio;
+                $audio_ab_path = \think\facade\Env::get('root_path').$path;
                 if(!file_exists($audio_ab_path)){
                     unset($audio);//销毁实例
                 }
@@ -69,7 +69,6 @@ class Create extends Common {
 //			$audio = str_replace('http://www.chinacarechain.com/uploads/', '../uploads/', input('audio', ''));
 			$video = str_replace('http://www.chinacarechain.com/uploads/', '../uploads/', input('video', ''));
 			$save = '';
-
 			if (empty($audio)) {
 				$save = $video;
 			} else {
