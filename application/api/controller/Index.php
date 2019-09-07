@@ -208,7 +208,16 @@ class Index extends Common
             $follow_num = (int)\app\common\model\UsersFollow::whereNotNull('follow_time')->where(['uid'=>$id])->count();
             //是否关注
             $is_follow = \app\common\model\UsersFollow::where(['uid'=>$this->user_id,'f_uid'=>$id])->find();
-            $data['praise']=['num'=>(int)$user_model['praise_num'],'follow'=>$follow_num,'fans'=>$fans_num,'is_follow'=>empty($is_follow)?0:1];
+            $is_follow_state = empty($is_follow)?0:1;
+            if($is_follow_state && $this->user_id){
+                //验证对方是否关注了我
+                $is_ftf_me = \app\common\model\UsersFollow::where(['uid'=>$id,'f_uid'=>$this->user_id])->find();
+                if($is_ftf_me) {
+                    $is_follow_state = 2;
+                }
+            }
+
+            $data['praise']=['num'=>(int)$user_model['praise_num'],'follow'=>$follow_num,'fans'=>$fans_num,'is_follow'=>$is_follow_state];
         }
         //身体状态
         if($on_user_body){
