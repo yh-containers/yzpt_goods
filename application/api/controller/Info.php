@@ -68,7 +68,7 @@ class Info extends Common
                 //验证对方是否关注了我
                 if($is_follow && $user_id){
                     $is_ftf_me = \app\common\model\UsersFollow::where(['uid'=>$item['uid'],'f_uid'=>$user_id])->find();
-                    if(empty($is_ftf_me)){
+                    if(!empty($is_ftf_me)){
                         $is_follow = 2;
                     }
                 }
@@ -220,7 +220,7 @@ class Info extends Common
             //验证对方是否关注了我
             if($is_follow && $user_id){
                 $is_ftf_me = \app\common\model\UsersFollow::where(['uid'=>$model['uid'],'f_uid'=>$user_id])->find();
-                if(empty($is_ftf_me)){
+                if(!empty($is_ftf_me)){
                     $is_follow = 2;
                 }
             }
