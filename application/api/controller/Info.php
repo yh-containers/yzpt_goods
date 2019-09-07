@@ -63,7 +63,16 @@ class Info extends Common
             }]);
         }])->where($where)
             ->order($order)->paginate()
-            ->each(function($item,$index)use(&$list){
+            ->each(function($item,$index)use(&$list,$user_id){
+                $is_follow = empty($item['link_users']['link_has_follow'])?0:1;
+                //验证对方是否关注了我
+                if($is_follow && $user_id){
+                    $is_ftf_me = \app\common\model\UsersFollow::where(['uid'=>$item['uid'],'f_uid'=>$user_id])->find();
+                    if(empty($is_ftf_me)){
+                        $is_follow = 2;
+                    }
+                }
+
                 array_push($list,[
                     'id'=>$item['id'],
                     'uid'=>$item['uid'],
@@ -76,7 +85,7 @@ class Info extends Common
                     'praise_times'=>$item['praise_times'],
                     'views'=>$item['views'],
                     'comment_times'=> isset($item['link_comment_count']['comment_count'])?$item['link_comment_count']['comment_count']:0,
-                    'is_follow'=>empty($item['link_users']['link_has_follow'])?0:1,
+                    'is_follow'=>$is_follow,
                     'is_praise'=>empty($item['link_is_praise'])?0:1,
                 ]);
             });
@@ -207,6 +216,15 @@ class Info extends Common
         //数据
         $data = [];
         if(!empty($model)){
+            $is_follow = empty($model['link_users']['link_has_follow'])?0:1;
+            //验证对方是否关注了我
+            if($is_follow && $user_id){
+                $is_ftf_me = \app\common\model\UsersFollow::where(['uid'=>$model['uid'],'f_uid'=>$user_id])->find();
+                if(empty($is_ftf_me)){
+                    $is_follow = 2;
+                }
+            }
+
             $data=[
                     'id'=>$model['id'],
                     'uid'=>$model['uid'],
@@ -219,7 +237,7 @@ class Info extends Common
                     'praise_times'=>$model['praise_times'],
                     'views'=>$model['views'],
                     'comment_times'=> isset($model['link_comment_count']['comment_count'])?$model['link_comment_count']['comment_count']:0,
-                    'is_follow'=>empty($model['link_users']['link_has_follow'])?0:1,
+                    'is_follow'=>$is_follow,
                     'is_praise'=>empty($model['link_is_praise'])?0:1,
                 ];
         }
