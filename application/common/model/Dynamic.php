@@ -148,7 +148,8 @@ class Dynamic extends BaseModel
         $model->save();
         //点赞次数增加
         $model->praise_date?$dy_model->setInc('praise_times'):$dy_model->setDec('praise_times');
-
+        //增加用户点赞次数
+        $model->praise_date?$user_model->setInc('praise_num'):$user_model->setDec('praise_num');
         return $model;
     }
 

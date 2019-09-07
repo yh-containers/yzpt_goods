@@ -102,6 +102,9 @@ class Video extends BaseModel
         //点赞次数增加
         $model->praise_date?$ex_model->setInc('praise_times'):$ex_model->setDec('praise_times');
 
+        //增加用户点赞次数
+        $model->praise_date?$user_model->setInc('praise_num'):$user_model->setDec('praise_num');
+        
         return $model;
     }
 
