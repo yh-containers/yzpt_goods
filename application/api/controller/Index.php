@@ -282,12 +282,12 @@ class Index extends Common
                 $is_ftf_str = '未关注';
                 $is_follow = 0;
                 //自己有没有关注对方
-                $is_ftf_info = \app\common\model\UsersFollow::where(['uid'=>$mine_user_id,'f_uid'=>$item['uid']])->whereNotNull('follow_time')->find();
+                $is_ftf_info = \app\common\model\UsersFollow::where(['uid'=>$mine_user_id,'f_uid'=>$item[$user_key]['id']])->whereNotNull('follow_time')->find();
                 if(!empty($is_ftf_info)){
                     $is_ftf_str = '已关注';
                     $is_follow = 1;
                     //对方是否关注了我
-                    $is_ftf_info_other = \app\common\model\UsersFollow::where(['uid'=>$item['uid'],'f_uid'=>$mine_user_id])->whereNotNull('follow_time')->find();
+                    $is_ftf_info_other = \app\common\model\UsersFollow::where(['uid'=>$item[$user_key]['id'],'f_uid'=>$mine_user_id])->whereNotNull('follow_time')->find();
                     if(!empty($is_ftf_info_other)){
                         $is_ftf_str = '互相关注';
                         $is_follow = 2;
@@ -297,7 +297,7 @@ class Index extends Common
                 //自己看自己的列表
                 if($type=='fans'){
                     //自己有没有关注对方
-                    $is_ftf_info = \app\common\model\UsersFollow::where(['uid'=>$user_id,'f_uid'=>$item['uid']])->whereNotNull('follow_time')->find();
+                    $is_ftf_info = \app\common\model\UsersFollow::where(['uid'=>$user_id,'f_uid'=>$item[$user_key]['id']])->whereNotNull('follow_time')->find();
                     $is_ftf_str = '未关注';
                     $is_follow = 0;
                     if($is_ftf_info){
@@ -305,7 +305,7 @@ class Index extends Common
                         $is_follow = 2;
                     }
                 }else{
-                    $is_ftf_info_other = \app\common\model\UsersFollow::where(['uid'=>$item['f_uid'],'f_uid'=>$user_id])->whereNotNull('follow_time')->find();
+                    $is_ftf_info_other = \app\common\model\UsersFollow::where(['uid'=>$item[$user_key]['id'],'f_uid'=>$user_id])->whereNotNull('follow_time')->find();
                     if($is_ftf_info_other){
                         $is_ftf_str = '互相关注';
                         $is_follow = 2;
