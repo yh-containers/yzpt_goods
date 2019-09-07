@@ -56,6 +56,43 @@ class Wechat implements IPay
         return $access_token;
     }
 
+    public function jssdkPay(\think\Model $model,$open_id)
+    {
+        //引入第三方
+        require_once \think\facade\Env::get('vendor_path').'wechat/lib/WxPay.Api.php';
+
+
+        $input = $this->handleOrderInput($model,'JSAPI');
+        $config = self::configInstance();
+        $input->SetOpenid($open_id);
+
+        $result = \WxPayApi::unifiedOrder($config, $input);
+        $result_data = array(
+            'appId'  => $config->GetAppId(),
+            'nonceStr' => $result['nonce_str'],
+            'timeStamp' => time(),
+            'signType' => $config->GetSignType(),
+            'package' => 'prepay_id='.$result['prepay_id'],
+        );
+        ksort($result_data,SORT_STRING);
+        $str = '';
+        foreach($result_data as $key=>$vo){
+            $str.=$key.'='.$vo.'&';
+        }
+        $str.=$config->GetKey();
+        if($config->GetSignType()=='MD5'){
+            $sign = strtoupper(md5($str));
+        }elseif($config->GetSignType()=='HMAC-SHA256'){
+            $sign = strtoupper(hash_hmac("sha256",$str ,$config->GetKey()));
+        }else{
+            throw new \Exception('签名类型不支持!!');
+        }
+        $result_data['sign'] =$sign;
+
+        return $result_data;
+    }
+
+
     //app支付
     public function appPay(\think\Model $model)
     {
