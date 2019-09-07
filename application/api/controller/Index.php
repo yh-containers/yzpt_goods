@@ -317,8 +317,7 @@ class Index extends Common
             }
 
             array_push($list,[
-                'uid' => $item['uid'],
-                'f_uid' => $item['f_uid'],
+                'uid' => $item[$user_key]['id'],
                 'user_name' => $item[$user_key]['name'],
                 'user_face' => $item[$user_key]['face'],
                 'user_intro' => $item[$user_key]['intro'],
