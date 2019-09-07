@@ -304,45 +304,46 @@ class Mine extends Common
     //关注列表--已弃用 请使用index/userfollow
     public function follow()
     {
-        $php_input = input();
-        $list = [];
-        $user_id = $this->user_id;
-        list($paginator,$user_key,$type) = \app\common\model\UsersFollow::getList($user_id, $php_input);
-        $paginator->each(function($item,$index)use(&$list,$user_key,$user_id,$type){
-
-            if($type=='fans'){
-                //自己有没有关注对方
-                $is_ftf_info = \app\common\model\UsersFollow::where(['uid'=>$user_id,'f_uid'=>$item['uid']])->whereNotNull('follow_time')->find();
-                $is_ftf_str = '未关注';
-                $is_follow = 0;
-                if($is_ftf_info){
-                    $is_ftf_str = '互相关注';
-                    $is_follow = 2;
-                }
-            }else{
-                $is_ftf_info_other = \app\common\model\UsersFollow::where(['uid'=>$item['uid'],'f_uid'=>$user_id])->whereNotNull('follow_time')->find();
-                if($is_ftf_info_other){
-                    $is_ftf_str = '互相关注';
-                    $is_follow = 2;
-                }else{
-                    $is_ftf_str = '已关注';
-                    $is_follow = 1;
-                }
-            }
-            array_push($list,[
-                'uid' => $item['uid'],
-                'f_uid' => $item['f_uid'],
-                'user_name' => $item[$user_key]['name'],
-                'user_face' => $item[$user_key]['face'],
-                'user_intro' => $item[$user_key]['intro'],
-                'is_follow' => $is_follow,
-                'is_ftf_str' => $is_ftf_str,
-                'date' => $item['follow_time'],
-            ]);
-        });
-
-        $data = ['list'=>$list,'total_page'=>$paginator->lastPage()];
-        return $this->_resData(1,'获取成功',$data);
+        return $this->_resData(0,'接口已停用');
+//        $php_input = input();
+//        $list = [];
+//        $user_id = $this->user_id;
+//        list($paginator,$user_key,$type) = \app\common\model\UsersFollow::getList($user_id, $php_input);
+//        $paginator->each(function($item,$index)use(&$list,$user_key,$user_id,$type){
+//
+//            if($type=='fans'){
+//                //自己有没有关注对方
+//                $is_ftf_info = \app\common\model\UsersFollow::where(['uid'=>$user_id,'f_uid'=>$item['uid']])->whereNotNull('follow_time')->find();
+//                $is_ftf_str = '未关注';
+//                $is_follow = 0;
+//                if($is_ftf_info){
+//                    $is_ftf_str = '互相关注';
+//                    $is_follow = 2;
+//                }
+//            }else{
+//                $is_ftf_info_other = \app\common\model\UsersFollow::where(['uid'=>$item['uid'],'f_uid'=>$user_id])->whereNotNull('follow_time')->find();
+//                if($is_ftf_info_other){
+//                    $is_ftf_str = '互相关注';
+//                    $is_follow = 2;
+//                }else{
+//                    $is_ftf_str = '已关注';
+//                    $is_follow = 1;
+//                }
+//            }
+//            array_push($list,[
+//                'uid' => $item['uid'],
+//                'f_uid' => $item['f_uid'],
+//                'user_name' => $item[$user_key]['name'],
+//                'user_face' => $item[$user_key]['face'],
+//                'user_intro' => $item[$user_key]['intro'],
+//                'is_follow' => $is_follow,
+//                'is_ftf_str' => $is_ftf_str,
+//                'date' => $item['follow_time'],
+//            ]);
+//        });
+//
+//        $data = ['list'=>$list,'total_page'=>$paginator->lastPage()];
+//        return $this->_resData(1,'获取成功',$data);
     }
 
 
