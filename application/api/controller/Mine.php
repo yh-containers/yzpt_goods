@@ -105,7 +105,18 @@ class Mine extends Common
         }catch (\Exception $e){
             return $this->_resData(0,$e->getMessage());
         }
-        return $this->_resData(1,$model->follow_time?'关注成功':'已取消关注',['state'=>$model['follow_time']?1:0]);
+        $state = 0;
+        if($model['follow_time']){
+            $state =1;
+            //验证对方有没有关注我
+            $obj_follow_me = \app\common\model\UsersFollow::where(['uid'=>$model['f_uid'],'f_uid'=>$this->user_id])->whereNotNull('follow_time')->find();
+            if($obj_follow_me){
+                $state=2;
+            }
+        }
+
+
+        return $this->_resData(1,$model->follow_time?'关注成功':'已取消关注',['state'=>$state]);
     }
 
     //好友申请
