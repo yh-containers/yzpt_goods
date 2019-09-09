@@ -267,8 +267,8 @@ class Mine extends Common
         $info = \app\common\model\ViewPraise::getList($php_input,$this->user_id)->each(function($item,$index)use(&$list){
             array_push($list,[
                 'uid' => $item['uid'],
-                'user_name' => $item['link_users']['name'],
-                'user_face' => $item['link_users']['face'],
+                'user_name' => $item['link_love_uid']['name'],
+                'user_face' => $item['link_love_uid']['face'],
                 'cond_id' => $item['cond_id'],
                 'title' => \app\common\model\ViewPraise::getPropInfo('fields_type',$item['type'],'name'),
                 'content' => '',
@@ -288,8 +288,8 @@ class Mine extends Common
         $info = \app\common\model\ViewComment::getList($php_input,$this->user_id)->each(function($item,$index)use(&$list){
             array_push($list,[
                 'uid' => $item['uid'],
-                'user_name' => $item['link_users']['name'],
-                'user_face' => $item['link_users']['face'],
+                'user_name' => $item['link_to_users']['name'],
+                'user_face' => $item['link_to_users']['face'],
                 'cond_id' => $item['cond_id'],
                 'title' => \app\common\model\ViewComment::getPropInfo('fields_type',$item['type'],'name'),
                 'content' => $item['content'],

@@ -19,7 +19,7 @@ class ViewComment extends BaseModel
 
 
     /**
-     * 列表数据
+     * 回复列表数据
      * @param array $php_input 数据
      * @param int $user_id 用户id
      * @throws
@@ -31,18 +31,23 @@ class ViewComment extends BaseModel
         $where = [];
         $where[]=['status','=',1];
         if($user_id){
-            $where[] =['uid','=',$user_id];
+            $where[] =['to_uid','=',$user_id];
         }
         if(!empty($php_input['type'])){
             $where[] =['type','=',$php_input['type']];
         }
-        $list = self::with(['linkUsers'])->where($where)->order('create_time desc')->paginate();
+        $list = self::with(['linkToUsers'])->where($where)->order('create_time desc')->paginate();
         return $list;
     }
 
 
-
+    //我
     public function linkUsers()
+    {
+        return $this->belongsTo('Users','uid');
+    }
+    //接收者
+    public function linkToUsers()
     {
         return $this->belongsTo('Users','uid');
     }

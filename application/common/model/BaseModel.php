@@ -78,6 +78,7 @@ class BaseModel extends Model
      * @param Users $user_model|null;
      * @param array $data;
      * @throws
+     * @return self
      * */
     public static function commentDel(Users $user_model,array $data=[])
     {
@@ -92,6 +93,7 @@ class BaseModel extends Model
             exception('评论已删除');
         }
         self::whereOr([['id','=',$model['id']],['pid','=',$model['id']]])->delete();
+        return $model;
     }
 
 

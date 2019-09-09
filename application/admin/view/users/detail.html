@@ -12,8 +12,8 @@
         <!-- form start -->
         <div class="box-body">
 
-            <div class="col-sm-8">
-                <table class="layui-table no-padding">
+            <div class="col-sm-8 no-padding">
+                <table class="layui-table ">
                     <colgroup>
                         <col width="80">
                         <col width="100">
@@ -89,18 +89,70 @@
                     </tbody>
                 </table>
 
+                <div class="row no-padding">
+                    <div class="col-sm-6">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">邀请的用户</h3>
+                                <div class="box-tools">
+                                </div>
+                            </div>
+                            <div class="box-body no-padding">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th width="120">用户名</th>
+                                        <th width="80">手机号</th>
+                                        <th width="100">日期</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {volist name="req_info" id="vo"}
+                                    <tr>
+                                        <td>{$vo['name']}</td>
+                                        <td>{$vo['phone']}</td>
+                                        <td>{:substr($vo['create_time'],0,10)}</td>
+                                    </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
             <div class="col-sm-4">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">养分日志</h3>
+                        <h3 class="box-title">近期养分日志</h3>
                         <div class="box-tools">
-                            <a class="text-blue" href="{:url('raise_num_logs',['id'=>$model['id']])}">更多>></a>
+                            <a class="text-blue" href="{:url('raiseNumLogs',['id'=>$model['id']])}">更多>></a>
                         </div>
                     </div>
-                    <div class="box-body">
+                    <div class="box-body no-padding">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th width="200">说明</th>
+                                <th width="80">养分</th>
+                                <th width="100">日期</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="raise_logs" id="vo"}
+                            <tr>
+                                <td>{$vo['intro']}</td>
+                                <td>{$vo['num']}</td>
+                                <td>{:substr($vo['create_time'],0,10)}</td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+
 
             </div>
 
