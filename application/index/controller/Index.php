@@ -293,7 +293,7 @@ class Index extends Common
                 $mobile = input('mobile');
                 $cig = 'web';
                 if($mobile) $cig = 'mobile';
-                $auth_info = \app\common\service\third\OpenWx::codeToAct('web',$code);
+                $auth_info = \app\common\service\third\OpenWx::codeToAct($cig,$code);
                 $where['wx_openid'] = $auth_info['openid'];
             }elseif ($mode=='qq'){
                 $auth_info = \app\common\service\third\QQ::codeToAct($code);
