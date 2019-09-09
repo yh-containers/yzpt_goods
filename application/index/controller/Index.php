@@ -290,6 +290,9 @@ class Index extends Common
                 $auth_info = \app\common\service\third\Weibo::codeToAct('web',$code);
                 $where['wb_openid'] = $auth_info['uid'];
             }elseif($mode=='wechat'){
+                $mobile = input('mobile');
+                $cig = 'web';
+                if($mobile) $cig = 'mobile';
                 $auth_info = \app\common\service\third\OpenWx::codeToAct('web',$code);
                 $where['wx_openid'] = $auth_info['openid'];
             }elseif ($mode=='qq'){

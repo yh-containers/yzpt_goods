@@ -29,7 +29,7 @@
 				<ul class="clearfix">
 					{if condition="$iswx"}
 					<li>
-						<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid={:\\app\\common\\service\\third\\OpenWx::config('mobile','app_id')}&redirect_uri={:url('index/thirdlogin',['mode'=>'wechat'],false,true)}&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect">
+						<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid={:\\app\\common\\service\\third\\OpenWx::config('mobile','app_id')}&redirect_uri={:url('index/thirdlogin',['mode'=>'wechat','mobile'=>1],false,true)}&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect">
 							<img src="/assets/index/mobile/images/login_weix.png">
 							<span>微信登录</span>
 						</a>
@@ -75,7 +75,7 @@
 				<ul class="clearfix">
 					{if condition="$iswx"}
 					<li>
-						<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid={:\\app\\common\\service\\third\\OpenWx::config('mobile','app_id')}&redirect_uri={:url('index/thirdlogin',['mode'=>'wechat'],false,true)}&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect">
+						<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid={:\\app\\common\\service\\third\\OpenWx::config('mobile','app_id')}&redirect_uri={:url('index/thirdlogin',['mode'=>'wechat','mobile'=>1],false,true)}&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect">
 							<img src="/assets/index/mobile/images/login_weix.png">
 							<span>微信登录</span>
 						</a>
