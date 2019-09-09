@@ -239,6 +239,33 @@ class Index extends Common
                 $php_input = $this->request->param();
                 //$validate =new \app\common\validate\Users();
                 //$validate->scene('web_reg');
+                if(session('auth_info')){
+                    $auth_info = session('auth_info');
+                    $user_model = new \app\common\model\Users();
+                    $data = array();
+                    $data['phone'] = $phone;
+                    $model = $user_model->where($data)->find();
+                    if ($auth_info['mode'] == 'weibo') {
+                        $php_input['wb_openid'] = $data['wb_openid'] = $auth_info['uid'];
+                    } elseif ($auth_info['mode'] == 'wechat') {
+                        $php_input['wx_openid'] = $data['wx_openid'] = $auth_info['openid'];
+                    } elseif ($auth_info['mode'] == 'qq') {
+                        $php_input['qq_openid'] = $data['qq_openid'] = $auth_info['openid'];
+                    }
+                    if($model) {
+                        unset($data['phone']);
+                        $user_model->where(['id'=>$model['id']])->update($data);
+                        session('auth_info',null);
+                        session('userinfo',[
+                            'uid' => $model['id'],
+                            'uname' => $model['name'],
+                            'face' => $model['face']
+                        ]);
+                        session('uid',$model['id']);
+                        $res['code'] = 1;
+                        echo json_encode($res);die;
+                    }
+                }
                 $user_model = new \app\common\model\Users();
                 $model = $user_model->handleReg($php_input);
             } catch (\Exception $e) {
