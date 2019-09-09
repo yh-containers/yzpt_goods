@@ -287,7 +287,7 @@ class Mine extends Common
         $list = [];
         $info = \app\common\model\ViewComment::getList($php_input,$this->user_id)->each(function($item,$index)use(&$list){
             array_push($list,[
-                'uid' => $item['to_uid'],
+                'uid' => $item['uid'],
                 'user_name' => $item['link_to_users']['name'],
                 'user_face' => $item['link_to_users']['face'],
                 'cond_id' => $item['cond_id'],
