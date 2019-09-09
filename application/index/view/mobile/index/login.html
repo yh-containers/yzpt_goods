@@ -23,27 +23,31 @@
 					<a href="{:url('Index/register')}" class="fr">立即注册&gt;</a>
 				</div>
 			</div>
+			{php}$iswx=0;if(strpos($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){ $iswx=1;}{/php}
 			<div class="other_login">
 				<div class="title">其他登录方式</div>
 				<ul class="clearfix">
-					<!--<li>
-						<a href="javascript:;">
+					{if condition="$iswx"}
+					<li>
+						<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid={:\\app\\common\\service\\third\\OpenWx::config('mobile','app_id')}&redirect_uri={:url('index/thirdlogin',['mode'=>'wechat','mobile'=>1],false,true)}&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect">
 							<img src="/assets/index/mobile/images/login_weix.png">
 							<span>微信登录</span>
 						</a>
-					</li>-->
-					<li>
-						<a href="javascript:;">
-							<img src="/assets/index/mobile/images/login_qq.png">
-							<span>QQ登录</span>
-						</a>
 					</li>
+					{else/}
 					<li>
 						<a href="https://api.weibo.com/oauth2/authorize?client_id={:\\app\\common\\service\\third\\Weibo::config('web','app_id')}&response_type=code&redirect_uri={:url('index/thirdlogin',['mode'=>'weibo'],false,true)}">
 							<img src="/assets/index/mobile/images/login_weibo.png">
 							<span>微博登录</span>
 						</a>
 					</li>
+					{/if}
+					<!--<li>
+						<a href="javascript:;">
+							<img src="/assets/index/mobile/images/login_qq.png">
+							<span>QQ登录</span>
+						</a>
+					</li>-->
 				</ul>
 			</div>
 		</div>
@@ -69,24 +73,27 @@
 			<div class="other_login">
 				<div class="title">其他登录方式</div>
 				<ul class="clearfix">
-					<!--<li>
-						<a href="javascript:;">
+					{if condition="$iswx"}
+					<li>
+						<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid={:\\app\\common\\service\\third\\OpenWx::config('mobile','app_id')}&redirect_uri={:url('index/thirdlogin',['mode'=>'wechat','mobile'=>1],false,true)}&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect">
 							<img src="/assets/index/mobile/images/login_weix.png">
 							<span>微信登录</span>
 						</a>
-					</li>-->
-					<li>
-						<a href="javascript:;">
-							<img src="/assets/index/mobile/images/login_qq.png">
-							<span>QQ登录</span>
-						</a>
 					</li>
+					{else/}
 					<li>
 						<a href="https://api.weibo.com/oauth2/authorize?client_id={:\\app\\common\\service\\third\\Weibo::config('web','app_id')}&response_type=code&redirect_uri={:url('index/thirdlogin',['mode'=>'weibo'],false,true)}"><img src="/assets/index/images/wb.png">
 							<img src="/assets/index/mobile/images/login_weibo.png">
 							<span>微博登录</span>
 						</a>
 					</li>
+					{/if}
+					<!--<li>
+						<a href="javascript:;">
+							<img src="/assets/index/mobile/images/login_qq.png">
+							<span>QQ登录</span>
+						</a>
+					</li>-->
 				</ul>
 			</div>
 		</div>
