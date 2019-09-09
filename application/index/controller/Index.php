@@ -9,9 +9,9 @@ class Index extends Common
     public function index(){
         $goods_model = new \app\common\model\Goods();
         //今日特惠
-        $et = strtotime(date('Y-m-d').' 23:59:59');
-        $st = strtotime(date('Y-m-d').' 00:00:00');
-        $today_where = 'status=1 and is_special=1 and update_time between '.$st.' and '.$et;
+        //$et = strtotime(date('Y-m-d').' 23:59:59');
+        //$st = strtotime(date('Y-m-d').' 00:00:00');
+        $today_where = 'status=1';// and is_special=1 and update_time between '.$st.' and '.$et;
         //今日特惠
         $goods['today'] = $goods_model->where($today_where)->field('id,goods_name,goods_image')->order('update_time desc,sort asc')->limit(10)->select();
         //新品推荐
