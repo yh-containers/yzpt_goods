@@ -43,7 +43,7 @@ class Users extends Common
         $model = \app\common\model\Users::get($id);
 
         return view('add',[
-            'model'=>$model
+            'model'=>$model,
         ]);
     }
 
@@ -53,9 +53,48 @@ class Users extends Common
         $id = input('id',0,'intval');
 
         $model = \app\common\model\Users::get($id);
-
+        //获取养分日志
+        $raise_logs = \app\common\model\UsersRaiseLogs::where('uid',$model['id'])->order('id desc')->limit(5)->select();
+        //余额日志
+        $money_logs = \app\common\model\UsersMoneyLog::where('uid',$model['id'])->order('id desc')->limit(5)->select();
+        //邀请
+        $req_info = \app\common\model\Users::where('r_uid1',$model['id'])->select();
         return view('detail',[
-            'model'=>$model
+            'model'=>$model,
+            'raise_logs'=>$raise_logs,
+            'money_logs'=>$money_logs,
+            'req_info'=>$req_info,
+
+        ]);
+    }
+
+    //用户养分日志
+    public function raiseNumLogs()
+    {
+        $id = input('id',0,'intval');
+
+        $model = \app\common\model\Users::get($id);
+        //获取养分日志
+        $list = \app\common\model\UsersRaiseLogs::where('uid',$model['id'])->order('id desc')->paginate();
+        return view('raiseNumLogs',[
+            'model'=>$model,
+            'list'=>$list,
+            'page'=>$list->render()
+        ]);
+    }
+
+    //用户余额日志
+    public function moneyLogs()
+    {
+        $id = input('id',0,'intval');
+
+        $model = \app\common\model\Users::get($id);
+        //获取养分日志
+        $list = \app\common\model\UsersMoneyLog::where('uid',$model['id'])->order('id desc')->paginate();
+        return view('moneyLogs',[
+            'model'=>$model,
+            'list'=>$list,
+            'page'=>$list->render()
         ]);
     }
 }

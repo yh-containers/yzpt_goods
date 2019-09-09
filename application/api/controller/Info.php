@@ -48,6 +48,16 @@ class Info extends Common
         if($is_course){
 
         }
+        $where_fnc='';
+        if(!empty($user_id)){
+            //仅能开自己或公开的文章
+            $where_fnc = function($query)use($user_id){
+              $query->whereOr([['status','=',0],['uid','=',$user_id]]);
+            };
+        }else{
+            $where[] =['status','=',0];//只能看公开的
+        }
+
 
         !empty($uid) && $where[] = ['uid','=',$uid];
         $list =[];
@@ -61,7 +71,7 @@ class Info extends Common
             $query->with(['linkHasFollow'=>function($query)use($user_id){
                 $query->where('uid','=',$user_id);
             }]);
-        }])->where($where)
+        }])->where($where)->where($where_fnc)
             ->order($order)->paginate()
             ->each(function($item,$index)use(&$list,$user_id){
                 $is_follow = empty($item['link_users']['link_has_follow'])?0:1;
@@ -120,7 +130,10 @@ class Info extends Common
             return $this->_resData(0,$e->getMessage());
         }
 
-        return $this->_resData(1,'评论成功',['comment'=>$model->structInfo()]);
+        return $this->_resData(1,'评论成功',[
+            'comment'=>$model->structInfo(),
+//            'num'=>\app\common\model\DyComment::where(['dy_id'=>$model['dy_id']])->count()
+        ]);
     }
 
     //评论--
@@ -128,12 +141,16 @@ class Info extends Common
     {
         $php_input = input();
         try{
-            \app\common\model\DyComment::commentDel($this->user_model,$php_input);
+            $model = \app\common\model\DyComment::commentDel($this->user_model,$php_input);
         }catch (\Exception $e){
             return $this->_resData(0,$e->getMessage());
         }
 
-        return $this->_resData(1,'删除成功');
+
+
+        return $this->_resData(1,'删除成功',[
+            'num'=>\app\common\model\DyComment::where(['dy_id'=>$model['dy_id']])->count(),
+        ]);
     }
 
 
@@ -336,12 +353,14 @@ class Info extends Common
     {
         $php_input = input();
         try{
-            \app\common\model\VideoComment::commentDel($this->user_model,$php_input);
+            $model=\app\common\model\VideoComment::commentDel($this->user_model,$php_input);
         }catch (\Exception $e){
             return $this->_resData(0,$e->getMessage());
         }
 
-        return $this->_resData(1,'删除成功');
+        return $this->_resData(1,'删除成功',[
+            'num'=>\app\common\model\VideoComment::where(['vid'=>$model['vid']])->count()
+        ]);
     }
 
     //发布视频
@@ -409,7 +428,10 @@ class Info extends Common
             return $this->_resData(0,$e->getMessage());
         }
 
-        return $this->_resData(1,'评论成功',['comment'=>$model->structInfo()]);
+        return $this->_resData(1,'评论成功',[
+            'comment'=>$model->structInfo(),
+//            'num'=>\app\common\model\VideoComment::where(['vid'=>$model['vid']])->count()
+        ]);
     }
 
 
