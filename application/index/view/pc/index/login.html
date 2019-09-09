@@ -27,9 +27,9 @@
 				<h2><span>其他方式登陆</span></h2>
 				<ul>
 					<li><a href="javascript:;"><img src="/assets/index/images/qq.png"></a></li>
-					<li><a href="https://api.weibo.com/oauth2/authorize?client_id={:\\app\\common\\service\\third\\Weibo::config('web','app_id')}&response_type=code&redirect_uri={:url('index/thirdlogin',['mode'=>'weibo'],false,true)}"><img src="/assets/index/images/wb.png"></a></li>
+					<li><a href="https://api.weibo.com/oauth2/authorize?client_id={:\\app\\common\\service\\third\\Weibo::config('web','app_id')}&response_type=code&redirect_uri=http://www.chinacarechain.com/index/thirdlogin/mode/wechat"><img src="/assets/index/images/wb.png"></a></li>
 					<!--<li><a href="javascript:;" onclick="$('#login_container').show();"><img src="/assets/index/images/wx.png"></a></li>-->
-					<li><a href="https://open.weixin.qq.com/connect/qrconnect?appid={:\\app\\common\\service\\third\\OpenWx::config('web','app_id')}&scope=snsapi_login&redirect_uri={:url('index/thirdlogin',['mode'=>'wechat'],false,true)}&state=&login_type=jssdk&self_redirect=false" target="_blank"><img src="/assets/index/images/wx.png"></a></li>
+					<li><a href="https://open.weixin.qq.com/connect/qrconnect?appid={:\\app\\common\\service\\third\\OpenWx::config('web','app_id')}&scope=snsapi_login&redirect_uri=http://www.chinacarechain.com/index/thirdlogin/mode/wechat&state=&login_type=jssdk&self_redirect=false" target="_blank"><img src="/assets/index/images/wx.png"></a></li>
 				</ul>
 			</div>
 
