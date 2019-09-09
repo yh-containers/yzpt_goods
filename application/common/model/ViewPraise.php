@@ -33,18 +33,24 @@ class ViewPraise extends BaseModel
 
         $where = [];
         if($user_id){
-            $where[] =['uid','=',$user_id];
+            $where[] =['love_uid','=',$user_id];
         }
         if(!empty($php_input['type'])){
             $where[] =['type','=',$php_input['type']];
         }
-        $list = self::with(['linkUsers'])->whereNotNull('praise_date')->where($where)->order('praise_date desc')->paginate();
+        $list = self::with(['linkLoveUid'])->whereNotNull('praise_date')->where($where)->order('praise_date desc')->paginate();
         return $list;
     }
 
 
 
     public function linkUsers()
+    {
+        return $this->belongsTo('Users','uid');
+    }
+
+
+    public function linkLoveUid()
     {
         return $this->belongsTo('Users','uid');
     }
