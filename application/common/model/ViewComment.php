@@ -49,6 +49,6 @@ class ViewComment extends BaseModel
     //接收者
     public function linkToUsers()
     {
-        return $this->belongsTo('Users','to_uid');
+        return $this->belongsTo('Users','uid');
     }
 }
