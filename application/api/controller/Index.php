@@ -245,7 +245,7 @@ class Index extends Common
         //邀请信息
         if($on_req_info){
             $data['req_info']=[
-                'num'=>$user_model->linkReqUser()->count(),
+                'num'=>$user_model->req_num,
                 'req_raise_num'=>$user_model->req_raise_num,
             ];
         }
