@@ -153,6 +153,18 @@ class Info extends Common
         ]);
     }
 
+    //动态删除--
+    public function dyDel()
+    {
+        $php_input = input();
+        try{
+            \app\common\model\Dynamic::Del($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'删除成功');
+    }
+
 
     //评论列表
     public function dyComList()
@@ -307,6 +319,17 @@ class Info extends Common
         return $this->_resData(1,'获取成功',$data);
     }
 
+    //删除--
+    public function videoDel()
+    {
+        $php_input = input();
+        try{
+            \app\common\model\Video::Del($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'删除成功');
+    }
 
     //视频详情
     public function videoDetail()
@@ -541,6 +564,18 @@ class Info extends Common
         return $this->_resData(1,'获取成功',$data);
     }
 
+
+    //删除--
+    public function actDel()
+    {
+        $php_input = input();
+        try{
+            \app\common\model\Activity::Del($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'删除成功');
+    }
     //活动-发布
     public function activityRelease()
     {

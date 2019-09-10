@@ -158,6 +158,26 @@ class Video extends BaseModel
         return $model;
     }
 
+
+    /**
+     * 删除
+     * @param Users $user_model|null;
+     * @param array $data;
+     * @throws
+     * */
+    public static function Del(Users $user_model=null,array $data=[])
+    {
+        empty($data['id']) && exception('对象异常:id');
+        $model = self::get($data['id']);
+        empty($model) && exception('已被删除');
+        if(!empty($user_model) && $user_model['id']!=$model['uid']){
+            exception('无法进行此操作');
+        }
+        //直接删除
+        $model->delete();
+    }
+
+
     //动态用户
     public function linkUsers()
     {

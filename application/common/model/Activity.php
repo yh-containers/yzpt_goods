@@ -1,11 +1,12 @@
 <?php
 namespace app\common\model;
 
+use think\model\concern\SoftDelete;
 use think\Validate;
 
 class Activity extends BaseModel
 {
-
+    use SoftDelete;
     protected $name='activity';
     public static $fields_online=['线上','线下'];
 
@@ -121,6 +122,23 @@ class Activity extends BaseModel
     }
 
 
+    /**
+     * 删除
+     * @param Users $user_model|null;
+     * @param array $data;
+     * @throws
+     * */
+    public static function Del(Users $user_model=null,array $data=[])
+    {
+        empty($data['id']) && exception('对象异常:id');
+        $model = self::get($data['id']);
+        empty($model) && exception('已删除');
+        if(!empty($user_model) && $user_model['id']!=$model['uid']){
+            exception('无法进行此操作');
+        }
+        //直接删除
+        $model->delete();
+    }
 
     //动态用户
     public function linkUsers()
