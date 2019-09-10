@@ -28,6 +28,7 @@ class Mine extends Common
         $on_user_label = input('on_user_label',0,'intval');
         $on_qr_code = input('on_qr_code',0,'intval'); //二维码
         $on_req_info = input('on_req_info',0,'intval'); //邀请信息
+        $on_req_info = input('on_req_info',0,'intval'); //邀请信息
         $off_user_info = input('off_user_info',0,'intval');//关闭用户基本信息
 
         $data=[];
@@ -36,11 +37,14 @@ class Mine extends Common
             $data['info']=[
                 'id' => $this->user_model['id'],
                 'num' => $this->user_model['qr_code'],
+                'real_name' => $this->user_model['real_name'],
                 'name' => $this->user_model['name'],
                 'face' => $this->user_model['face'],
                 'sex' => $this->user_model['sex'],
                 'sex_name' => \app\common\model\Users::getPropInfo('fields_sex',$this->user_model['sex']),
                 'intro' => $this->user_model['intro'],
+                'age' => $this->user_model['age'],
+                'height' => $this->user_model['height'],
                 'address' => $this->user_model['address'],
                 'birthday' => $this->user_model->birthday,
                 'flag' => empty($this->user_model->py)?'':$this->user_model->py[0],
