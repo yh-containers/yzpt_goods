@@ -370,4 +370,18 @@ class Mine extends Common
     }
 
 
+    
+    //增加数据导入
+    public function healthUpdate()
+    {
+        try{
+            $num = input('num');
+            $type = input('type',0,'intval');
+            \app\common\model\UsersHealth::setHealthData($this->user_model,$num,$type);
+        }catch (\Exception $e){
+            $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'更新成功');
+    }
+    
 }

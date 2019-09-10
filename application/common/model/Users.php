@@ -91,7 +91,7 @@ class Users extends BaseModel
         if(empty($value) || $value<=0){
             return;
         }
-        $this->setBirthdayAttr(date('Y-m-d',strtotime('-'.$value.' year',time())));
+        $this->setAttr('birth_y', date('Y',strtotime('-'.$value.' year',time())));
         return $value;
     }
 
