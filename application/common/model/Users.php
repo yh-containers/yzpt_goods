@@ -207,7 +207,7 @@ class Users extends BaseModel
      * */
     public function regUpdateChatUser()
     {
-
+        $id = $this->getPk();
         $data = $this->getData();
         $config_chat_url = config('chat.url');
         $config_chat_route = config('chat.route');
@@ -216,7 +216,7 @@ class Users extends BaseModel
             if(isset($config_chat_route['reg'])){
                 $user_py_first = empty($data['py'])?'':$data['py'][0];
                 $reg_update_data = [
-                    'user_id' => $data['id'],
+                    'user_id' => $id,
                     'phone' => empty($data['phone'])?'':$data['phone'],
                     'user_name' => empty($data['name'])?'':$data['name'],
                     'user_flag' => $user_py_first,
