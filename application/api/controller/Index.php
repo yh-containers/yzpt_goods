@@ -156,7 +156,7 @@ class Index extends Common
         $where[] = ['status','=',1];
         $list =[];
         $info=\app\common\model\Music::where($where)
-            ->order('sort asc')->paginate()
+            ->order('sort asc')->select()
             ->each(function($item,$index)use(&$list){
                 array_push($list,[
                     'id'=>$item['id'],
