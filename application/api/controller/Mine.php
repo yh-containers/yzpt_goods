@@ -35,7 +35,7 @@ class Mine extends Common
             //用户资料
             $data['info']=[
                 'id' => $this->user_model['id'],
-                'num' => $this->user_model['num'],
+                'num' => $this->user_model['qr_code'],
                 'name' => $this->user_model['name'],
                 'face' => $this->user_model['face'],
                 'sex' => $this->user_model['sex'],

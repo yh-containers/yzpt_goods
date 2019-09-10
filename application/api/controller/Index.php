@@ -189,7 +189,7 @@ class Index extends Common
         //用户资料
         $data['info']=[
             'id' => $user_model['id'],
-            'num' => (string)$user_model['num'],
+            'num' => (string)$user_model['qr_code'],
             'name' => (string)$user_model['name'],
             'face' => (string)$user_model['face'],
             'sex' => (string)$user_model['sex'],

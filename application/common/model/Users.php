@@ -165,19 +165,22 @@ class Users extends BaseModel
 
         parent::init();
 
+        //更新数据
+        self::event('after_update',function($model){
+            $change_data = $model->getChangedData();
+            $update_chat_condition_field = ['phone','user_name','user_face'];
+            foreach ($update_chat_condition_field as $filed){
+                if(array_key_exists($filed,$change_data)){
+                    $model->regUpdateChatUser();
+                    break;
+                }
+            }
+        });
+
         //用户新增事件
         self::event('after_insert', function ($model) {
             //绑定用户
-            $config_chat_url = config('chat.url');
-            $config_chat_route = config('chat.route');
-            if(!empty($config_chat_url)){
-                //注册聊天用户
-                if(isset($config_chat_route['reg'])){
-                    $user_py_first = empty($model['py'])?'':$model['py'][0];
-                    $url = $config_chat_url.$config_chat_route['reg'].'?user_id='.$model['id'].'&user_name='.$model['name'].'&user_flag='.$user_py_first.'&user_face='.self::handleFile($model['face']);
-                    try{ file_get_contents($url);  }catch (\Exception $e){}
-                }
-            }
+            $model->regUpdateChatUser();
 
             //验证是邀请用户
             if(!empty(self::$req_user_model)){
@@ -187,6 +190,10 @@ class Users extends BaseModel
                 $setting_content = json_decode($setting_content,true);
                 $num = isset($setting_content['req_raise_num'])?$setting_content['req_raise_num']:0;
                 $num>0 && self::$req_user_model->recordRaise($num,2,'邀请用户获得:'.$num.'养分');
+                //第二级增加养分
+
+                //注册奖励养分
+
             }
         });
         //养分日志记录
@@ -195,7 +202,35 @@ class Users extends BaseModel
         });
     }
 
+    /**
+     * 注册或更新用户聊天资料
+     * */
+    public function regUpdateChatUser()
+    {
 
+        $data = $this->getData();
+        $config_chat_url = config('chat.url');
+        $config_chat_route = config('chat.route');
+        if(!empty($config_chat_url)){
+            //注册聊天用户
+            if(isset($config_chat_route['reg'])){
+                $user_py_first = empty($data['py'])?'':$data['py'][0];
+                $reg_update_data = [
+                    'user_id' => $data['id'],
+                    'phone' => empty($data['phone'])?'':$data['phone'],
+                    'user_name' => empty($data['name'])?'':$data['name'],
+                    'user_flag' => $user_py_first,
+                    'user_face' => empty($data['face'])?'':self::handleFile($data['face']),
+                ];
+                $query ='';
+                foreach ($reg_update_data as $key=>$vo){
+                    $query .= $key.'='.$vo.'&';
+                }
+                $url = $config_chat_url.$config_chat_route['reg'].'?'.$query;
+                try{ file_get_contents($url);  }catch (\Exception $e){}
+            }
+        }
+    }
 
 
     /**
