@@ -156,7 +156,7 @@ class Index extends Common
         $where[] = ['status','=',1];
         $list =[];
         $info=\app\common\model\Music::where($where)
-            ->order('sort asc')->select()
+            ->order('sort asc')->paginate(100)
             ->each(function($item,$index)use(&$list){
                 array_push($list,[
                     'id'=>$item['id'],
@@ -168,8 +168,7 @@ class Index extends Common
                     'duration'=>$item['duration'],
                 ]);
             });
-//        $data = ['list'=>$list,'total'=>$info->total()];
-        $data = ['list'=>$list,'total'=>0];
+        $data = ['list'=>$list,'total'=>$info->total()];
         return $this->_resData(1,'获取成功',$data);
     }
 
