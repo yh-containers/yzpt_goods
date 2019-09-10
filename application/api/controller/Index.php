@@ -168,7 +168,8 @@ class Index extends Common
                     'duration'=>$item['duration'],
                 ]);
             });
-        $data = ['list'=>$list,'total'=>$info->total()];
+//        $data = ['list'=>$list,'total'=>$info->total()];
+        $data = ['list'=>$list,'total'=>0];
         return $this->_resData(1,'获取成功',$data);
     }
 
