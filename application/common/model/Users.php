@@ -86,6 +86,14 @@ class Users extends BaseModel
         return $value;
     }
 
+    protected function setAgeAttr($value)
+    {
+        if(empty($value) || $value<=0){
+            return;
+        }
+        $this->setBirthdayAttr(date('Y-m-d',strtotime('-'.$value.' year',time())));
+        return $value;
+    }
 
     //自动完成头像
     protected function setNameAttr($value,$data)
@@ -589,6 +597,17 @@ class Users extends BaseModel
     public function modInfo(array $data = [])
     {
         $data = array_filter($data);
+        //验证身高
+        if(!empty($data['height'])){
+            $data['height']<50 && exception('身高不得低于50cm');
+            $data['height']>300 && exception('身高不得低于300cm');
+        }
+        //验证年龄
+        if(!empty($data['age'])){
+            $data['age']<18 && exception('年龄不得低于18岁');
+            $data['age']>130 && exception('年龄不得高于130岁');
+        }
+
         //无修改内容直接返回
         if(empty($data)){ return;}
 
