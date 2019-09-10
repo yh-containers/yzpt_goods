@@ -88,6 +88,12 @@
                             </div>
                         </div>-->
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">签到奖励养分</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="0" name="content[sign_raise_num]" value="{:isset($normal_content['sign_raise_num'])?$normal_content['sign_raise_num']:'0'}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">注册奖励养分</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" placeholder="0" name="content[reg_raise_num]" value="{:isset($normal_content['reg_raise_num'])?$normal_content['reg_raise_num']:'0'}" >
@@ -112,6 +118,35 @@
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" placeholder="0" name="content[req_f_raise_num]" value="{:isset($normal_content['req_f_raise_num'])?$normal_content['req_f_raise_num']:'0'}" >
                                 <span class="help-block text-red">邀请者的邀请者获得养分</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">发布动态</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="0" name="content[dynamic_raise_num]" value="{:isset($normal_content['dynamic_raise_num'])?$normal_content['dynamic_raise_num']:'0'}" >
+                                <span class="help-block text-red">用户发布动态获得养分</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">发布视频</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="0" name="content[video_raise_num]" value="{:isset($normal_content['video_raise_num'])?$normal_content['video_raise_num']:'0'}" >
+                                <span class="help-block text-red">用户每发布视频获得养分</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">报名参加活动</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="0" name="content[activity_raise_num]" value="{:isset($normal_content['activity_raise_num'])?$normal_content['activity_raise_num']:'0'}" >
+                                <span class="help-block text-red">用户报名参加活动获得养分</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">健康数据有效更新</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="0" name="content[healthy_raise_num]" value="{:isset($normal_content['healthy_raise_num'])?$normal_content['healthy_raise_num']:'0'}" >
+                                <span class="help-block text-red">健康数据有效更新获得养分</span>
                             </div>
                         </div>
 

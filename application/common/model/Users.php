@@ -195,16 +195,13 @@ class Users extends BaseModel
                     if($f_num>0){
                         $up_user_model = self::get($model['r_uid2']);
                         if($up_user_model){
-                            $up_user_model->setInc('raise_num',$f_num);
                             $up_user_model->recordRaise($f_num,4,'有用户被邀请奖励:'.$f_num.'养分');
                         }
-
                     }
                 }
                 //注册奖励养分
                 $reg_num = isset($setting_content['reg_raise_num'])?$setting_content['reg_raise_num']:0;
                 if($reg_num>0){
-                    $model->setInc('raise_num',$reg_num);
                     $model->recordRaise($reg_num,3,'新用户注册获得:'.$reg_num.'养分');
                 }
             }

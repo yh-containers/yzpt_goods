@@ -27,7 +27,9 @@ class UsersSign extends BaseModel
             exception('您今天已签到过');
         }
         //活动养分数量
-        $num = 10;
+        $setting_content = SysSetting::getContent('normal');
+        $setting_content = json_decode($setting_content,true);
+        $num = isset($setting_content['sign_raise_num'])?$setting_content['sign_raise_num']:0;
         try{
             \think\Db::startTrans();
             //增加签到
