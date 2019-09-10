@@ -168,7 +168,7 @@ class Users extends BaseModel
         //更新数据
         self::event('after_update',function($model){
             $change_data = $model->getChangedData();
-            $update_chat_condition_field = ['phone','name','face'];
+            $update_chat_condition_field = ['phone','name','face','intro'];
             foreach ($update_chat_condition_field as $filed){
                 if(array_key_exists($filed,$change_data)){
                     $model->regUpdateChatUser();
@@ -207,8 +207,8 @@ class Users extends BaseModel
      * */
     public function regUpdateChatUser()
     {
-        $id = $this->getPk();
         $data = $this->getData();
+        $id = $this->getOrigin('id');
         $config_chat_url = config('chat.url');
         $config_chat_route = config('chat.route');
         if(!empty($config_chat_url)){
@@ -216,18 +216,16 @@ class Users extends BaseModel
             if(isset($config_chat_route['reg'])){
                 $user_py_first = empty($data['py'])?'':$data['py'][0];
                 $reg_update_data = [
-                    'user_id' => $id,
+                    'user_id' => empty($data['id'])?$id:$data['id'],
                     'phone' => empty($data['phone'])?'':$data['phone'],
                     'user_name' => empty($data['name'])?'':$data['name'],
                     'user_flag' => $user_py_first,
                     'user_face' => empty($data['face'])?'':self::handleFile($data['face']),
+                    'user_intro' => empty($data['intro'])?'':$data['intro'],
                 ];
-                $query ='';
-                foreach ($reg_update_data as $key=>$vo){
-                    $query .= $key.'='.$vo.'&';
-                }
+                $query =http_build_query($reg_update_data);
                 $url = $config_chat_url.$config_chat_route['reg'].'?'.$query;
-                try{ file_get_contents($url);  }catch (\Exception $e){}
+                try{ file_get_contents($url);  }catch (\Exception $e){dump($e->getMessage());}
             }
         }
     }

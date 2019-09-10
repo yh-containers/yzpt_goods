@@ -1,6 +1,6 @@
 <?php
 return [
-    'url'=>'http://chat.chinacarechain.cn/',
+    'url'=>'http://chat.chinacarechain.com/',
     'route'=>[
         'reg'=>'HandleUser/regOrUpdate',
     ]
