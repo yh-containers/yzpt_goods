@@ -19,7 +19,7 @@ class ActJoin extends BaseModel
             $num = isset($setting_content['activity_raise_num'])?$setting_content['activity_raise_num']:0;
             $user_model = Users::get($model['uid']);
             if($num>0 && !empty($user_model)){
-                $user_model->recordRaise($num,5,'参加活动获得:'.$num.'养分');
+                $user_model->recordRaise($num,7,'参加活动获得:'.$num.'养分');
             }
         });
     }

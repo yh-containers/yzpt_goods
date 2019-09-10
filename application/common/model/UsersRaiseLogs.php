@@ -15,6 +15,9 @@ class UsersRaiseLogs extends BaseModel
         ['name'=>'用户注册'],
         ['name'=>'邀请用户'],
         ['name'=>'发布动态'],
+        ['name'=>'发布视频'],
+        ['name'=>'参加活动'],
+        ['name'=>'更新健康数据'],
     ];
 
     /**

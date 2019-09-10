@@ -68,7 +68,7 @@ class Video extends BaseModel
             $num = isset($setting_content['video_raise_num'])?$setting_content['video_raise_num']:0;
             $user_model = Users::get($model['uid']);
             if($num>0 && !empty($user_model)){
-                $user_model->recordRaise($num,5,'发布视频获得:'.$num.'养分');
+                $user_model->recordRaise($num,6,'发布视频获得:'.$num.'养分');
             }
         });
     }
