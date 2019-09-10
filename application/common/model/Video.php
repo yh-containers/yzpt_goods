@@ -27,6 +27,11 @@ class Video extends BaseModel
         return empty($value)?'00:00:00':sprintf('%02d:%02d:%02d',substr(intval($value/60/60*100),0,-2),intval($value/60%60),intval($value%60));
     }
 
+    protected function setTitleAttr($value)
+    {
+        return empty($value)?'':strip_tags($value);
+    }
+
     //定位信息
     protected function setLocationPoiAttr($value)
     {

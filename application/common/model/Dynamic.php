@@ -45,6 +45,11 @@ class Dynamic extends BaseModel
         return $data;
     }
 
+    protected function setContentAttr($value)
+    {
+        return empty($value)?'':strip_tags($value);
+    }
+
 
     //设置poi信息
     protected function setLocationPoiAttr($value)
