@@ -59,4 +59,12 @@ class Test extends Common
         $audio = input('audio');
         dump(save_music($audio));
     }
+
+    //同步更新聊天数据
+    public function chatUserUpdate()
+    {
+        \app\common\model\Users::select()->each(function($item,$index){
+            $item->regUpdateChatUser();
+        });
+    }
 }

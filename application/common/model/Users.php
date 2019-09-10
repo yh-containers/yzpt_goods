@@ -13,7 +13,7 @@ class Users extends BaseModel
     //数据库表名
     protected $name = 'users';
     //自动完成
-    protected $insert=['face','name','status'=>1,'qr_code'];
+    protected $insert=['face','name','status'=>1,'qr_code','raise_num'=>0];
 
     //养分变更自从
     protected $c_raise_type=0;//类型
@@ -126,7 +126,6 @@ class Users extends BaseModel
             !empty(self::$req_user_model['r_uid2']) && $this->setAttr('r_uid3',self::$req_user_model['r_uid2']);
         }
 
-
         return $value;
 
     }
@@ -191,9 +190,23 @@ class Users extends BaseModel
                 $num = isset($setting_content['req_raise_num'])?$setting_content['req_raise_num']:0;
                 $num>0 && self::$req_user_model->recordRaise($num,2,'邀请用户获得:'.$num.'养分');
                 //第二级增加养分
+                if(!empty($model['r_uid2'])){
+                    $f_num = isset($setting_content['req_f_raise_num'])?$setting_content['req_f_raise_num']:0;
+                    if($f_num>0){
+                        $up_user_model = self::get($model['r_uid2']);
+                        if($up_user_model){
+                            $up_user_model->setInc('raise_num',$f_num);
+                            $up_user_model->recordRaise($f_num,4,'有用户被邀请奖励:'.$f_num.'养分');
+                        }
 
+                    }
+                }
                 //注册奖励养分
-
+                $reg_num = isset($setting_content['reg_raise_num'])?$setting_content['reg_raise_num']:0;
+                if($reg_num>0){
+                    $model->setInc('raise_num',$reg_num);
+                    $model->recordRaise($reg_num,3,'新用户注册获得:'.$reg_num.'养分');
+                }
             }
         });
         //养分日志记录
@@ -307,7 +320,6 @@ class Users extends BaseModel
                 $data['phone'] = $account;
                 //邀请码
                 !empty($php_input['req_code']) && $data['req_code'] = $php_input['req_code'];
-
                 if(!empty($auth_info) && isset($auth_info['mode']) && isset($auth_info['open_id']) && isset($auth_info['access_token'])){
                     //新注册使用第三方基本信息
                     try{

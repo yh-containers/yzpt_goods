@@ -114,8 +114,6 @@ class Mine extends Common
                 $state=2;
             }
         }
-
-
         return $this->_resData(1,$model->follow_time?'关注成功':'已取消关注',['state'=>$state]);
     }
 
