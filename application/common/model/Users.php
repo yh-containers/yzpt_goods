@@ -168,7 +168,7 @@ class Users extends BaseModel
         //更新数据
         self::event('after_update',function($model){
             $change_data = $model->getChangedData();
-            $update_chat_condition_field = ['phone','user_name','user_face'];
+            $update_chat_condition_field = ['phone','name','face'];
             foreach ($update_chat_condition_field as $filed){
                 if(array_key_exists($filed,$change_data)){
                     $model->regUpdateChatUser();
