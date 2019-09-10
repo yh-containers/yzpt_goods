@@ -19,6 +19,15 @@ class Upload
         $this->fsizeLimit = empty(config('qiniu.fsizeLimit'))?0:config('qiniu.fsizeLimit');
     }
 
+    //获取auth
+    public static function authorization($url,$body=null,$contentType=null)
+    {
+        $auth = new Auth(config('qiniu.ak'), config('qiniu.sk'));
+
+        $auth = $auth->authorization($url,$body,$contentType);
+        return $auth[key($auth)];
+    }
+
     //获取上传凭证
     public function info($type='image')
     {

@@ -11,6 +11,8 @@ class Index extends Common
 
     public function index()
     {
+
+
         //获取当前用户id写入session
         $id = Session('user_id');
         $data = SysManager::find($id);

@@ -8,6 +8,19 @@ use think\Validate;
 class BaseModel extends Model
 {
     public static $fields_status = ['--','正常','关闭'];
+
+    public static function init()
+    {
+        parent::init();
+        //注册七牛文件删除事件
+        self::observe(\app\common\event\DeleteQnResource::class);
+
+    }
+
+    //删除文件
+
+
+
     //状态
     public static function getPropInfo($propOrFunc,$key=null,$field=null)
     {

@@ -9,4 +9,6 @@ return [
     'is_use'=>1,//开启七牛上传
     'file_prefix'=> '/qn_',
     'preview_domain'=> 'http://qiniu.chinacarechain.com/', //域名
+    //是否删除数据
+    'is_open_del'=>0,
 ];

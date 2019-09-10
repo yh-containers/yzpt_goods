@@ -162,6 +162,9 @@ class Users extends BaseModel
 
     public static function init()
     {
+
+        parent::init();
+
         //用户新增事件
         self::event('after_insert', function ($model) {
             //绑定用户
