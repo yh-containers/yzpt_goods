@@ -109,7 +109,7 @@ class Create extends Common {
         $where[] = ['status','=',1];
         $list =[];
         $info=\app\common\model\Music::where($where)
-            ->order('sort asc')->paginate()
+            ->order('sort asc')->paginate(100)
             ->each(function($item,$index)use(&$list){
                 array_push($list,[
                     'id'=>$item['id'],
