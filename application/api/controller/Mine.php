@@ -88,7 +88,7 @@ class Mine extends Common
         //邀请信息
         if($on_req_info){
             $data['req_info']=[
-                'num'=>$this->user_model->linkReqUser()->count(),
+                'num'=>$this->user_model->req_num,
                 'req_raise_num'=>$this->user_model->req_raise_num,
             ];
         }
