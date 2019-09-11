@@ -193,7 +193,7 @@ class Index extends Common
             'name' => (string)$user_model['name'],
             'real_name' => (string)$user_model['real_name'],
             'face' => (string)$user_model['face'],
-            'sex' => (string)$user_model['sex'],
+            'sex' => (int)$user_model['sex'],
             'sex_name' => empty($user_model)?'':\app\common\model\Users::getPropInfo('fields_sex',$user_model['sex']),
             'age' => (string)$user_model['age'],
             'height' => (string)$user_model['height'],

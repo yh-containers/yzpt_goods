@@ -40,7 +40,7 @@ class Mine extends Common
                 'real_name' => $this->user_model['real_name'],
                 'name' => $this->user_model['name'],
                 'face' => $this->user_model['face'],
-                'sex' => $this->user_model['sex'],
+                'sex' => (int)$this->user_model['sex'],
                 'sex_name' => \app\common\model\Users::getPropInfo('fields_sex',$this->user_model['sex']),
                 'intro' => $this->user_model['intro'],
                 'age' => $this->user_model['age'],
