@@ -393,5 +393,24 @@ class Mine extends Common
         }
         return $this->_resData(1,'更新成功');
     }
+
+    //健康报表
+    public function healthResult()
+    {
+        $data=[
+            'list'=>[
+                ['intro'=>'累计步数为98903步','color'=>''],
+                ['intro'=>'体重116kg','color'=>''],
+                ['intro'=>'左眼视力正常','color'=>'red'],
+                ['intro'=>'血压正常','color'=>''],
+                ['intro'=>'血脂正常','color'=>''],
+                ['intro'=>'血糖正常','color'=>''],
+                ['intro'=>'心率正常','color'=>''],
+            ],
+            'suggest'=>'建议注意调整日常生活饮食，遵循良好作息习惯，增加日常活动量，保持良好的身体状态。',
+        ];
+
+        return $this->_resData(1,'更新成功',$data);
+    }
     
 }
