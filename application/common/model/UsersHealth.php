@@ -84,7 +84,7 @@ class UsersHealth extends BaseModel
                 $mode_title = isset($mode['title'])?$mode['title']:[];
                 $item_data = $item->toArray();
                 !empty($item_data['date']) && $item_data['date'] = (int)substr($item_data['date'],-2);
-                if($mode_type==='area'){
+                if($mode_type=='area'){
                     //眼睛
                     $arr = explode(',', $item_data['num']);
                     foreach ($mode_title as $key=>&$vo){
