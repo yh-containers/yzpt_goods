@@ -12,7 +12,10 @@ class UsersHealth extends BaseModel
     public static $fields_type = [
         ['name'=>'步数','month'=>'','list'=>[]],
         ['name'=>'体重','month'=>'','list'=>[]],
-        ['name'=>'视力','month'=>'','list'=>[],'mode'=>['type'=>'c','title'=>['左眼','右眼']],'is_only'=>true], //单条记录
+        ['name'=>'视力','month'=>'','list'=>[],'mode'=>['type'=>'area','title'=>[
+            ['name'=>'左眼','value'=>''],
+            ['name'=>'右眼','value'=>'']
+        ]],'is_only'=>true], //单条记录
         ['name'=>'血压','month'=>'','list'=>[]],
         ['name'=>'血糖','month'=>'','list'=>[]],
         ['name'=>'血脂','month'=>'','list'=>[]],
@@ -71,13 +74,24 @@ class UsersHealth extends BaseModel
         //清空不要数据
         foreach ($type_info as &$vo){
             $vo['month'] = substr($month,0,-3);
-            unset($vo['is_only']);
         }
 
         self::where($where)->order('date desc')->select()->each(function($item,$index)use(&$type_info){
             if(isset($type_info[$item['type']])){
+                $is_only = isset($type_info[$item['type']]['is_only']) ? $type_info[$item['type']]['is_only'] : false;
+                $mode = isset($type_info[$item['type']]['mode'])?$type_info[$item['type']]['mode']:[];
+                $mode_type =isset($mode['type'])?$mode['type']:'';
+                $mode_title = isset($mode['title'])?$mode['title']:[];
                 $item_data = $item->toArray();
                 !empty($item_data['date']) && $item_data['date'] = (int)substr($item_data['date'],-2);
+                if($mode_type==='area'){
+                    //眼睛
+                    $arr = explode(',', $item_data['num']);
+                    foreach ($mode_title as $key=>&$vo){
+                        $vo['value'] = isset($arr[$key])?$arr[$key]:'';
+                    }
+                    $item_data['num']=$mode_title;
+                }
                 $type_info[$item['type']]['list'][] = $item_data;
             }
         });
