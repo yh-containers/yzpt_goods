@@ -10,13 +10,13 @@ class UsersHealth extends BaseModel
      * */
     protected $user_model;
     public static $fields_type = [
-        ['name'=>'步数'],
-        ['name'=>'体重'],
-        ['name'=>'视力','is_only'=>true], //单条记录
-        ['name'=>'血压'],
-        ['name'=>'血糖'],
-        ['name'=>'血脂'],
-        ['name'=>'心率'],
+        ['name'=>'步数','month'=>'','list'=>[]],
+        ['name'=>'体重','month'=>'','list'=>[]],
+        ['name'=>'视力','month'=>'','list'=>[],'mode'=>['type'=>'c','title'=>['左眼','右眼']],'is_only'=>true], //单条记录
+        ['name'=>'血压','month'=>'','list'=>[]],
+        ['name'=>'血糖','month'=>'','list'=>[]],
+        ['name'=>'血脂','month'=>'','list'=>[]],
+        ['name'=>'心率','month'=>'','list'=>[]],
     ];
 
     public static function init()
@@ -34,6 +34,58 @@ class UsersHealth extends BaseModel
              }
         });
     }
+
+
+
+    /**
+     * 列表数据--
+     * @param  $php_input array 数据
+     * @param  $user_id int 用户id
+     * @throws
+     * @return array
+     * */
+    public static function getTypeList(array $php_input=[],$user_id=0)
+    {
+
+        $where = [];
+        if($user_id){
+            $where[] =['uid','=',$user_id];
+        }
+
+        //按月查看
+        $month = empty($php_input['month'])?date('Y-m-01'):date('Y-m-01',strtotime($php_input['month']));
+        $next_month = date('Y-m-01',strtotime('+1 month',strtotime($month)));
+        $where[] = ['date','>=',$month];
+        $where[] = ['date','<',$next_month];
+
+        //按类型查看
+        if(isset($php_input['type']) && is_numeric($php_input['type'])){
+            $where[] = ['type','=',$php_input['type']];
+            $type_info = self::getPropInfo('fields_type',$php_input['type']);
+            $type_info = empty($type_info)?[]:[$type_info];
+        }else{
+            //将数据分组
+            $type_info = self::getPropInfo('fields_type');
+        }
+
+        //清空不要数据
+        foreach ($type_info as &$vo){
+            $vo['month'] = substr($month,0,-3);
+            unset($vo['is_only']);
+        }
+
+        self::where($where)->order('date desc')->select()->each(function($item,$index)use(&$type_info){
+            if(isset($type_info[$item['type']])){
+                $item_data = $item->toArray();
+                !empty($item_data['date']) && $item_data['date'] = (int)substr($item_data['date'],-2);
+                $type_info[$item['type']]['list'][] = $item_data;
+            }
+        });
+
+        return $type_info;
+    }
+
+
 
     /**
      * 记录健康数据

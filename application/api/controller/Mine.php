@@ -369,6 +369,15 @@ class Mine extends Common
         return $this->_resData(1,'获取成功',$data);
     }
 
+    //健康数据
+    public function health()
+    {
+        $user_id = input('user_id',$this->user_id,'intval');
+        $php_input = input();
+        $list = \app\common\model\UsersHealth::getTypeList( $php_input,$user_id);
+        $data = ['list'=>$list];
+        return $this->_resData(1,'获取成功',$data);
+    }
 
     
     //增加数据导入

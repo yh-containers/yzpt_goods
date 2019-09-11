@@ -196,6 +196,7 @@ class Users extends BaseModel
                 $setting_content = SysSetting::getContent('normal');
                 $setting_content = json_decode($setting_content,true);
                 $num = isset($setting_content['req_raise_num'])?$setting_content['req_raise_num']:0;
+                self::$req_user_model->setInc('req_raise_num',$num); //记录邀请获得养分总和
                 $num>0 && self::$req_user_model->recordRaise($num,2,'邀请用户获得:'.$num.'养分');
                 //第二级增加养分
                 if(!empty($model['r_uid2'])){
