@@ -12,7 +12,7 @@ class UsersHealth extends BaseModel
     public static $fields_type = [
         ['name'=>'步数','month'=>'','list'=>[]],
         ['name'=>'体重','month'=>'','list'=>[]],
-        ['name'=>'视力','month'=>'','list'=>[],'mode'=>['type'=>'area','title'=>[
+        ['name'=>'视力','month'=>'','mode'=>['type'=>'area','title'=>[
             ['name'=>'左眼','value'=>''],
             ['name'=>'右眼','value'=>'']
         ]],'is_only'=>true], //单条记录
@@ -90,9 +90,9 @@ class UsersHealth extends BaseModel
                     foreach ($mode_title as $key=>&$vo){
                         $vo['value'] = isset($arr[$key])?$arr[$key]:'';
                     }
-                    $item_data['num']=$mode_title;
+                    $type_info[$item['type']]['mode']['title']=$mode_title;
                 }
-                $type_info[$item['type']]['list'][] = $item_data;
+                isset($type_info[$item['type']]['list']) && $type_info[$item['type']]['list'][] = $item_data;
             }
         });
 
