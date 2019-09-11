@@ -398,9 +398,12 @@ class Mine extends Common
     public function healthResult()
     {
         $data=[
+            'img'=>$this->user_model->face,
+            'date'=>date('Y-m-d'),
+            'number'=>99,
             'list'=>[
-                ['intro'=>'累计步数为98903步','color'=>''],
-                ['intro'=>'体重116kg','color'=>''],
+                ['intro'=>'累计步数为93步','color'=>''],
+                ['intro'=>'体重80kg','color'=>''],
                 ['intro'=>'左眼视力正常','color'=>'red'],
                 ['intro'=>'血压正常','color'=>''],
                 ['intro'=>'血脂正常','color'=>''],
