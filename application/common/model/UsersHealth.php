@@ -103,7 +103,7 @@ class UsersHealth extends BaseModel
                     }
                     $type_info[$item['type']]['mode']['title']=$mode_title;
                 }
-                $type_info[$item['type']]['list']['value'][$item_data['date']-1] = $item_data['num'];
+                $type_info[$item['type']]['list']['value'][$item_data['date']-1] = is_numeric($item_data['num'])?number_format($item_data['num'],2):$item_data['num'];
 
             }
         });
