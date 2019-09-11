@@ -372,9 +372,10 @@ class Mine extends Common
     //健康数据
     public function health()
     {
+        $deep = input('deep',0,'intval');
         $user_id = input('user_id',$this->user_id,'intval');
         $php_input = input();
-        $list = \app\common\model\UsersHealth::getTypeList( $php_input,$user_id);
+        $list = \app\common\model\UsersHealth::getTypeList( $php_input,$user_id,$deep);
         $data = ['list'=>$list];
         return $this->_resData(1,'获取成功',$data);
     }

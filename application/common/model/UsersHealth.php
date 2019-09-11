@@ -44,10 +44,11 @@ class UsersHealth extends BaseModel
      * 列表数据--
      * @param  $php_input array 数据
      * @param  $user_id int 用户id
+     * @param  $deep int 深度
      * @throws
      * @return array
      * */
-    public static function getTypeList(array $php_input=[],$user_id=0)
+    public static function getTypeList(array $php_input=[],$user_id=0,$deep=0)
     {
 
         $where = [];
@@ -103,7 +104,7 @@ class UsersHealth extends BaseModel
                     }
                     $type_info[$item['type']]['mode']['title']=$mode_title;
                 }
-                $type_info[$item['type']]['list']['value'][$item_data['date']-1] = is_numeric($item_data['num'])?(float)number_format($item_data['num'],2):$item_data['num'];
+                $type_info[$item['type']]['list']['value'][$item_data['date']-1] = is_numeric($item_data['num'])?(float)sprintf('%.2f',$item_data['num']):$item_data['num'];
 
             }
         });
@@ -137,6 +138,7 @@ class UsersHealth extends BaseModel
         }else{
 
         }
+
         $model->user_model = $user_model;
         $model->setAttr('type',$type);
         $model->uid = $user_model->id;
