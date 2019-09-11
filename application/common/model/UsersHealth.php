@@ -54,12 +54,21 @@ class UsersHealth extends BaseModel
         if($user_id){
             $where[] =['uid','=',$user_id];
         }
-
         //按月查看
         $month = empty($php_input['month'])?date('Y-m-01'):date('Y-m-01',strtotime($php_input['month']));
         $next_month = date('Y-m-01',strtotime('+1 month',strtotime($month)));
         $where[] = ['date','>=',$month];
         $where[] = ['date','<',$next_month];
+        //月份所有天数
+        $month_day = [];
+        $last_day = (int)date('d',strtotime('+1 month -1 day',strtotime($month)));
+        if(substr($month,0,-3)==date('Y-m')){
+            //本月
+            $last_day = (int)date('d');
+        }
+        for ($i=1;$i<=$last_day;$i++){
+            array_push($month_day,$i);
+        }
 
         //按类型查看
         if(isset($php_input['type']) && is_numeric($php_input['type'])){
@@ -74,9 +83,11 @@ class UsersHealth extends BaseModel
         //清空不要数据
         foreach ($type_info as &$vo){
             $vo['month'] = substr($month,0,-3);
+            $vo['list']['days'] = $month_day;
+            $vo['list']['value'] = array_fill(0,$last_day,0);
         }
 
-        self::where($where)->order('date desc')->select()->each(function($item,$index)use(&$type_info){
+        self::where($where)->order('date asc')->select()->each(function($item,$index)use(&$type_info){
             if(isset($type_info[$item['type']])){
                 $is_only = isset($type_info[$item['type']]['is_only']) ? $type_info[$item['type']]['is_only'] : false;
                 $mode = isset($type_info[$item['type']]['mode'])?$type_info[$item['type']]['mode']:[];
@@ -92,7 +103,8 @@ class UsersHealth extends BaseModel
                     }
                     $type_info[$item['type']]['mode']['title']=$mode_title;
                 }
-                isset($type_info[$item['type']]['list']) && $type_info[$item['type']]['list'][] = $item_data;
+                $type_info[$item['type']]['list']['value'][$item_data['date']-1] = $item_data['num'];
+
             }
         });
 
