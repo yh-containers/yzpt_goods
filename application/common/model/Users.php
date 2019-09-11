@@ -189,11 +189,11 @@ class Users extends BaseModel
             //绑定用户
             $model->regUpdateChatUser();
 
-            self::$req_user_model->setInc('req_num');
             $setting_content = SysSetting::getContent('normal');
             $setting_content = json_decode($setting_content,true);
             //验证是邀请用户
             if(!empty(self::$req_user_model)){
+                self::$req_user_model->setInc('req_num');
                 //增加邀请人数
                 $num = isset($setting_content['req_raise_num'])?$setting_content['req_raise_num']:0;
                 self::$req_user_model->setInc('req_raise_num',$num); //记录邀请获得养分总和
