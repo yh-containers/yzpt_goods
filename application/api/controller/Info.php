@@ -282,7 +282,7 @@ class Info extends Common
         $user_id = $this->user_id;
         $where = [];
         !empty($uid) && $where[] = ['uid','=',$uid];
-        !empty($keyword) && $where[] = ['title','like','%'.$keyword.'%'];
+        !empty($keyword) && $where[] = ['title|labels','like','%'.$keyword.'%'];
 
         $list =[];
         $info=\app\common\model\Video::with(['linkCommentCount'
