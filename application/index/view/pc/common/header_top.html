@@ -5,17 +5,17 @@
                 <a href="/">返回首页</a>
                 {if condition="$Think.session.uid"}
                 <a href="/Member/index">{$Think.session.userinfo.uname}</a>
-                <a href="{:url('Index/loginout')}" class="reg">退出</a>
+                <a href="/Index/loginout" class="reg">退出</a>
                 {else/}
-                <a href="{:url('Index/login')}">请登录</a>
-                <a href="{:url('Index/register')}" class="reg">免费注册</a>
+                <a href="/Index/login">请登录</a>
+                <a href="/Index/register" class="reg">免费注册</a>
                 {/if}
             </div>
         </div>
         <div class="header_top_right fr">
             <ul class="clearfix">
                 <li>
-                    <a href="{:url('Member/index')}">我的养众</a>
+                    <a href="/Member/index">我的养众</a>
                     <!--<ul class="sub">
                         <li><a href="release_product.html">发布商品</a></li>
                         <li><a href="product_management.html">商品管理</a></li>
@@ -23,7 +23,7 @@
                         <li><a href="credit_card.html">信用卡</a></li>
                     </ul>-->
                 </li>
-                <li><a href="{:url('Order/cart')}">购物车{if($cart_count)}（{$cart_count}）{/if}</a></li>
+                <li><a href="/Order/cart">购物车{if($cart_count)}（{$cart_count}）{/if}</a></li>
                 <li><a href="javascript:;">在线客服</a></li>
             </ul>
         </div>

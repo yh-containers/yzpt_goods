@@ -8,11 +8,11 @@
                 <li>
                     <i class="icon"><img src="{$cate.icon}"></i>
                     <div class="text">
-                        <h2><a href="{:url('Goods/goods_list',['cate_id'=>$cate['id']])}">{$cate.cate_name}</a></h2>
+                        <h2><a href="/Goods/goods_list/cate_id/{$cate['id']}">{$cate.cate_name}</a></h2>
                          <p>
                              {volist name="cate.link_child_cate" id="child_cates" key="cik"}
                              {if condition="$cik elt 3"}
-                             <a href="{:url('Goods/goods_list',['cate_id'=>$child_cates['id']])}">{$child_cates.cate_name}</a><span>{if condition="$cik lt 3"}|{/if}</span>
+                             <a href="/Goods/goods_list/cate_id/{$child_cates['id']}">{$child_cates.cate_name}</a><span>{if condition="$cik lt 3"}|{/if}</span>
                              {/if}
                              {/volist}
                          </p>
@@ -21,10 +21,10 @@
                         <ul>
                             {volist name="cate.link_child_cate" id="child_cate"}
                             <li>
-                                <div class="one"><a href="{:url('Goods/goods_list',['cate_id'=>$child_cate['id']])}">{$child_cate.cate_name}</a></div>
+                                <div class="one"><a href="/Goods/goods_list/cate_id/{$child_cate['id']}">{$child_cate.cate_name}</a></div>
                                 <div class="two">
                                     {volist name="child_cate.link_child_cate" id="child_cate2"}
-                                    <a href="{:url('Goods/goods_list',['cate_id'=>$child_cate2['id']])}">{$child_cate2.cate_name}</a>
+                                    <a href="/Goods/goods_list/cate_id/{$child_cate2['id']}">{$child_cate2.cate_name}</a>
                                     {/volist}
                                 </div>
                             </li>

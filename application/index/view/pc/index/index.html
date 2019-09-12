@@ -18,10 +18,10 @@
 <div class="main">
     <div class="advertising w1200 clearfix">
         {if($goods['bg'])}
-        {if($goods['bg_left'])}<div class="img"><a href="{:url('Goods/detail',['id'=>$goods['bg_left']['id']])}"><img src="{$goods['bg_left']['zd_img']}"></a></div>{/if}
+        {if($goods['bg_left'])}<div class="img"><a href="/Goods/detail/id/{$goods['bg_left']['id']}"><img src="{$goods['bg_left']['zd_img']}"></a></div>{/if}
         <ul class="clearfix">
             {volist name="goods.bg" id="bg_goods" key="bk"}
-            <li><a href="{:url('Goods/detail',['id'=>$bg_goods['id']])}"><img src="{$bg_goods.zd_img}"></a></li>
+            <li><a href="/Goods/detail/id/{$bg_goods['id']}"><img src="{$bg_goods.zd_img}"></a></li>
             {/volist}
             <li>
                 <a href="javascript:;"><img src="/assets/index/images/adv07.jpg"></a>
@@ -45,7 +45,7 @@
             <div class="slideBox">
                 <ul>
                     {volist name="goods.new" id="goods_new"}
-                    <li><a href="{:url('Goods/detail',['id'=>$goods_new['id']])}"><img src="{$goods_new.goods_image}"><span>{$goods_new.goods_name}</span></a></li>
+                    <li><a href="/Goods/detail/id/{$goods_new['id']}"><img src="{$goods_new.goods_image}"><span>{$goods_new.goods_name}</span></a></li>
                     {/volist}
                 </ul>
             </div><!-- slideBox End -->
@@ -53,7 +53,7 @@
             <div class="slideBox">
                 <ul>
                     {volist name="goods.special" id="goods_special"}
-                    <li><a href="{:url('Goods/detail',['id'=>$goods_special['id']])}"><img src="{$goods_special.goods_image}"><span>{$goods_special.goods_name}</span></a></li>
+                    <li><a href="/Goods/detail/id/{$goods_special['id']}"><img src="{$goods_special.goods_image}"><span>{$goods_special.goods_name}</span></a></li>
                     {/volist}
                 </ul>
             </div><!-- slideBox End -->
@@ -61,7 +61,7 @@
             <div class="slideBox">
                 <ul>
                     {volist name="goods.hot" id="goods_hot"}
-                    <li><a href="{:url('Goods/detail',['id'=>$goods_hot['id']])}"><img src="{$goods_hot.goods_image}"><span>{$goods_hot.goods_name}</span></a></li>
+                    <li><a href="/Goods/detail/id/{$goods_hot['id']}"><img src="{$goods_hot.goods_image}"><span>{$goods_hot.goods_name}</span></a></li>
                     {/volist}
                 </ul>
             </div><!-- slideBox End -->
@@ -70,7 +70,7 @@
                 <ul>
                     {volist name="goods.today" id="goods_today"}
                     <li>
-                        <a href="{:url('Goods/detail',['id'=>$goods_today['id']])}">
+                        <a href="/Goods/detail/id/{$goods_today['id']}">
                             <img src="{$goods_today.goods_image}">
                             <span>{$goods_today.goods_name}</span>
                         </a>
@@ -92,27 +92,27 @@
             <div class="left">
                 {volist name="cg.goods_list" id="lg" key="lk"}
                 {if condition="$lk elt 2"}
-                <a href="{:url('Goods/detail',['id'=>$lg['id']])}"><img src="{$lg.tuijian_img}"></a>
+                <a href="/Goods/detail/id/{$lg.id}"><img src="{$lg.tuijian_img}"></a>
                 {/if}
                 {/volist}
             </div>
             <div class="right">
-                <p><a href="{:url('Goods/goods_list',['cate_id'=>$cg['id']])}"><img src="{$cg.image}"></a></p>
+                <p><a href="/Goods/goods_list/cate_id/{$cg['id']}"><img src="{$cg.image}"></a></p>
                 <ul>
                     {volist name="cg.goods_list" id="rg" key="rk"}
                     {if condition="$rk egt 3"}
-                    <li><a href="{:url('Goods/detail',['id'=>$rg['id']])}"><img src="{$rg.tuijian_img}"></a></li>
+                    <li><a href="/Goods/detail/id/{$rg['id']}"><img src="{$rg.tuijian_img}"></a></li>
                     {/if}
                     {/volist}
                 </ul>
             </div>
             {else/}
             <div class="right">
-                <p><a href="{:url('Goods/goods_list',['cate_id'=>$cg['id']])}"><img src="{$cg.image}"></a></p>
+                <p><a href="/Goods/goods_list/cate_id/{$cg['id']}"><img src="{$cg.image}"></a></p>
                 <ul>
                     {volist name="cg.goods_list" id="rgs" key="rks"}
                     {if condition="$rks elt 3"}
-                    <li><a href="{:url('Goods/detail',['id'=>$rgs['id']])}"><img src="{$rgs.tuijian_img}"></a></li>
+                    <li><a href="/Goods/detail/id/{$rgs['id']}"><img src="{$rgs.tuijian_img}"></a></li>
                     {/if}
                     {/volist}
                 </ul>
@@ -120,7 +120,7 @@
             <div class="left">
                 {volist name="cg.goods_list" id="lgs" key="lks"}
                 {if condition="$lks egt 4"}
-                <a href="{:url('Goods/detail',['id'=>$lgs['id']])}"><img src="{$lgs.tuijian_img}"></a>
+                <a href="/Goods/detail/id/{$lgs['id']}"><img src="{$lgs.tuijian_img}"></a>
                 {/if}
                 {/volist}
             </div>

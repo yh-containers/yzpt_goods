@@ -6,11 +6,11 @@
         <script type="text/javascript">
             function toSearchGoods(){
                 var search = $('.ssk').val();
-                window.location.href="{:url('Goods/goods_list')}"+"?search="+search;
+                window.location.href="/Goods/goods_list"+"?search="+search;
             }
         </script>
     </div>
-    <div class="header_shopping"><a href="{:url('Order/cart')}">我的购物车{if($cart_count)}<span>{$cart_count}</span>{/if}</a></div>
+    <div class="header_shopping"><a href="/Order/cart">我的购物车{if($cart_count)}<span>{$cart_count}</span>{/if}</a></div>
     <div class="header_ewm">
         <p><img src="/assets/index/images/ewm.jpg"></p>
         <p>手机商城</p>
