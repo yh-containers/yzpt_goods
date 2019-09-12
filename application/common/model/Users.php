@@ -308,7 +308,8 @@ class Users extends BaseModel
                 $data['wx_openid'] = $auth_info['open_id'];
                 $third_update['wx_openid']='';
             }elseif ($auth_info['mode']=='qq'){
-                $data['qq_openid'] = $auth_info['open_id'];
+                $auth_user_info = \app\common\service\third\OpenWx::actToUserInfo($auth_info['access_token'],$auth_info['open_id']);
+                $data['qq_openid'] = (empty($auth_user_info)||empty($auth_user_info['unionid']))?$auth_info['open_id']:$auth_user_info['unionid'];
                 $third_update['qq_openid']='';
             }elseif ($auth_info['mode']=='weibo'){
                 $data['wb_openid'] = $auth_info['open_id'];
