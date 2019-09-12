@@ -306,7 +306,9 @@ class Users extends BaseModel
         if(!empty($auth_info) && isset($auth_info['mode']) && isset($auth_info['open_id']) && isset($auth_info['access_token'])){
             //绑定第三方信息
             if($auth_info['mode']=='wechat'){
-                $data['wx_openid'] = $auth_info['open_id'];
+                $auth_user_info = \app\common\service\third\OpenWx::actToUserInfo($auth_info['access_token'],$auth_info['open_id']);
+                $data['wx_openid'] = (empty($auth_user_info)||empty($auth_user_info['unionid']))?$auth_info['open_id']:$auth_user_info['unionid'];
+//                $data['wx_openid'] = $auth_info['open_id'];
                 $third_update['wx_openid']='';
             }elseif ($auth_info['mode']=='qq'){
                 $data['qq_openid'] = $auth_info['open_id'];
