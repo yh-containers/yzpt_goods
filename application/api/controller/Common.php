@@ -48,6 +48,7 @@ class Common
         $res_data = [
             'code' => $code,
             'msg'=>$msg,
+            'emit_url'=>url('index/warring',[],false,true)
         ];
         !empty($data) && $res_data['data']= $data;
         return $res_data;
