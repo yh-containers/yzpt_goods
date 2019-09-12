@@ -100,6 +100,10 @@ class Video extends BaseModel
         return self::handleFile($value);
     }
 
+    protected function getLabelsAttr($value)
+    {
+        return empty($value)?[]:explode(',',$value);
+    }
 
     /**
      * 评论

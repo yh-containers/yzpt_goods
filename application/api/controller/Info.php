@@ -305,6 +305,7 @@ class Info extends Common
                     'user_name'=>$item['link_users']['name'],
                     'release_date'=>$item['releaseDate'],
                     'title'=>(string)$item['title'],
+                    'labels'=>$item['labels'],
                     'addr'=>(string)$item['addr'],
                     'file'=>$item['fileGroup'],
                     'share_times'=>$item['share_times'],
