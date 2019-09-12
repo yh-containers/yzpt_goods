@@ -270,7 +270,9 @@ class Users extends BaseModel
         if($mode=='qq'){
             $where['qq_openid'] = $data['open_id'];
         }elseif ($mode=='wechat'){
-            $where['wx_openid'] = $data['open_id'];
+            $auth_user_info = \app\common\service\third\OpenWx::actToUserInfo($data['access_token'],$data['open_id']);
+            $where['wx_openid'] = (empty($auth_user_info)||empty($auth_user_info['unionid']))?$data['open_id']:$auth_user_info['unionid'];
+            exception('wx_openid:'.json_encode($auth_user_info));
         }elseif ($mode=='weibo'){
             $where['wb_openid'] = $data['open_id'];
         }
@@ -305,9 +307,7 @@ class Users extends BaseModel
         if(!empty($auth_info) && isset($auth_info['mode']) && isset($auth_info['open_id']) && isset($auth_info['access_token'])){
             //绑定第三方信息
             if($auth_info['mode']=='wechat'){
-                $auth_user_info = \app\common\service\third\OpenWx::actToUserInfo($auth_info['access_token'],$auth_info['open_id']);
-                $data['wx_openid'] = (empty($auth_user_info)||empty($auth_user_info['unionid']))?$auth_info['open_id']:$auth_user_info['unionid'];
-                $data['thrd_info']=$auth_user_info;
+                $data['wx_openid'] = $auth_info['open_id'];
                 $third_update['wx_openid']='';
             }elseif ($auth_info['mode']=='qq'){
                 $data['qq_openid'] = $auth_info['open_id'];
