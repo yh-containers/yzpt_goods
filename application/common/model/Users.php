@@ -271,8 +271,7 @@ class Users extends BaseModel
             $where['qq_openid'] = $data['open_id'];
         }elseif ($mode=='wechat'){
             $auth_user_info = \app\common\service\third\OpenWx::actToUserInfo($data['access_token'],$data['open_id']);
-            $where['wx_openid'] = (empty($auth_user_info)||empty($auth_user_info['unionid']))?$data['open_id']:$auth_user_info['unionid'];
-            exception('wx_openid:'.json_encode($auth_user_info));
+            $where['wx_openid'] = (empty($auth_user_info) || empty($auth_user_info['unionid']))?$data['open_id']:$auth_user_info['unionid'];
         }elseif ($mode=='weibo'){
             $where['wb_openid'] = $data['open_id'];
         }

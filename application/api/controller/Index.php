@@ -36,12 +36,8 @@ class Index extends Common
     //第三方登录流程
     public function loginThird()
     {
-
         $mode = input('mode');
         $php_input = input();
-        $auth_user_info = \app\common\service\third\OpenWx::actToUserInfo($php_input['access_token'],$php_input['open_id']);
-        $where['wx_openid'] = (empty($auth_user_info)||empty($auth_user_info['unionid']))?$php_input['open_id']:$auth_user_info['unionid'];
-        $this->_resData(1,('wx_openid:'.json_encode($auth_user_info)));
         try{
             $model = \app\common\model\Users::handleThirdLogin($mode,$php_input);
         }catch (\Exception $e){
