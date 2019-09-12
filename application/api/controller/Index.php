@@ -574,4 +574,9 @@ class Index extends Common
             'img_group'=>[]
         ]);
     }
+
+    public function warring()
+    {
+        return view('warring');
+    }
 }
