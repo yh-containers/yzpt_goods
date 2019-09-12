@@ -399,7 +399,7 @@ class Mine extends Common
     {
         $data=[
             'img'=>$this->user_model->face,
-            'date'=>date('Y-m-d'),
+            'date'=>date('m.d'),
             'number'=>99,
             'list'=>[
                 ['intro'=>'累计步数为93步','color'=>''],

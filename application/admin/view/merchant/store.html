@@ -1,0 +1,82 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}system,system/flowImg{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <div class="col-sm-1">
+                <a class="layui-btn layui-btn-sm" href="{:url('storeAdd',['mch_id'=>$mch_id,'ser_id'=>$ser_id])}">添加门店</a>
+            </div>
+            <div class="col-sm-11">
+                <div class="btn-group">
+                    <form class="input-group   col-sm-4">
+                        <input type="text" class="form-control" name="keyword" value="{$keyword}" placeholder="类型名">
+                        <span class="input-group-btn">
+                          <button type="submit" class="btn btn-info btn-flat">搜索</button>
+                        </span>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body no-padding">
+                <table class="table table-striped" id="layer-photos-demo">
+                    <thead>
+                        <tr>
+                            <th width="20">#</th>
+                            <th width="120">类型名</th>
+                            <th width="120">店铺名</th>
+                            <th width="60">店铺联系人</th>
+                            <th width="60">店铺联系人电话</th>
+                            <th width="30">评星</th>
+                            <th width="30">消费人数</th>
+                            <th width="80">店铺封面图</th>
+                            <th width="80">更新时间</th>
+                            <th width="60">状态</th>
+                            <th width="120">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {volist name="list" id="vo"}
+                        <tr>
+                            <td>{$i}</td>
+                            <td>{$vo['link_mch_service']['name']}</td>
+                            <td>{$vo['name']}</td>
+                            <td>{$vo['up_name']}</td>
+                            <td>{$vo['up_phone']}</td>
+                            <td>{$vo['star']}</td>
+                            <td>{$vo['consume_num']}</td>
+                            <td><img src="{$vo['img']}" width="80" height="80" alt="封面图"></td>
+                            <td>{$vo['update_time']}</td>
+                            <td>{:\\app\\common\\model\\MchStore::getPropInfo('fields_status',$vo['status'])}</td>
+                            <td>
+                                <a class="layui-btn layui-btn-sm" href="{:url('storeAdd',["mch_id"=>$vo['mch_id'],'ser_id'=>$vo['ser_id'],'id'=>$vo['id']])}">编辑</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("storeDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
+                            </td>
+                        </tr>
+                        {/volist}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+
+            <div class="box-footer clearfix">
+                {$page|raw}
+            </div>
+    </div>
+    <!-- /.error-page -->
+{/block}
+{block name="script"}
+<script>
+    layui.use(['layer'],function(){
+        layui.layer.photos({
+            photos: '#layer-photos-demo'
+            ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+        });
+    })
+</script>
+{/block}

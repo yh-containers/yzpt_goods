@@ -17,6 +17,7 @@ class DeleteQnResource
         \app\common\model\News::class=>['filed'=>['img'],'delay'=>0],
         \app\common\model\Video::class=>['filed'=>['file','img'],'delay'=>0],
         \app\common\model\Welfare::class=>['filed'=>['img,'],'delay'=>0],
+        \app\common\model\Merchant::class=>['filed'=>['img','logo'],'delay'=>0],
     ];
 
 

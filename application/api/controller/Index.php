@@ -509,4 +509,61 @@ class Index extends Common
             'hot_key'=>$hot_key,
         ]);
     }
+
+    //服务商家
+    public function mchService()
+    {
+        $list = [];
+        $info=\app\common\model\MchService::where([['status','=',1]])->order('sort asc')->paginate()->each(function($item,$index)use(&$list){
+            array_push($list,[
+                'id'=>$item['id'],
+                'name'=>$item['name'],
+                'img'=>$item['img'],
+                'view'=>$item['view'],
+                'intro'=>'已有'.$item['consume_num'].'人参与',
+            ]);
+        });
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
+    //服务商家门店
+    public function mchStore()
+    {
+        $ser_id = input('ser_id',0,'intval');
+        $list = [];
+        $where[] = ['status','=',1];
+        $ser_id && $where[]=['ser_id','=',$ser_id];
+
+        $info=\app\common\model\MchStore::with(['linkMchService'])->where($where)->order('sort asc')->paginate()->each(function($item,$index)use(&$list){
+            array_push($list,[
+                'id'=>$item['id'],
+                'ser_name'=>$item['link_mch_service']['name'],
+                'name'=>$item['name'],
+                'img'=>$item['img'],
+                'star'=>$item['star'],
+                'service_time'=>$item['service_time'],
+                'intro'=>'已有'.$item['consume_num'].'人参与',
+            ]);
+        });
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
+    }
+
+    //服务商家门店
+    public function mchStoreDetail()
+    {
+        $id = input('id',0,'intval');
+        $model=\app\common\model\MchStore::get($id);
+        $detail=[
+            'id'=>(int)$id,
+            'name'=>(string)$model['name'],
+            'img'=>(string)$model['img'],
+            'star'=>(int)$model['star'],
+            'service_time'=>(string)$model['service_time'],
+            'content'=>(string)$model['content'],
+            'intro'=>'已有'.(string)$model['consume_num'].'人参与',
+        ];
+        return $this->_resData(1,'获取成功',['detail'=>$detail]);
+    }
 }
