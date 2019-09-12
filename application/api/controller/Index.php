@@ -566,11 +566,11 @@ class Index extends Common
         ];
         return $this->_resData(1,'获取成功',['detail'=>$detail]);
     }
-    
+
     public function welcome()
     {
         return $this->_resData(1,'获取成功',[
-            'show_url'=>url('index/notice',[],false,true),
+            'show_url'=>url('index/warring',[],false,true),
             'img_group'=>[]
         ]);
     }
