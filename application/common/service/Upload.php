@@ -31,12 +31,6 @@ class Upload
     //获取上传凭证
     public function info($type='image')
     {
-        if($type=='video'){
-            //禁用上传视频
-            exception('视频上传接口已被屏蔽');
-        }
-
-
         $data = [
             'token' => '',
             'preview_domain' => request()->domain(),
