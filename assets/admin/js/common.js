@@ -21,7 +21,7 @@ $.common={
         return false;
     },
     //待确定请求动作
-    waitConfirm:function(tip_msg,url,data,type,func){
+    waitConfirm:function(tip_msg,url,data,type,func,ele_obj){
         //默认请求成功指定动作
         func = typeof func ==='function' ? func:()=>{
             //默认刷新页面
@@ -29,7 +29,7 @@ $.common={
         }
         layer.confirm(tip_msg,function(){
 
-            sendAjax(url,data,type,func)
+            sendAjax(url,data,type,func,ele_obj)
         })
     },
     //文件上传
@@ -79,7 +79,7 @@ $.common={
 }
 
 //发送请求
-function sendAjax(url,data,type,func){
+function sendAjax(url,data,type,func,ele_obj){
     type = (typeof type===undefined)||(typeof type==='undefined')?'get':type
     type = type.toLowerCase()==='get'?'get':'post'
     var layer_load;
@@ -99,12 +99,12 @@ function sendAjax(url,data,type,func){
                 layui.layer.msg(res.msg)
                 if(res.code===1){
                     //成功
-                    typeof func ==='function' && setTimeout(()=>{func(res)},1000)
+                    typeof func ==='function' && setTimeout(()=>{func(res,ele_obj)},1000)
                 }else{
                     //失败
                 }
             }else{
-                typeof func ==='function' && setTimeout(()=>{func(res)},1000)
+                typeof func ==='function' && setTimeout(()=>{func(res,ele_obj)},1000)
             }
         },
         error:function(res){

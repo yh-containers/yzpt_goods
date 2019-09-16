@@ -93,7 +93,7 @@ class BaseModel extends Model
      * @throws
      * @return self
      * */
-    public static function commentDel(Users $user_model,array $data=[])
+    public static function commentDel(Users $user_model=null,array $data=[])
     {
         empty($data['id']) && exception('参数异常:id');
         $where[] = ['id', '=', $data['id']];

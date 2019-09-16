@@ -235,7 +235,7 @@ class Article extends Common
         $keyword = input('keyword','','trim');
         $where=[];
         !empty($keyword) && $where[]=['title','like','%'.$keyword.'%'];
-        $list = \app\common\model\Video::where($where)->order('update_time desc')->paginate();
+        $list = \app\common\model\Video::where($where)->order('status asc,update_time desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
@@ -265,6 +265,17 @@ class Article extends Common
         $model = $model->get($id);
 
         return view('videoAdd',[
+            'model'=>$model,
+        ]);
+    }
+
+    public function videoDetail()
+    {
+        $id  = $this->request->param('id');
+        $model = \app\common\model\Video::with(['link_users','linkCommentCount'])->get($id);
+
+
+        return view('videoDetail',[
             'model'=>$model,
         ]);
     }
@@ -324,4 +335,54 @@ class Article extends Common
         return $model->actionDel(['id'=>$id]);
     }
 
+    //查看评论
+    public function showComments()
+    {
+        $id = input('id',0,'intval');
+        $type = input('type');
+        if($type=='video'){
+            //视频
+            $class = \app\common\model\VideoComment::class;
+        }elseif($type=='dynamic'){
+            //动态
+            $class = \app\common\model\DyComment::class;
+        }else{
+            return $this->_resData(1,'获取成功',['list'=>[],'total_page'=>0]);
+        }
+        $where[] =['vid','=',$id];
+        //评论信息
+        $list = [];
+        $info = $class::with(['linkUsers','linkToUsers'])->where($where)->order('id desc')->paginate()->each(function($item,$index)use(&$list){
+            $child_comment = [];
+            foreach ($item['link_child'] as $vo){
+                array_push($child_comment, $vo->structInfo());
+            }
+            array_push($list,$item->structInfo($child_comment));
+        });
+
+        return $this->_resData(1,'获取成功',['list'=>$list,'total_page'=>$info->lastPage()]);
+    }
+    //删除评论
+    public function delComments()
+    {
+        $id = input('id',0,'intval');//对应信息id
+        $cid = input('cid',0,'intval');//评论id
+        $type = input('type');
+        if($type=='video'){
+            //视频
+            $class = \app\common\model\VideoComment::class;
+        }elseif($type=='dynamic'){
+            //动态
+            $class = \app\common\model\DyComment::class;
+        }else{
+            return $this->_resData(0,'类型异常');
+        }
+//        \app\common\model\Dynamic::commentDel()
+        try{
+            $class::commentDel(null,['id'=>$cid]);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'删除成功');
+    }
 }

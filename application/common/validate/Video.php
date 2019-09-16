@@ -7,8 +7,8 @@ class Video extends Validate
 {
     protected $rule = [
         'file'  => 'require',
-        'size'  => 'require|gt:0',
-        'mime_type'  => 'require',
+//        'size'  => 'require|gt:0',
+//        'mime_type'  => 'require',
     ];
 
     protected $message  =   [

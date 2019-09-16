@@ -1,0 +1,151 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}system,system/flowImg{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title"><a href="{:url('users/detail',['id'=>$model['uid']])}">用户{ <span class="text-red">{$model['link_users']['name']}</span> }发布的视频</a></h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <div class="box-body">
+
+            <div class="col-sm-7 no-padding">
+                <table class="layui-table ">
+                    <colgroup>
+                        <col width="80">
+                        <col width="100">
+                        <col width="80">
+                        <col width="100">
+                        <col width="80">
+                        <col width="100">
+                        <col width="80">
+                        <col width="100">
+                    </colgroup>
+
+                    <tbody>
+                    <tr>
+                        <td>视频标题</td>
+                        <td colspan="5">{$model['title']}</td>
+
+                        <td>封面图</td>
+                        <td> <img src="{$model['img']}" alt="" width="40" height="40"></td>
+                    </tr>
+                    <tr>
+                        <td>标签</td>
+                        <td colspan="5">{:empty($model)?'':$model->getData('labels')}</td>
+                        <td>视频地址</td>
+                        <td><a href="{$model['file']}" target="_blank">查看文件</a></td>
+                    </tr>
+                    <tr>
+                        <td>点赞数量</td>
+                        <td>{$model['praise_times']}</td>
+                        <td>分享次数</td>
+                        <td>{$model['share_times']}</td>
+                        <td>评论次数</td>
+                        <td>{$model['link_comment_count']['comment_count']}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>发布日期</td>
+                        <td colspan="2">{$model['create_time']}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>状态</td>
+                        <td>{:empty($model)?'':\\app\\common\\model\\Video::getPropInfo('fields_status',$model['status'])}</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+
+                </div>
+
+            <div class="col-sm-5">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">评论记录</h3>
+                        <div class="box-tools">
+                        </div>
+                    </div>
+                    <div class="box-body no-padding">
+                        <div class="box-footer box-comments" id="comment">
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+            <!-- /.box-body -->
+
+        <div class="box-footer">
+        </div>
+    </div>
+
+{/block}
+
+
+{block name="script"}
+<script>
+    //引用上传组件
+    layui.use(['laydate','flow'],function(){
+        var laydate = layui.laydate;
+        var flow = layui.flow;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '.datetime' //指定元素
+            ,type: 'date' //默认，可不填
+            ,max: 1
+        });
+        var comment_url = "{:url('Article/showComments',['type'=>'video','id'=>$model['id']])}";
+        var comment_item_url = "{:url('Article/DelComments',['type'=>'video','id'=>$model['id']])}";
+        var users_detail = "{:url('Users/detail')}";
+        flow.load({
+            elem: '#comment' //指定列表容器
+            ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get(comment_url+(comment_url.indexOf('?')>-1?+'&':'?')+'page='+page, function(res){
+                    console.log(res)
+                    var data = res.data;
+                    var list = data.hasOwnProperty('list')?data.list:[];
+                    var total_page = data.hasOwnProperty('total_page')?data.total_page:0;
+                    //假设你的列表返回在data集合中
+                    layui.each(list, function(index, item){
+                        lis.push('<div class="box-comment">\n' +
+                            '    <!-- User image -->\n' +
+                            '    <a href="'+users_detail+((users_detail.indexOf('?')>-1?+'&':'?')+'id='+item.uid)+'"><img class="img-circle img-sm" src="'+item.u_face+'" alt="用户头像"></a>\n' +
+                            '    <div class="comment-text">\n' +
+                            '      <span class="username">\n' +
+                            '        '+item.u_name+((item.to_uid-0>0)?('  回复 ' + ' <a href="'+users_detail+((users_detail.indexOf('?')>-1?+'&':'?')+'id='+item.to_uid)+'">'+item.to_name+'</a>  '):'')+'\n' +
+                            '        <span class="text-muted pull-right">'+item.date+'</span>\n' +
+                            '      </span><!-- /.username -->\n' +
+                            '     '+item.content+'' +
+                            '        <a class="pull-right text-red" href="javascript:;" onclick="$.common.waitConfirm(\'是否删除该条数据?\',\''+comment_item_url+((comment_item_url.indexOf('?')>-1?+'&':'?')+'cid='+item.id)+'\',{},\'get\',delItem,this)">删除</a>\n' +
+                            '    </div>\n' +
+                            '</div>\n');
+                    });
+
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < total_page);
+                });
+            }
+        });
+
+
+    })
+    function delItem(res,obj){
+        $(obj).parent().parent().remove()
+    }
+</script>
+{/block}
