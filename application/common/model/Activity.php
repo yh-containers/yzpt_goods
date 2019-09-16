@@ -48,6 +48,30 @@ class Activity extends BaseModel
         return empty($value)?'':substr($value,0,10);
     }
 
+    protected function getStateIntroAttr($value,$data)
+    {
+        $current_day = date('Y-m-d');
+        $intro = '未开始.';
+        if(isset($data['end_date']) && $data['start_date']){
+            if($current_day>$data['end_date']){
+                $intro='已结束';
+            }elseif ($current_day>$data['start_date']){
+                $intro='进行中';
+            }
+        }
+        return $intro;
+    }
+    protected function getStateShowAttr($value,$data)
+    {
+        $current_day = date('Y-m-d');
+        $value = 1;
+        if(isset($data['end_date']) && $data['start_date']){
+            if($current_day>$data['end_date']){
+                $value=0;
+            }
+        }
+        return $value;
+    }
 
 
     /**

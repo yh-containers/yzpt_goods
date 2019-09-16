@@ -633,8 +633,8 @@ class Info extends Common
             'addr'=> $model['addr'],
             'addr_extra'=> $model['addr_extra'],
             'is_join'=>empty($model['link_is_join'])?0:1,
-            'state_intro'=> '活动已开始',
-            'state_show'=> 1,
+            'state_intro'=> (string)$model['state_intro'],
+            'state_show'=> (int)$model['state_show'],
         ];
         return $this->_resData(1,'获取成功',$info);
     }
