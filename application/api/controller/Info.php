@@ -392,32 +392,34 @@ class Info extends Common
     {
         try{
             $input_data = input();
-            $file = input('file');
+//            dump($input_data);exit;
+//            return $this->_resData(0, '请选择xxx');
+//            $file = input('file');
             $input_data['uid'] = $this->user_id;
             //清空上传的图片信息
-            $input_data['img']='';
-            if(preg_match('/^https?:\/\//',$file)){
-                try{
-                    $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
-                    $filePath = \think\facade\Env::get('root_path').$file;
-                    //上传七牛
-                    $upload = new \app\common\service\Upload($this->user_id);
-                    $data = $upload->info('video');
-                    if(isset($data['token'])){
-                        $uploadMgr = new \Qiniu\Storage\UploadManager();
-                        list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
-                        if($err !== null) {
-                            //处理失败
-                        } else {
-                            if(isset($ret['data'])){
-                                $input_data['file'] = $ret['data']['key'];
-                            }
-                        }
-                    }
-                }catch (\Exception $e){
-
-                }
-            }
+//            $input_data['img']='';
+//            if(preg_match('/^https?:\/\//',$file)){
+//                try{
+//                    $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
+//                    $filePath = \think\facade\Env::get('root_path').$file;
+//                    //上传七牛
+//                    $upload = new \app\common\service\Upload($this->user_id);
+//                    $data = $upload->info('video');
+//                    if(isset($data['token'])){
+//                        $uploadMgr = new \Qiniu\Storage\UploadManager();
+//                        list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
+//                        if($err !== null) {
+//                            //处理失败
+//                        } else {
+//                            if(isset($ret['data'])){
+//                                $input_data['file'] = $ret['data']['key'];
+//                            }
+//                        }
+//                    }
+//                }catch (\Exception $e){
+//
+//                }
+//            }
             $validate =new \app\common\validate\Video();
             $validate->scene('api_release');
             $model = new \app\common\model\Video();
