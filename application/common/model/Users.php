@@ -399,6 +399,10 @@ class Users extends BaseModel
     {
         $time = time();
         $access_token = $this->id.'.'.$time.'.'.rand(10000,9999).'.'.self::generateSign($this->id,$time);
+        //更新登录凭证
+        $this->token = $access_token;
+        $this->save();
+
         return $access_token;
     }
     /**

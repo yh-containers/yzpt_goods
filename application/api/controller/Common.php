@@ -20,9 +20,15 @@ class Common
         $this->request = request();
 
         $user_token = isset($_SERVER['HTTP_USER_TOKEN'])?$_SERVER['HTTP_USER_TOKEN']:'';
-        if($user_token = \app\common\model\Users::validUserToken($user_token)){
+        $user_token_arr = \app\common\model\Users::validUserToken($user_token);
+        if($user_token_arr){
             //验证成功
-            $this->user_id = $user_token[0];//用户id
+            $this->user_id = $user_token_arr[0];//用户id
+            //获取用户凭证
+            $token = \app\common\model\Users::where(['id'=>$this->user_id])->value('token');
+            if($user_token!=$token){
+                abort(-10,'帐号已在其它地方登录');
+            }
         }
         //in_array() 搜索数组中是否存在指定的值。
         if(!in_array($this->request->action(),$this->ignore_action) && $this->need_login && empty($this->user_id)){
@@ -48,7 +54,7 @@ class Common
         $res_data = [
             'code' => $code,
             'msg'=>$msg,
-            'emit_url'=>url('index/warring',[],false,true)
+//            'emit_url'=>url('index/warring',[],false,true)
         ];
         !empty($data) && $res_data['data']= $data;
         return $res_data;
