@@ -140,6 +140,24 @@ class Activity extends BaseModel
         $model->delete();
     }
 
+
+    /**
+     * 取消
+     * @param Users $user_model|null;
+     * @param array $data;
+     * @throws
+     * */
+    public static function cancel(Users $user_model=null,array $data=[])
+    {
+        empty($data['aid']) && exception('对象异常:id',0);
+        $model = ActJoin::where(['uid'=>$user_model->id,'aid'=>$data['aid']])->find();
+        empty($model) && exception('已取消',1);
+        //直接删除
+        $model->delete();
+    }
+
+
+
     //动态用户
     public function linkUsers()
     {

@@ -557,7 +557,7 @@ class Info extends Common
                     'comment_times'=> 0,
                     'start_date'=> $item['start_date'],
                     'end_date'=> $item['end_date'],
-                    'date_str'=> $item['end_date'].'至'.$item['end_date'],
+                    'date_str'=> $item['start_date'].'至'.$item['end_date'],
                     'addr'=> $item['addr'],
                     'addr_extra'=> $item['addr_extra'],
                     'is_join'=>empty($item['link_is_join'])?0:1,
@@ -633,6 +633,8 @@ class Info extends Common
             'addr'=> $model['addr'],
             'addr_extra'=> $model['addr_extra'],
             'is_join'=>empty($model['link_is_join'])?0:1,
+            'state_intro'=> '活动已开始',
+            'state_show'=> 1,
         ];
         return $this->_resData(1,'获取成功',$info);
     }
@@ -663,6 +665,18 @@ class Info extends Common
         }
 
         return $this->_resData(1,'加入成功');
+    }
+    //报名活动
+    public function actCancel()
+    {
+        $php_input = input();
+        try{
+            \app\common\model\Activity::cancel($this->user_model,$php_input);
+        }catch (\Exception $e){
+            return $this->_resData($e->getCode(),$e->getMessage());
+        }
+
+        return $this->_resData(1,'取消成功');
     }
 
 
