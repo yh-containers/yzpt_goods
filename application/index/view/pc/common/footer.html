@@ -36,7 +36,7 @@
                 <dl>
                     <dt><a href="javascript:;">{$aval.name}</a></dt>
                     {volist name="aval.own_columns" id="ca"}
-                    <dd><a href="{:url('Article/index',['id'=>$ca['id']])}">{$ca.name}</a></dd>
+                    <dd><a href="/Article/index/id/{$ca['id']}">{$ca.name}</a></dd>
                     {/volist}
                 </dl>
                 {/volist}
