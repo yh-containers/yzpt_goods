@@ -9,12 +9,21 @@ class Dynamic extends BaseModel
     use SoftDelete;
     protected $name='dynamic';
 
+    protected $insert = [ 'status'];
+
     public static $fields_status =[
+        ['name'=>'待审核'],
         ['name'=>'公开'],
         ['name'=>'私密'],
-        ['name'=>'部分人可见'],
-        ['name'=>'部分人不可见'],
+        ['name'=>'禁用'],
     ];
+
+    //状态
+    public function setStatusAttr($value)
+    {
+        return empty($value)?0:$value;
+    }
+
 
     //发布时间
     protected function getReleaseDateAttr()

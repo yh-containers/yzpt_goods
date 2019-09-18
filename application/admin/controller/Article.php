@@ -169,7 +169,7 @@ class Article extends Common
         $keyword = input('keyword','','trim');
         $where=[];
         !empty($keyword) && $where[]=['content','like','%'.$keyword.'%'];
-        $list = \app\common\model\Activity::with(['linkUsers'])->where($where)->paginate();
+        $list = \app\common\model\Activity::with(['linkUsers'])->where($where)->order('id desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
@@ -178,6 +178,14 @@ class Article extends Common
             'list' => $list,
             'page'=>$page
         ]);
+    }
+
+    //删除数据
+    public function activityDel()
+    {
+        $id = $this->request->param('id',0,'int');
+        $model = new \app\common\model\Activity();
+        return $model->actionDel(['id'=>$id]);
     }
 
     //乐库

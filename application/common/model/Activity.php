@@ -8,7 +8,19 @@ class Activity extends BaseModel
 {
     use SoftDelete;
     protected $name='activity';
+
+    protected $insert = ['status'];
+
+    public static $fields_status = ['待审核','正常','关闭'];
+
     public static $fields_online=['线上','线下'];
+
+    //状态
+    public function setStatusAttr($value)
+    {
+        return empty($value)?0:$value;
+    }
+
 
     //发布时间
     protected function getReleaseDateAttr()

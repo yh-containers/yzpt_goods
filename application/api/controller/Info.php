@@ -30,6 +30,7 @@ class Info extends Common
 
         $user_id = $this->user_id;
         $where = [];
+        $where[]=['status','>',0];
         $order = 'id desc';
         if($is_new){
 
@@ -52,10 +53,10 @@ class Info extends Common
         if(!empty($user_id)){
             //仅能开自己或公开的文章
             $where_fnc = function($query)use($user_id){
-              $query->whereOr([['status','=',0],['uid','=',$user_id]]);
+              $query->whereOr([['status','=',1],['uid','=',$user_id]]);
             };
         }else{
-            $where[] =['status','=',0];//只能看公开的
+            $where[] =['status','=',1];//只能看公开的
         }
 
 
@@ -82,6 +83,7 @@ class Info extends Common
                         $is_follow = 2;
                     }
                 }
+                empty($item['status']) && $item['status_info'] = '待审核';
 
                 array_push($list,[
                     'id'=>$item['id'],
@@ -281,6 +283,10 @@ class Info extends Common
 
         $user_id = $this->user_id;
         $where = [];
+
+        if($uid!=$user_id){
+            $where[]=['status','=',1]; //审核通过才能显示
+        }
         !empty($uid) && $where[] = ['uid','=',$uid];
         !empty($keyword) && $where[] = ['title|labels','like','%'.$keyword.'%'];
 
@@ -298,6 +304,9 @@ class Info extends Common
             }])->where($where)
             ->order('id desc')->paginate()
             ->each(function($item,$index)use(&$list){
+
+                empty($item['status']) && $item['status_info'] = '待审核';
+
                 array_push($list,[
                     'id'=>$item['id'],
                     'uid'=>$item['uid'],
@@ -542,6 +551,9 @@ class Info extends Common
             ->order('id desc')->paginate()
             ->each(function($item,$index)use(&$list){
 //                dump($item);exit;
+
+                empty($item['status']) && $item['status_info'] = '待审核';
+
                 array_push($list,[
                     'id'=>$item['id'],
                     'uid'=>$item['uid'],

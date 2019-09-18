@@ -579,4 +579,34 @@ class Index extends Common
     {
         return view('warring');
     }
+
+    public function upProtocol()
+    {
+        return <<<eof
+        尊敬的用户您好！
+为了更好营造“养众天使”平台的健康，和谐，安全的经营环境，请用户/群主和养众会员务必遵守法规、用户协议和平台公约，文明互动，理性表达，必须遵守以下规则：
+1、禁止发布和上传违法国家法律法规，色情，反动，涉及政治和军事等敏感性视频和图文。
+2、禁止发布和上传广告，低俗，如裸露、色情和亵渎内容相关的图文和视频。
+3、禁止发布和上传黄、赌、毒信息，禁止传播暴力恐怖和谣言诈骗信息。
+4、禁止上传涉及知识产权纠纷之图文和视频内容，如有版权纠纷，用户自行承担法律责任，与平台无关。
+5、“养众天使”将在24小时审核用户发布之视频和图文内容，轻微违规者将封号1-3天处理，严重者将永久封号且举报给国家安全部门。
+如有违反用户和会员，“养众天使”平台将永久性封号并举报给国家安全部门。基于技术和不可预见的原因而导致的被举报和投诉，以及涉及的版权和其他法律风险，或者因会员的非法操作而造成的损失，“养众天使”不负任何法律责任。
+会员应当自行承担一切因自身行为而直接或者间接导致的民事或刑事法律责任。
+eof;
+
+    }
+
+
+    public function complaint()
+    {
+        $model = new \app\common\model\UsersComplaint();
+        $model->cond_id = input('cond_id',0,'intval');
+        $model->uid = $this->user_id;
+        $model->content = input('content','','trim');
+        $model->type = input('type',0,'intval');//投诉类型
+        $model->save();
+        return $this->_resData(1,'感谢反馈..');
+
+    }
+
 }

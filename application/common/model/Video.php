@@ -7,13 +7,21 @@ use think\model\concern\SoftDelete;
 class Video extends BaseModel
 {
     use SoftDelete;
+    public static $fields_status = ['待审核','正常','关闭'];
+
     protected $name='video';
 
-    protected $insert = ['uid'];
+    protected $insert = ['uid', 'status'];
 
     protected function setUidAttr($value,$data)
     {
         return empty($value)?1:(int)$value;
+    }
+
+    //状态
+    public function setStatusAttr($value)
+    {
+        return empty($value)?0:$value;
     }
 
     //发布时间
