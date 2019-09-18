@@ -22,6 +22,9 @@ class Protocol extends Common
         }elseif ($type=='secret'){
             //隐私政策
             $protocol_type = 'secret_protocol';
+        }elseif ($type=='release'){
+            //隐私政策
+            $protocol_type = 'release_protocol';
         }
 
         $content=\app\common\model\SysSetting::getContent($protocol_type);
