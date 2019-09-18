@@ -592,7 +592,7 @@ class Index extends Common
     //不感兴趣
     public function noInterest()
     {
-        $model = new \app\common\model\UsersComplaint();
+        $model = new \app\common\model\UsersNoInterest();
         $model->type = input('type',0,'intval');//投诉类型
         $model->cond_id = input('cond_id',0,'intval');//作品id
         $model->uid = $this->user_id;
