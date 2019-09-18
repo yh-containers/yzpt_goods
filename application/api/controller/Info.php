@@ -119,7 +119,7 @@ class Info extends Common
             return $this->_resData(0,$e->getMessage());
         }
 
-        return $this->_resData(1,'发布成功');
+        return $this->_resData(1,'审核中...');
     }
 
     //评论--
@@ -437,7 +437,7 @@ class Info extends Common
             return $this->_resData(0,$e->getMessage());
         }
 
-        return $this->_resData(1,'发布成功');
+        return $this->_resData(1,'审核中...');
     }
 
     //-点赞
@@ -605,7 +605,7 @@ class Info extends Common
             return $this->_resData(0,$e->getMessage());
         }
 
-        return $this->_resData(1,'发布成功');
+        return $this->_resData(1,'审核中...');
     }
 
     //活动详情
