@@ -304,10 +304,7 @@ class Info extends Common
             }])->where($where)
             ->order('id desc')->paginate()
             ->each(function($item,$index)use(&$list){
-
-                empty($item['status']) && $item['status_info'] = '待审核';
-
-                array_push($list,[
+                $_data = [
                     'id'=>$item['id'],
                     'uid'=>$item['uid'],
                     'face'=>$item['link_users']['face'],
@@ -323,7 +320,10 @@ class Info extends Common
                     'comment_times'=> isset($item['link_comment_count']['comment_count'])?$item['link_comment_count']['comment_count']:0,
                     'is_follow'=>empty($item['link_users']['link_has_follow'])?0:1,
                     'is_praise'=>empty($item['link_is_praise'])?0:1,
-                ]);
+                ];
+                empty($item['status']) && $_data['status_info'] = '待审核';
+
+                array_push($list,$_data);
             });
         $data = ['list'=>$list,'total_page'=>$info->lastPage()];
         return $this->_resData(1,'获取成功',$data);
