@@ -599,10 +599,11 @@ class Index extends Common
     public function complaint()
     {
         $model = new \app\common\model\UsersComplaint();
+        $model->type = input('type',0,'intval');//投诉类型
         $model->cond_id = input('cond_id',0,'intval');
+        $model->cd_id = input('cd_id',0,'intval'); //反馈类型
         $model->uid = $this->user_id;
         $model->content = input('content','','trim');
-        $model->type = input('type',0,'intval');//投诉类型
         $model->save();
         return $this->_resData(1,'感谢反馈..');
 
