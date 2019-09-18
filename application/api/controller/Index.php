@@ -580,6 +580,15 @@ class Index extends Common
         return view('warring');
     }
 
+    //获取投诉选项
+    public function complaintType()
+    {
+        $info = \app\common\model\UsersComplaint::getPropInfo('fields_report');
+        return $this->_resData(1,'获取成功',[
+            'info'=>$info
+        ]);
+    }
+
     //不感兴趣
     public function noInterest()
     {

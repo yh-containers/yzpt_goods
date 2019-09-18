@@ -27,7 +27,7 @@ class Common
             //获取用户凭证
             $token = \app\common\model\Users::where(['id'=>$this->user_id])->value('token');
             if($user_token!=$token){
-                abort(-10,'帐号已在其它地方登录');
+                abort(-9,'帐号已在其它地方登录');
             }
         }
         //in_array() 搜索数组中是否存在指定的值。
