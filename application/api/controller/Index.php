@@ -592,6 +592,12 @@ class Index extends Common
     //不感兴趣
     public function noInterest()
     {
+        $model = new \app\common\model\UsersComplaint();
+        $model->type = input('type',0,'intval');//投诉类型
+        $model->cond_id = input('cond_id',0,'intval');//作品id
+        $model->uid = $this->user_id;
+        $model->content = input('content','','trim');
+        $model->save();
         return $this->_resData(1,'操作成功,将减少此类作品推荐');
     }
 
@@ -600,7 +606,7 @@ class Index extends Common
     {
         $model = new \app\common\model\UsersComplaint();
         $model->type = input('type',0,'intval');//投诉类型
-        $model->cond_id = input('cond_id',0,'intval');
+        $model->cond_id = input('cond_id',0,'intval');//作品id
         $model->cd_id = input('cd_id',0,'intval'); //反馈类型
         $model->uid = $this->user_id;
         $model->content = input('content','','trim');
