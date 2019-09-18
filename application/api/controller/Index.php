@@ -594,7 +594,7 @@ class Index extends Common
     {
         $model = new \app\common\model\UsersNoInterest();
         $model->type = input('type',0,'intval');//投诉类型
-        $model->cond_id = input('cond_id',0,'intval');//作品id
+        $model->cond_id = input('id',0,'intval');//作品id
         $model->uid = $this->user_id;
         $model->content = input('content','','trim');
         $model->save();
@@ -606,7 +606,7 @@ class Index extends Common
     {
         $model = new \app\common\model\UsersComplaint();
         $model->type = input('type',0,'intval');//投诉类型
-        $model->cond_id = input('cond_id',0,'intval');//作品id
+        $model->cond_id = input('id',0,'intval');//作品id
         $model->cd_id = input('cd_id',0,'intval'); //反馈类型
         $model->uid = $this->user_id;
         $model->content = input('content','','trim');
