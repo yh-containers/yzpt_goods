@@ -284,7 +284,7 @@ class Info extends Common
         $user_id = $this->user_id;
         $where = [];
 
-        if($uid!=$user_id){
+        if(empty($user_id) || $uid!=$user_id){
             $where[]=['status','=',1]; //审核通过才能显示
         }
         !empty($uid) && $where[] = ['uid','=',$uid];
