@@ -133,9 +133,12 @@ class Article extends Common
         //表单提交
         if($this->request->isAjax()){
             $php_input = $this->request->param();
-            $pointer_user_id = [1,2,3,6,8,9];
-            shuffle($pointer_user_id);
-            $php_input['uid'] = $pointer_user_id[0];
+            if(!$id){
+                $pointer_user_id = [1,2,3,6,8,9];
+                shuffle($pointer_user_id);
+                $php_input['uid'] = $pointer_user_id[0];
+            }
+
             $php_input['file'] = empty($php_input['file'])?'':implode(',',$php_input['file']);
 //            dump($php_input);exit;
             $validate = new \app\common\validate\Dynamic();
