@@ -5,11 +5,16 @@ class UsersComplaint extends BaseModel
 {
 
     protected $name='users_complaint';
+    protected $insert=['status'=>0];
+    public static $fields_status =[
+        ['name'=>'待处理'],
+        ['name'=>'已处理'],
+    ];
 
     public static $fields_type = [
-        ['name'=>'视频'],
-        ['name'=>'动态'],
-        ['name'=>'活动'],
+        ['name'=>'视频','m_url'=>'article/videoDetail'],
+        ['name'=>'动态','m_url'=>'article/dynamicAdd'],
+        ['name'=>'活动','m_url'=>''],
     ];
 
     public static $fields_report = [
@@ -26,4 +31,8 @@ class UsersComplaint extends BaseModel
         ['name'=>'其他'],
     ];
 
+    public function linkUsers()
+    {
+        return $this->belongsTo('Users','uid');
+    }
 }

@@ -1,0 +1,53 @@
+{extend name="base" /}
+<!--高亮选中效果-->
+{block name="current_index"}system,system/manager{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body no-padding">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th width="10">#</th>
+                            <th width="80">用户名</th>
+                            <th width="100">投诉模块</th>
+                            <th width="80">投诉类型</th>
+                            <th width="80">投诉信息</th>
+                            <th width="120">投诉时间</th>
+                            <th width="60">状态</th>
+                            <th width="120">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {volist name="list" id="vo"}
+                        <tr>
+                            <td>{$i}</td>
+                            <td>{:empty($vo['link_users'])?'匿名投诉':$vo['link_users']['name']}</td>
+                            <td>{:\\app\\common\\model\\UsersComplaint::getPropInfo('fields_type',$vo['type'],'name')}</td>
+                            <td>{:\\app\\common\\model\\UsersComplaint::getPropInfo('fields_report',$vo['cd_id'],'name')}</td>
+                            <td><a href="{:url(\\app\\common\\model\\UsersComplaint::getPropInfo('fields_type',$vo['type'],'m_url'),['id'=>$vo['cond_id']])}">查看投诉类容</a></td>
+                            <td>{$vo['create_time']}</td>
+                            <td>{:\\app\\common\\model\\UsersComplaint::getPropInfo('fields_status',$vo['status'],'name')}</td>
+                            <td>
+                                {if(empty($vo['status']))}
+                                <a class="layui-btn layui-btn-sm" href="javascript:alert('开发中..')">处理</a>
+                                {/if}
+                            </td>
+                        </tr>
+                        {/volist}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+
+            <div class="box-footer clearfix">
+                {$page|raw}
+            </div>
+    </div>
+    <!-- /.error-page -->
+{/block}
