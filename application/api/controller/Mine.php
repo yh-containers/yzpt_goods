@@ -420,14 +420,15 @@ class Mine extends Common
     public function blackList()
     {
         $list = [];
-        \app\common\model\UsersBlack::with(['linkUsers'])->where(['uid'=>$this->user_id])->select()->each(function($item)use(&$list){
+        $info = \app\common\model\UsersBlack::with(['linkUsers'])->where(['uid'=>$this->user_id])->paginate()->each(function($item)use(&$list){
             array_push($list,[
                 'uid'=>$item['b_uid'],
                 'name' => $item['link_users']['name'],
                 'face' => $item['link_users']['face'],
             ]);
         });
-        return $this->_resData(1,'获取成功',$list);
+        $data = ['list'=>$list,'total_page'=>$info->lastPage()];
+        return $this->_resData(1,'获取成功',$data);
     }
 
     //黑名单列表
