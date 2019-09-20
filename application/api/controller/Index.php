@@ -181,6 +181,7 @@ class Index extends Common
         $on_user_label = input('on_user_label',0,'intval');
         $on_qr_code = input('on_qr_code',0,'intval'); //二维码
         $on_req_info = input('on_req_info',0,'intval'); //邀请信息
+        $on_black = input('on_black',0,'intval'); //邀请信息
 
         //用户信息
         $user_model = \app\common\model\Users::get($id);
@@ -202,6 +203,14 @@ class Index extends Common
             'birthday' => empty($user_model)?'':$user_model->birthday,
             'flag' => empty($user_model->py)?'':$user_model->py[0],
         ];
+        //黑名单
+        if($on_black){
+            //验证用户是否在我的黑名单
+            $is_black = \app\common\model\UsersBlack::where(['uid'=>$this->user_id,'b_uid'=>$id])->find();
+            //验证用户我是否在对方黑名单
+            $other_black = \app\common\model\UsersBlack::where(['uid'=>$id,'b_uid'=>$this->user_id])->find();
+            $data['black'] = ['in_mine'=>empty($is_black)?0:1,'in_other'=>empty($other_black)?0:1];
+        }
 
         //用户点赞
         if($on_praise_num){

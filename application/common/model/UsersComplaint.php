@@ -15,6 +15,7 @@ class UsersComplaint extends BaseModel
         ['name'=>'视频','m_url'=>'article/videoDetail'],
         ['name'=>'动态','m_url'=>'article/dynamicAdd'],
         ['name'=>'活动','m_url'=>''],
+        ['name'=>'用户','m_url'=>''],
     ];
 
     public static $fields_report = [
