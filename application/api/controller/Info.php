@@ -743,7 +743,7 @@ class Info extends Common
     {
         $php_input = input();
         $uid = input('user_id',0,'intval');
-
+        $user_id = $this->user_id;
 
         if(!empty($user_id) && !empty($uid)){
             //无法查看黑名单数据--必须登录
