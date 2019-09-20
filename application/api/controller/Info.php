@@ -28,6 +28,12 @@ class Info extends Common
         $is_mine = input('is_mine',0,'intval');//关注
         $is_course = input('is_course',0,'intval');//课堂
 
+
+        //检测是否关注
+        if(!$this->_checkFollow($uid)){
+            return $this->_resData(1,'未关注对方,无法查看信息');
+        }
+
         $user_id = $this->user_id;
         $where = [];
         $where[]=['status','>',0];
@@ -280,6 +286,11 @@ class Info extends Common
         //按用户查看
         $uid = input('user_id',0,'intval');
         $keyword = input('keyword','','trim');
+
+        //检测是否关注
+        if(!$this->_checkFollow($uid)){
+            return $this->_resData(1,'未关注对方,无法查看信息');
+        }
 
         $user_id = $this->user_id;
         $where = [];
@@ -710,6 +721,13 @@ class Info extends Common
     {
         $php_input = input();
         $uid = input('user_id',0,'intval');
+
+
+        //检测是否关注
+        if(!$this->_checkFollow($uid)){
+            return $this->_resData(1,'未关注对方,无法查看信息');
+        }
+
         $user_id = $this->user_id;
         $where = [];
         $where[] = ['uid','=',$uid];
@@ -791,5 +809,22 @@ class Info extends Common
     }
 
 
+    //检测用户关注问题
+    private function _checkFollow($uid)
+    {
+        if(empty($uid) || empty($this->user_id)){
+            return false;
+        }elseif($this->user_id==$uid){
+            return true;
+        }else{
+            $is_follow = \app\common\model\UsersFollow::where(['uid'=>$this->user_id,'f_uid'=>$uid])->find();
+            if(empty($is_follow)){
+                return false;
+            }else{
+                return true;
+            }
+
+        }
+    }
 
 }
