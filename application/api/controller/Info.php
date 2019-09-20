@@ -30,9 +30,9 @@ class Info extends Common
 
 
         //检测是否关注
-        if(!$this->_checkFollow($uid)){
-            return $this->_resData(1,'未关注对方,无法查看信息');
-        }
+//        if(!$this->_checkFollow($uid)){
+//            return $this->_resData(1,'未关注对方,无法查看信息');
+//        }
 
         $user_id = $this->user_id;
         $where = [];
@@ -288,9 +288,9 @@ class Info extends Common
         $keyword = input('keyword','','trim');
 
         //检测是否关注
-        if(!$this->_checkFollow($uid)){
-            return $this->_resData(1,'未关注对方,无法查看信息');
-        }
+//        if(!$this->_checkFollow($uid)){
+//            return $this->_resData(1,'未关注对方,无法查看信息');
+//        }
 
         $user_id = $this->user_id;
         $where = [];
@@ -724,9 +724,9 @@ class Info extends Common
 
 
         //检测是否关注
-        if(!$this->_checkFollow($uid)){
-            return $this->_resData(1,'未关注对方,无法查看信息');
-        }
+//        if(!$this->_checkFollow($uid)){
+//            return $this->_resData(1,'未关注对方,无法查看信息');
+//        }
 
         $user_id = $this->user_id;
         $where = [];
