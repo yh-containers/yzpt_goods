@@ -821,7 +821,7 @@ class Info extends Common
         }elseif($this->user_id==$uid){
             return true;
         }else{
-            $is_follow = \app\common\model\UsersFollow::where(['uid'=>$this->user_id,'f_uid'=>$uid])->find();
+            $is_follow = \app\common\model\UsersFollow::where(['uid'=>$this->user_id,'f_uid'=>$uid])->whereNotNull('follow_time')->find();
             if(empty($is_follow)){
                 return false;
             }else{
