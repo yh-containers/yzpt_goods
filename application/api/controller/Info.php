@@ -69,8 +69,11 @@ class Info extends Common
                 })->whereOr(function($query)use($uid,$user_id){
                     $query->where(['uid'=>$uid,'b_uid'=>$user_id]);
                 })->column('b_uid');
-                count($black_users)>0 && $where[] =['uid','not in',$black_users];
+            }else{
+                $black_users = \app\common\model\UsersBlack::where(['uid'=>$this->user_id])->column('b_uid');
             }
+            count($black_users)>0 && $where[] =['uid','not in',$black_users];
+
 
         }else{
             $where[] =['status','=',1];//只能看公开的
@@ -311,12 +314,17 @@ class Info extends Common
         }
 
         if(!empty($user_id) && !empty($uid)){
+
             //无法查看黑名单数据--必须登录
-            $black_users = \app\common\model\UsersBlack::whereOr(function($query)use($uid,$user_id){
-                $query->where(['uid'=>$user_id,'b_uid'=>$uid]);
-            })->whereOr(function($query)use($uid,$user_id){
-                $query->where(['uid'=>$uid,'b_uid'=>$user_id]);
-            })->column('b_uid');
+            if(!empty($uid)){
+                $black_users = \app\common\model\UsersBlack::whereOr(function($query)use($uid,$user_id){
+                    $query->where(['uid'=>$user_id,'b_uid'=>$uid]);
+                })->whereOr(function($query)use($uid,$user_id){
+                    $query->where(['uid'=>$uid,'b_uid'=>$user_id]);
+                })->column('b_uid');
+            }else{
+                $black_users = \app\common\model\UsersBlack::where(['uid'=>$this->user_id])->column('b_uid');
+            }
             count($black_users)>0 && $where[] =['uid','not in',$black_users];
         }
 
