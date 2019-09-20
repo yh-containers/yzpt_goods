@@ -59,6 +59,17 @@ class ViewLove extends BaseModel
             $where[] =['type','=',$php_input['type']];
         }
 
+        if(!empty($praise_uid) && !empty($user_id)){
+            //无法查看黑名单数据--必须登录
+            $black_users = \app\common\model\UsersBlack::whereOr(function($query)use($user_id,$praise_uid){
+                $query->where(['uid'=>$praise_uid,'b_uid'=>$user_id]);
+            })->whereOr(function($query)use($user_id,$praise_uid){
+                $query->where(['uid'=>$user_id,'b_uid'=>$praise_uid]);
+            })->column('b_uid');
+
+            count($black_users)>0 && $where[] =['uid','=',-1];
+        }
+
         $list = self::with(['linkUsers'=>function($query)use($praise_uid){
             $query->with(['linkHasFollow'=>function($query)use($praise_uid){
                 $query->where('uid','=',$praise_uid);

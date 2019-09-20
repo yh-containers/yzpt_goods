@@ -743,17 +743,6 @@ class Info extends Common
     {
         $php_input = input();
         $uid = input('user_id',0,'intval');
-        $user_id = $this->user_id;
-
-        if(!empty($user_id) && !empty($uid)){
-            //无法查看黑名单数据--必须登录
-            $black_users = \app\common\model\UsersBlack::whereOr(function($query)use($uid,$user_id){
-                $query->where(['uid'=>$user_id,'b_uid'=>$uid]);
-            })->whereOr(function($query)use($uid,$user_id){
-                $query->where(['uid'=>$uid,'b_uid'=>$user_id]);
-            })->column('b_uid');
-            count($black_users)>0 && $where[] =['uid','not in',$black_users];
-        }
 
         $user_id = $this->user_id;
         $where = [];
