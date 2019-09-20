@@ -313,7 +313,7 @@ class Info extends Common
             $where[]=['status','=',1]; //审核通过才能显示
         }
 
-        if(!empty($user_id) && !empty($uid)){
+        if(!empty($user_id)){
 
             //无法查看黑名单数据--必须登录
             if(!empty($uid)){
@@ -326,6 +326,7 @@ class Info extends Common
                 $black_users = \app\common\model\UsersBlack::where(['uid'=>$this->user_id])->column('b_uid');
             }
             count($black_users)>0 && $where[] =['uid','not in',$black_users];
+
         }
 
 
