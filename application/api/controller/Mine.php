@@ -440,7 +440,7 @@ class Mine extends Common
         }catch (\Exception $e){
             return $this->_resData(0, $e->getMessage());
         }
-        return $this->_resData(1,'操作成功',['state'=>$state]);
+        return $this->_resData(1,'已加入到黑名单，你可以在设置中移出',['state'=>$state]);
     }
     
 }

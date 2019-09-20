@@ -28,7 +28,11 @@ class UserNotice extends BaseModel
         if(!empty($php_input['type'])){
             $where[] =['type','=',$php_input['type']];
         }
-        $list = self::whereOr([$where,[['uid','=',0]]])->paginate();
+        $list = self::where(function($query)use($where){
+            $query->where($where);
+        })->whereOr(function($query){
+            $query->where([['uid','=',0]]);
+        })->order('id desc')->paginate();
         return $list;
     }
 }
