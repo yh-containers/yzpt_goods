@@ -11,6 +11,8 @@ class Dynamic extends BaseModel
 
     protected $insert = [ 'status'];
 
+    public static $link_cond_black_uid=0;
+
     public static $fields_status =[
         ['name'=>'待审核'],
         ['name'=>'公开'],
@@ -187,6 +189,13 @@ class Dynamic extends BaseModel
     public function linkIsPraise()
     {
         return $this->hasOne('DyPraise','dy_id')->whereNotNull('praise_date');
+    }
+
+
+    //黑名单
+    public function linkBlack()
+    {
+        return $this->hasOne('UsersBlack','b_uid','uid');
     }
 
 

@@ -30,9 +30,9 @@ class Info extends Common
 
 
         //检测是否关注
-        if(!$this->_checkFollow($uid)){
-            return $this->_resData(1,'未关注对方,无法查看信息');
-        }
+//        if(!$this->_checkFollow($uid)){
+//            return $this->_resData(1,'未关注对方,无法查看信息');
+//        }
 
         $user_id = $this->user_id;
         $where = [];
@@ -61,6 +61,17 @@ class Info extends Common
             $where_fnc = function($query)use($user_id){
               $query->whereOr([['status','=',1],['uid','=',$user_id]]);
             };
+
+            //无法查看黑名单数据--必须登录
+            if(!empty($uid)){
+                $black_users = \app\common\model\UsersBlack::whereOr(function($query)use($uid,$user_id){
+                    $query->where(['uid'=>$user_id,'b_uid'=>$uid]);
+                })->whereOr(function($query)use($uid,$user_id){
+                    $query->where(['uid'=>$uid,'b_uid'=>$user_id]);
+                })->column('b_uid');
+                count($black_users)>0 && $where[] =['uid','not in',$black_users];
+            }
+
         }else{
             $where[] =['status','=',1];//只能看公开的
         }
@@ -288,9 +299,9 @@ class Info extends Common
         $keyword = input('keyword','','trim');
 
         //检测是否关注
-        if(!$this->_checkFollow($uid)){
-            return $this->_resData(1,'未关注对方,无法查看信息');
-        }
+//        if(!$this->_checkFollow($uid)){
+//            return $this->_resData(1,'未关注对方,无法查看信息');
+//        }
 
         $user_id = $this->user_id;
         $where = [];
@@ -298,6 +309,18 @@ class Info extends Common
         if(empty($user_id) || $uid!=$user_id){
             $where[]=['status','=',1]; //审核通过才能显示
         }
+
+        if(!empty($user_id) && !empty($uid)){
+            //无法查看黑名单数据--必须登录
+            $black_users = \app\common\model\UsersBlack::whereOr(function($query)use($uid,$user_id){
+                $query->where(['uid'=>$user_id,'b_uid'=>$uid]);
+            })->whereOr(function($query)use($uid,$user_id){
+                $query->where(['uid'=>$uid,'b_uid'=>$user_id]);
+            })->column('b_uid');
+            count($black_users)>0 && $where[] =['uid','not in',$black_users];
+        }
+
+
         !empty($uid) && $where[] = ['uid','=',$uid];
         !empty($keyword) && $where[] = ['title|labels','like','%'.$keyword.'%'];
 
@@ -555,7 +578,6 @@ class Info extends Common
                 $query->where('linkIsJoin.uid','=',$user_id);
             }],'left');
         }
-
 
         $list =[];
         $info=$model->with(['linkJoinCount','linkUsers'])->where($where)

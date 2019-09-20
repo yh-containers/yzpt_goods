@@ -615,4 +615,15 @@ class Index extends Common
 
     }
 
+
+    public function platform()
+    {
+        $content = \app\common\model\SysSetting::getContent('normal');
+        $content = empty($content)?[]:explode(',',$content);
+        return $this->_resData(1,'获取成功',[
+            'tel'=>isset($content['tel'])?$content['tel']:'',
+            'qq'=>isset($content['qq'])?$content['qq']:'',
+            'email'=>isset($content['email'])?$content['email']:'',
+        ]);
+    }
 }

@@ -415,5 +415,31 @@ class Mine extends Common
 
         return $this->_resData(1,'更新成功',$data);
     }
+
+    //黑名单列表
+    public function blackList()
+    {
+        $list = [];
+        \app\common\model\UsersBlack::with(['linkUsers'])->where(['uid'=>$this->user_id])->select()->each(function($item)use(&$list){
+            array_push($list,[
+                'uid'=>$item['b_uid'],
+                'name' => $item['link_users']['name'],
+                'face' => $item['link_users']['face'],
+            ]);
+        });
+        return $this->_resData(1,'获取成功',$list);
+    }
+
+    //黑名单列表
+    public function blackOpt()
+    {
+        $uid = input('user_id',0,'intval');
+        try{
+            $state = \app\common\model\UsersBlack::JoinOrDel($this->user_model,$uid);
+        }catch (\Exception $e){
+            return $this->_resData(0, $e->getMessage());
+        }
+        return $this->_resData(1,'操作成功',['state'=>$state]);
+    }
     
 }
