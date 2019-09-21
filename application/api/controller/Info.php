@@ -310,12 +310,18 @@ class Info extends Common
         $user_id = $this->user_id;
         $where = [];
 
+        $where[]=['status','=',1];
 
         if(empty($user_id) || $uid!=$user_id){
             //用户没有登录/当前登录者不等于要查看的用户
-            $where[]=['status','=',1];
-        }else{
             $where[]=['is_auth','=',1]; //只能查看审核通过的作品
+        }
+//        dump($where);exit;
+        if($uid){
+            //指定查看用户
+            $order = 'id desc';
+        }else{
+            $order = 'up_times asc,id desc';
         }
 
         if(!empty($user_id)){
@@ -350,7 +356,7 @@ class Info extends Common
                     $query->where('uid','=',$user_id);
                 }]);
             }])->where($where)
-            ->order('up_times asc,id desc')->paginate()
+            ->order($order)->paginate()
             ->each(function($item,$index)use(&$list){
                 if(empty($index)){
                     $item->setInc('up_times');
