@@ -110,6 +110,28 @@ class BaseModel extends Model
     }
 
 
+    //作品审核
+    public static function proAuth($id,$state,$content='')
+    {
+        $class = get_called_class();
+        empty($id) && exception('参数异常:id');
+        empty($state) && exception('参数异常:state');
+
+        $model = new $class();
+        $model = $model->get($id);
+        empty($model) && exception('操作对象异常');
+        !empty($model['is_auth']) && exception('操作对象未处于待审核状态,无法进行此操作');
+
+        $model->is_auth = $state===1?1:2;
+        $model->auth_time = date('Y-m-d H:i:s');
+        $model->auth_content = empty($content)? $model->is_auth==1?'恭喜您,发布的信息已通过审核':'很遗憾,发布的信息审核被拒' :$content;
+
+        $model->save();
+
+
+    }
+
+
     //验证文件是否是图片
     public static function checkImg($file)
     {

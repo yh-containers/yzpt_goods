@@ -11,7 +11,7 @@ class Video extends BaseModel
 
     protected $name='video';
 
-    protected $insert = ['uid', 'status'];
+    protected $insert = ['uid'];
 
     protected function setUidAttr($value,$data)
     {
@@ -19,10 +19,10 @@ class Video extends BaseModel
     }
 
     //状态
-    public function setStatusAttr($value)
-    {
-        return empty($value)?0:$value;
-    }
+//    public function setStatusAttr($value)
+//    {
+//        return empty($value)?0:$value;
+//    }
 
     //发布时间
     protected function getReleaseDateAttr()
@@ -66,6 +66,29 @@ class Video extends BaseModel
             ]
         ];
         return $data;
+    }
+
+
+    public function getStatusIntroAttr()
+    {
+        if(empty($this->is_auth)){
+            return '待审核';
+        }elseif($this->is_auth==2){
+            return '已被拒';
+        }else{
+            return self::getPropInfo('fields_status',$this->status);
+        }
+    }
+
+    public function getStatusClassAttr()
+    {
+        if(empty($this->is_auth)){
+            return 'wait';
+        }elseif($this->is_auth==2){
+            return 'warring';
+        }else{
+            return 'normal';
+        }
     }
 
 

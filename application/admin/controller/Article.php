@@ -183,6 +183,38 @@ class Article extends Common
         ]);
     }
 
+
+    //添加活动
+    public function activityAdd()
+    {
+        $id  = $this->request->param('id');
+        $model = new \app\common\model\Activity();
+        //表单提交
+        if($this->request->isAjax()){
+            $php_input = $this->request->param();//获取当前请求的参数
+            if(!$id){
+                $pointer_user_id = [1,2,3,6,8,9];
+                shuffle($pointer_user_id);
+                $php_input['uid'] = $pointer_user_id[0];
+            }
+
+            !empty($php_input['user_num']) && $php_input['user_num'] = implode(',',$php_input['user_num']);
+            $validate = new \app\common\validate\Activity();
+            $validate->scene('api_release');
+            try{
+                $model->actionAdd($php_input,$validate);//调用BaseModel中封装的添加/更新操作
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
+            }
+            return json(['code'=>1,'msg'=>'操作成功']);
+        }
+        $model = $model->get($id);
+        return view('activityAdd',[
+            'model'=>$model,
+        ]);
+    }
+
+
     //删除数据
     public function activityDel()
     {
@@ -190,6 +222,7 @@ class Article extends Common
         $model = new \app\common\model\Activity();
         return $model->actionDel(['id'=>$id]);
     }
+
 
     //乐库
     public function music()
@@ -395,5 +428,30 @@ class Article extends Common
             return $this->_resData(0,$e->getMessage());
         }
         return $this->_resData(1,'删除成功');
+    }
+
+
+    //审核动作
+    public function auth()
+    {
+        $type = input('type');
+        $id = input('id',0,'intval');
+        $state = input('state',2,'intval');
+        $content = input('content','','trim');
+        if($type == 'video'){
+            $class = \app\common\model\Video::class;
+        }elseif($type == 'dynamic'){
+            $class = \app\common\model\Dynamic::class;
+        }elseif($type == 'activity'){
+            $class = \app\common\model\Activity::class;
+        }else{
+            return $this->_resData(0,'审核类型异常');
+        }
+        try{
+            $class::proAuth($id,$state,$content);
+        }catch (\Exception $e){
+            return $this->_resData(0,$e->getMessage());
+        }
+        return $this->_resData(1,'操作成功');
     }
 }

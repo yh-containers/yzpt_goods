@@ -17,6 +17,7 @@ class Activity extends Validate
         'title.require' => '请输入标题',
         'content.require' => '活动详情必须输入',
         'date.require' => '活动日期必须传入',
+        'start_date.require' => '请选择活动开始时间',
         'start_date.date' => '活动时间格式异常:',
 
         'user_num.require' => '请输入活动人数',
@@ -59,6 +60,7 @@ class Activity extends Validate
     {
         if(isset($data['start_date']) && $value<$data['start_date']){
             return '活动结束时间不得低于开始时间';
+
         }
         return true;
     }

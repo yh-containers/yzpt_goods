@@ -9,7 +9,7 @@ class Dynamic extends BaseModel
     use SoftDelete;
     protected $name='dynamic';
 
-    protected $insert = [ 'status'];
+    protected $insert = [];
 
     public static $link_cond_black_uid=0;
 
@@ -20,10 +20,27 @@ class Dynamic extends BaseModel
         ['name'=>'禁用'],
     ];
 
-    //状态
-    public function setStatusAttr($value)
+
+    public function getStatusIntroAttr()
     {
-        return empty($value)?0:$value;
+        if(empty($this->is_auth)){
+            return '待审核';
+        }elseif($this->is_auth==2){
+            return '已被拒';
+        }else{
+            return self::getPropInfo('fields_status',$this->status,'name');
+        }
+    }
+
+    public function getStatusClassAttr()
+    {
+        if(empty($this->is_auth)){
+            return 'wait';
+        }elseif($this->is_auth==2){
+            return 'warring';
+        }else{
+            return 'normal';
+        }
     }
 
 

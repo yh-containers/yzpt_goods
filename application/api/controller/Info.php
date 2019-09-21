@@ -36,7 +36,8 @@ class Info extends Common
 
         $user_id = $this->user_id;
         $where = [];
-        $where[]=['status','>',0];
+        $where[]=['status','<>',3];
+        $where[]=['auth','=',1];
         $order = 'id desc';
         if($is_new){
 
@@ -309,8 +310,12 @@ class Info extends Common
         $user_id = $this->user_id;
         $where = [];
 
+
         if(empty($user_id) || $uid!=$user_id){
-            $where[]=['status','=',1]; //审核通过才能显示
+            //用户没有登录/当前登录者不等于要查看的用户
+            $where[]=['status','=',1];
+        }else{
+            $where[]=['auth','=',1]; //只能查看审核通过的作品
         }
 
         if(!empty($user_id)){
@@ -368,7 +373,7 @@ class Info extends Common
                     'is_follow'=>empty($item['link_users']['link_has_follow'])?0:1,
                     'is_praise'=>empty($item['link_is_praise'])?0:1,
                 ];
-                empty($item['status']) && $_data['status_info'] = '待审核';
+                empty($item['is_auth']) && $_data['status_info'] = '待审核';
 
                 array_push($list,$_data);
             });
@@ -575,6 +580,7 @@ class Info extends Common
 
         $user_id = $this->user_id;
         $where = [];
+        $where[]=['auth','=',1];
 
         //默认查询方式
         $model=\app\common\model\Activity::with(['linkIsJoin'=>function($query)use($user_id){

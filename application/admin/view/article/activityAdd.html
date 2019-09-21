@@ -1,0 +1,151 @@
+{extend name="base" /}
+
+{block name="style"}
+<style>
+
+    .goods-group{display: flex;flex-wrap: wrap;}
+    .goods-group .item{display: inline-block;position: relative;margin-right: 5px}
+    .goods-group .item i{position: absolute; top:0; size: 18px;color: white; background: red}
+
+</style>
+{/block}
+
+{block name="content"}
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <!--<h3 class="box-title">Quick Example</h3>-->
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+            <div class="box-body">
+                <form id="form" action="" class="form-horizontal">
+                    <input type="hidden" name="id" value="{$model['id']}"/>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">标题</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="title" value="{$model['title']}" maxlength="155">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">内容</label>
+                        <div class="col-sm-10">
+                            <textarea name="content" class="form-control" rows="10">{$model['content']}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">联系方式</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" name="phone" value="{$model['phone']}" maxlength="155">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">图片</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" name="img" value="{:empty($model)?'':$model->getData('img')}" />
+                            <button type="button" class="layui-btn upload-img" lay-data='{:action('upload/info',['type'=>'article'])}'>
+                            <i class="layui-icon">&#xe67c;</i>封面图
+                            </button>
+                            <img width="80" height="80" src="{$model['img']}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">活动时间</label>
+                        <div class="col-sm-10">
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control datetime_start" name="start_date" value="{$model['start_date']}">
+                            </div>
+                            <div class="col-sm-2 ">
+                                <input type="text" class="form-control datetime_end" name="end_date" value="{$model['end_date']}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">参与人数</label>
+                        <div class="col-sm-10">
+                            <div class="col-sm-2">
+                                <input type="number" class="form-control" name="user_num[]"  placeholder="参与人数" value="{:count($model['user_num'])>0?$model['user_num'][0]:''}">
+                            </div>
+                            <div class="col-sm-2 ">
+                                <input type="number" class="form-control " name="user_num[]" placeholder="参与人数" value="{:count($model['user_num'])==2?$model['user_num'][1]:''}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">活动地址</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="addr" value="{$model['addr']}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">详细地址</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="addr_extra" value="{$model['addr_extra']}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">活动类型</label>
+                        <div class="col-sm-10">
+                            <label>
+                                <input type="radio" name="online" value="0" {:empty($model)?'checked':''} />
+                                线上
+                            </label>
+                            <label>
+                                <input type="radio" name="online" value="1" {:$model['status']==1?'checked':''}>
+                                线下
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-10">
+                            <label>
+                                <input type="radio" name="status" value="1" {:empty($model)?'checked':($model['status']==1?'checked':'')} />
+                                开启
+                            </label>
+                            <label>
+                                <input type="radio" name="status" value="2" {:$model['status']==2?'checked':''}>
+                                禁用
+                            </label>
+                        </div>
+                    </div>
+
+
+
+                </form>
+
+            </div>
+            <!-- /.box-body -->
+
+        <div class="box-footer">
+            <button type="button" onclick="$.common.submitForm()" class="col-sm-offset-2 btn  btn-info">保存</button>
+        </div>
+    </div>
+
+{/block}
+
+
+{block name="script"}
+
+<script>
+    //引用上传组件
+    layui.use(['upload','laydate'],function(){
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        $.common.fileUpload(upload,'.upload-img')
+        //执行一个laydate实例
+        laydate.render({
+            elem: '.datetime_start' //指定元素
+            ,type: 'datetime' //默认，可不填
+        });
+        laydate.render({
+            elem: '.datetime_end' //指定元素
+            ,type: 'datetime' //默认，可不填
+        });
+    })
+</script>
+{/block}

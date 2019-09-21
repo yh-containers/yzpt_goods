@@ -9,17 +9,36 @@ class Activity extends BaseModel
     use SoftDelete;
     protected $name='activity';
 
-    protected $insert = ['status'];
+    protected $insert = [];
 
     public static $fields_status = ['待审核','正常','关闭'];
 
     public static $fields_online=['线上','线下'];
 
-    //状态
-    public function setStatusAttr($value)
+
+
+    public function getStatusIntroAttr()
     {
-        return empty($value)?0:$value;
+        if(empty($this->is_auth)){
+            return '待审核';
+        }elseif($this->is_auth==2){
+            return '已被拒';
+        }else{
+            return self::getPropInfo('fields_status',$this->status);
+        }
     }
+
+    public function getStatusClassAttr()
+    {
+        if(empty($this->is_auth)){
+            return 'wait';
+        }elseif($this->is_auth==2){
+            return 'warring';
+        }else{
+            return 'normal';
+        }
+    }
+
 
 
     //发布时间
@@ -35,7 +54,7 @@ class Activity extends BaseModel
 
     protected function getUserNumAttr($value)
     {
-        return empty($value)?[]:explode('-',$value);
+        return empty($value)?[]:explode(',',$value);
     }
     protected function getUserNumStrAttr()
     {
@@ -51,13 +70,13 @@ class Activity extends BaseModel
 
     protected function getStartDateAttr($value)
     {
-        return empty($value)?'':substr($value,0,10);
+        return empty($value)?null:substr($value,0,10);
     }
 
 
     protected function getEndDateAttr($value)
     {
-        return empty($value)?'':substr($value,0,10);
+        return empty($value)?null:substr($value,0,10);
     }
 
     protected function getStateIntroAttr($value,$data)

@@ -44,8 +44,11 @@
                         </td>
                         <td>{$vo['views']}</td>
                         <td>{$vo['create_time']}</td>
-                        <td>{:\\app\\common\\model\\Dynamic::getPropInfo('fields_status',$vo['status'],'name')}</td>
+                        <td>{:$vo['status_intro']}</td>
                         <td>
+                            {if(empty($vo['is_auth']))}
+                                <a class="layui-btn layui-btn-normal layui-btn-sm" href="javascript:;" onclick="handleAuth(this,{$vo['id']})">审核</a>
+                            {/if}
                             <a class="layui-btn layui-btn-sm" href="{:url('dynamicAdd',['id'=>$vo['id']])}">编辑</a>
                             <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("dynamicDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
                         </td>
@@ -62,6 +65,12 @@
         </form>
     </div>
     <!-- /.error-page -->
+<div class="form-group" id="auth-block" style="display: none;">
+    <div class="col-sm-12">
+        <textarea name="content" rows="5" placeholder="请输入审核内容.." class="form-control"></textarea>
+    </div>
+</div>
+
 {/block}
 {block name="script"}
 <script>
@@ -71,5 +80,36 @@
             ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
         });
     })
+
+
+    function handleAuth(obj,id){
+        var layer_index = layer.open({
+            type:1,
+            title:'审核',
+            content:$('#auth-block'),
+            area:['300px','250px'],
+            btn:['通过','拒绝'],
+            yes:function(index, layero){
+                //按钮【按钮一】的回调
+                var content = $("#auth-block textarea[name='content']").val()
+                $.common.waitConfirm('确定通过审核?',"{:url('article/auth')}",{type:'dynamic',id:id,state:1,content:content},'post',(res)=>{
+                    if(res.code===1){
+                        setTimeout(function(){location.reload()},1000)
+                    }
+                })
+
+            }
+            ,btn2:function(index){
+                var content = $("#auth-block textarea[name='content']").val()
+                $.common.waitConfirm('确定拒绝通过审核?',"{:url('article/auth')}",{type:'dynamic',id:id,state:2,content:content},'post',(res)=>{
+                    if(res.code===1){
+                        setTimeout(function(){location.reload()},1000)
+                    }
+                })
+
+            }
+        })
+    }
+
 </script>
 {/block}
