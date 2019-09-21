@@ -32,6 +32,16 @@ class UsersComplaint extends BaseModel
         ['name'=>'其他'],
     ];
 
+    public static function init()
+    {
+        self::event('after_insert',function($model){
+            $title = '举报通知';
+            $content = '已收到举报信息,非常感谢您的举报,我们会立即进行相关信息处理.';
+            $model['uid'] > 0 && UserNotice::send($title,$content,$model['uid'],0,$model['id']);
+        });
+    }
+
+
     public function linkUsers()
     {
         return $this->belongsTo('Users','uid');
