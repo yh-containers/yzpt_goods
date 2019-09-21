@@ -110,13 +110,20 @@ class Article extends Common
     public function dynamic()
     {
         $keyword = input('keyword','','trim');
+        $auth_state = input('auth_state',0,'intval');
         $where=[];
+        if($auth_state==1){
+            $where[] = ['is_auth','=',0];
+        }elseif($auth_state==2){
+            $where[] = ['is_auth','=',2];
+        }
         !empty($keyword) && $where[]=['content','like','%'.$keyword.'%'];
         $list = \app\common\model\Dynamic::with(['linkUsers'])->where($where)->order('update_time desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
         return view('dynamic',[
+            'auth_state' => $auth_state,
             'keyword' => $keyword,
             'list' => $list,
             'page'=>$page
@@ -170,13 +177,20 @@ class Article extends Common
     public function activity()
     {
         $keyword = input('keyword','','trim');
+        $auth_state = input('auth_state',0,'intval');
         $where=[];
+        if($auth_state==1){
+            $where[] = ['is_auth','=',0];
+        }elseif($auth_state==2){
+            $where[] = ['is_auth','=',2];
+        }
         !empty($keyword) && $where[]=['content','like','%'.$keyword.'%'];
         $list = \app\common\model\Activity::with(['linkUsers'])->where($where)->order('id desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
         return view('activity',[
+            'auth_state' => $auth_state,
             'keyword' => $keyword,
             'list' => $list,
             'page'=>$page
@@ -277,13 +291,20 @@ class Article extends Common
     public function video()
     {
         $keyword = input('keyword','','trim');
+        $auth_state = input('auth_state',0,'intval');
         $where=[];
+        if($auth_state==1){
+            $where[] = ['is_auth','=',0];
+        }elseif($auth_state==2){
+            $where[] = ['is_auth','=',2];
+        }
         !empty($keyword) && $where[]=['title','like','%'.$keyword.'%'];
         $list = \app\common\model\Video::where($where)->order('status asc,update_time desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
         return view('video',[
+            'auth_state' => $auth_state,
             'keyword' => $keyword,
             'list' => $list,
             'page'=>$page

@@ -51,10 +51,11 @@ class Activity extends Validate
 
     protected function checkDate($value,$rule,$data=[])
     {
-        if($value<date('Y-m-d')){
-            return '活动不能低于当前时间';
+        if($value>=date('Y-m-d')){
+            return true;
+        }else{
+            return '活动开始时间不能低于当前时间';
         }
-        return true;
     }
     protected function checkEndDate($value,$rule,$data=[])
     {
