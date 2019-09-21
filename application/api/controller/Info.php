@@ -345,8 +345,12 @@ class Info extends Common
                     $query->where('uid','=',$user_id);
                 }]);
             }])->where($where)
-            ->order('id desc')->paginate()
+            ->order('up_times asc,id desc')->paginate()
             ->each(function($item,$index)use(&$list){
+                if(empty($index)){
+                    $item->setInc('up_times');
+                }
+
                 $_data = [
                     'id'=>$item['id'],
                     'uid'=>$item['uid'],

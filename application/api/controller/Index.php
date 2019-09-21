@@ -620,7 +620,7 @@ class Index extends Common
         $model->uid = $this->user_id;
         $model->content = input('content','','trim');
         $model->save();
-        return $this->_resData(1,'举报提示修改：感谢您的举报，我们将通过站内信通知您举报的内容是否属实。谢谢！');
+        return $this->_resData(1,'举报提示：感谢您的举报，我们将通过站内信通知您举报的内容是否属实。谢谢！');
 
     }
 
