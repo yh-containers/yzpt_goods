@@ -678,7 +678,7 @@ class Info extends Common
             }
         ])->where(['status'=>1,'id'=>$id])
             ->order('id desc')->find();
-        empty($model) && exception('活动不存在');
+        empty($model) && exception('该活动已被禁止参与');
 
 
         $info=[

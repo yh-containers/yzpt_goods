@@ -57,6 +57,7 @@
                                 <a class="layui-btn layui-btn-normal layui-btn-sm" href="javascript:;" onclick="handleAuth(this,{$vo['id']})">审核</a>
                             {/if}
                             <a class="layui-btn layui-btn-sm" href="{:url('dynamicAdd',['id'=>$vo['id']])}">编辑</a>
+                            <a class="layui-btn layui-btn-sm" href="{:url('dynamicDetail',['id'=>$vo['id']])}">查看</a>
                             <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("dynamicDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
                         </td>
                     </tr>

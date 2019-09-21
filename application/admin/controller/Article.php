@@ -173,6 +173,17 @@ class Article extends Common
         return $model->actionDel(['id'=>$id]);
     }
 
+
+    public function dynamicDetail()
+    {
+        $id  = $this->request->param('id');
+        $model = \app\common\model\Dynamic::with(['link_users','linkCommentCount'])->get($id);
+
+        return view('dynamicDetail',[
+            'model'=>$model,
+        ]);
+    }
+
     //活动列表
     public function activity()
     {
@@ -408,13 +419,16 @@ class Article extends Common
         if($type=='video'){
             //视频
             $class = \app\common\model\VideoComment::class;
+            $where[] =['vid','=',$id];
+
         }elseif($type=='dynamic'){
             //动态
             $class = \app\common\model\DyComment::class;
+            $where[] =['dy_id','=',$id];
+
         }else{
             return $this->_resData(1,'获取成功',['list'=>[],'total_page'=>0]);
         }
-        $where[] =['vid','=',$id];
         //评论信息
         $list = [];
         $info = $class::with(['linkUsers','linkToUsers'])->where($where)->order('id desc')->paginate()->each(function($item,$index)use(&$list){
