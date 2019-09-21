@@ -633,7 +633,7 @@ class Index extends Common
             'tel'=>isset($content['tel'])?$content['tel']:'',
             'qq'=>isset($content['qq'])?$content['qq']:'',
             'email'=>isset($content['email'])?$content['email']:'',
-            'cp'=>'Copyright  2019 深圳市深正互联网络有限公司版权所有',
+            'cp'=>'Copyright  2019 深圳市深正互联网络有限公司版权所有.',
         ]);
     }
 }
