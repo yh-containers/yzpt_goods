@@ -118,7 +118,7 @@ class Article extends Common
             $where[] = ['is_auth','=',2];
         }
         !empty($keyword) && $where[]=['content','like','%'.$keyword.'%'];
-        $list = \app\common\model\Dynamic::with(['linkUsers'])->where($where)->order('update_time desc')->paginate();
+        $list = \app\common\model\Dynamic::with(['linkUsers'])->where($where)->order('is_auth asc,update_time desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
@@ -196,7 +196,7 @@ class Article extends Common
             $where[] = ['is_auth','=',2];
         }
         !empty($keyword) && $where[]=['content','like','%'.$keyword.'%'];
-        $list = \app\common\model\Activity::with(['linkUsers'])->where($where)->order('id desc')->paginate();
+        $list = \app\common\model\Activity::with(['linkUsers'])->where($where)->order('is_auth asc,id desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
@@ -310,7 +310,7 @@ class Article extends Common
             $where[] = ['is_auth','=',2];
         }
         !empty($keyword) && $where[]=['title','like','%'.$keyword.'%'];
-        $list = \app\common\model\Video::where($where)->order('status asc,update_time desc')->paginate();
+        $list = \app\common\model\Video::where($where)->order('is_auth asc,status asc,update_time desc')->paginate();
         //dump($list);die;
         // 获取分页显示
         $page = $list->render();
