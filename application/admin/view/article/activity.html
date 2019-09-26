@@ -58,6 +58,7 @@
                             {/if}
 
                             <a class="layui-btn layui-btn-sm" href="{:url('activityAdd',['id'=>$vo['id']])}">编辑</a>
+                            <a class="layui-btn layui-btn-sm" href="{:url('activityDetail',['id'=>$vo['id']])}">查看</a>
                             <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;" onclick="$.common.waitConfirm('是否删除该条数据?','{:url("activityDel",["id"=>$vo["id"]])}')" class="ml-5">  删除</a>
                         </td>
                     </tr>

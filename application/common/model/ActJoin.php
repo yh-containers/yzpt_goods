@@ -5,7 +5,7 @@ class ActJoin extends BaseModel
 {
 
     protected $name='act_join';
-
+    public static $fields_sex=['','男','女'];
 
     //
     public static function init()

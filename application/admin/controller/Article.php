@@ -240,6 +240,18 @@ class Article extends Common
     }
 
 
+    public function activityDetail()
+    {
+        $id  = $this->request->param('id');
+        $model = \app\common\model\Activity::with(['linkUsers','linkJoinCount','linkCommentCount'])->get($id);
+        //加入人信息
+        $join_model = \app\common\model\ActJoin::where(['aid'=>$id])->select();
+        return view('activityDetail',[
+            'model'=>$model,
+            'join_model'=>$join_model,
+        ]);
+    }
+
     //删除数据
     public function activityDel()
     {
