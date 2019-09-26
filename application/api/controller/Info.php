@@ -132,6 +132,7 @@ class Info extends Common
         try{
             $input_data = input();
             $input_data['uid'] = $this->user_id;
+            $input_data['status'] = empty($input_data['status'])?1:$input_data['status'];
             $validate =new \app\common\validate\Dynamic();
             $validate->scene('api_release');
             $model = new \app\common\model\Dynamic();

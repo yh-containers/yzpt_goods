@@ -14,7 +14,7 @@ class Dynamic extends BaseModel
     public static $link_cond_black_uid=0;
 
     public static $fields_status =[
-        ['name'=>'待审核'],
+        ['name'=>'--'],
         ['name'=>'公开'],
         ['name'=>'私密'],
         ['name'=>'禁用'],
