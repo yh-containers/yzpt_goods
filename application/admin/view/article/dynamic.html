@@ -35,7 +35,7 @@
                             <th width="20">#</th>
                             <th width="80">用户名</th>
                             <th width="200">动态内容</th>
-                            <th width="80">浏览次数</th>
+                            <!--<th width="80">浏览次数</th>-->
                             <th width="80">发布时间</th>
                             <th width="60">状态</th>
                             <th width="120">操作</th>
@@ -49,7 +49,7 @@
                         <td title="{$vo['content']}">
                             <div> {:mb_strlen(htmlspecialchars($vo['content']),'utf-8')>20 ?(mb_substr(htmlspecialchars($vo['content']),0,20,'utf-8').'...'):htmlspecialchars($vo['content'])} </div>
                         </td>
-                        <td>{$vo['views']}</td>
+                        <!--<td>{$vo['views']}</td>-->
                         <td>{$vo['create_time']}</td>
                         <td>{:$vo['status_intro']}</td>
                         <td>
