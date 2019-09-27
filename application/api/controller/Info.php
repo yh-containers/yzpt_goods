@@ -342,7 +342,7 @@ class Info extends Common
 
 
         !empty($uid) && $where[] = ['uid','=',$uid];
-        !empty($keyword) && $where[] = ['title|labels|name|phone|req_num|link_users.id','like','%'.$keyword.'%'];
+        !empty($keyword) && $where[] = ['title|labels|name|phone|req_num','like','%'.$keyword.'%'];
 
         $list =[];
         $info=\app\common\model\Video::withJoin('linkUsers','left')->with(['linkCommentCount'
