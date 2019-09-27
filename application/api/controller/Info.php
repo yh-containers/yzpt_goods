@@ -79,7 +79,7 @@ class Info extends Common
         }else{
             $where[] =['status','=',0];//只能看公开的
         }
-
+//        dump($where);exit;
 
         !empty($uid) && $where[] = ['uid','=',$uid];
         $list =[];

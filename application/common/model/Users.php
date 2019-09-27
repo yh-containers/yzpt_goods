@@ -193,7 +193,7 @@ class Users extends BaseModel
             $setting_content = json_decode($setting_content,true);
 
             //验证用户是存在被邀请记录
-            $req_model = self::where(['phone'=>$model['phone']])->order('id desc')->find();
+            $req_model = UsersReqRecord::where(['phone'=>$model['phone']])->order('id desc')->find();
             if(!empty($req_model)){
                 $req_user_model = self::where(['id'=>$req_model['req_uid']])->find();
                 !empty($req_user_model) && self::$req_user_model = $req_user_model;
