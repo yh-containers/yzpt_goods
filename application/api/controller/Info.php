@@ -36,7 +36,7 @@ class Info extends Common
 
         $user_id = $this->user_id;
         $where = [];
-        $where[]=['status','<>',3];
+        $where[]=['status','<>',2];
         $where[]=['is_auth','=',1];
         $order = 'id desc';
         if($is_new){
@@ -77,7 +77,7 @@ class Info extends Common
 
 
         }else{
-            $where[] =['status','=',1];//只能看公开的
+            $where[] =['status','=',0];//只能看公开的
         }
 
 
@@ -132,7 +132,6 @@ class Info extends Common
         try{
             $input_data = input();
             $input_data['uid'] = $this->user_id;
-            $input_data['status'] = empty($input_data['status'])?1:$input_data['status'];
             $validate =new \app\common\validate\Dynamic();
             $validate->scene('api_release');
             $model = new \app\common\model\Dynamic();
@@ -311,7 +310,7 @@ class Info extends Common
         $user_id = $this->user_id;
         $where = [];
 
-        $where[]=['status','=',1];
+        $where[]=['video.status','=',1];
 
         if(empty($user_id) || $uid!=$user_id){
             //用户没有登录/当前登录者不等于要查看的用户
@@ -343,10 +342,10 @@ class Info extends Common
 
 
         !empty($uid) && $where[] = ['uid','=',$uid];
-        !empty($keyword) && $where[] = ['title|labels','like','%'.$keyword.'%'];
+        !empty($keyword) && $where[] = ['title|labels|name|phone|req_num|id','like','%'.$keyword.'%'];
 
         $list =[];
-        $info=\app\common\model\Video::with(['linkCommentCount'
+        $info=\app\common\model\Video::withJoin('linkUsers','left')->with(['linkCommentCount'
             //点赞
             ,'linkIsPraise'=>function($query)use($user_id){
                 $query->where('uid','=',$user_id);

@@ -426,13 +426,23 @@ class Index extends Common
     public function shareAction()
     {
         $phone = input('phone','');
-        $php_input = input();
+        $req_code = input('req_code','');
+//        $php_input = input();
         !validPhone($phone) && exception('请输入正确的手机号码');
-        try{
-            \app\common\model\Users::handleLogin($phone,'1234',1,$php_input);
-        }catch (\Exception $e){
-            return $this->_resData(0,$e->getMessage());
-        }
+//        try{
+//            \app\common\model\Users::handleLogin($phone,'1234',1,$php_input);
+//        }catch (\Exception $e){
+//            return $this->_resData(0,$e->getMessage());
+//        }
+        //查找用户
+        $req_user_model = \app\common\model\Users::where(['qr_code'=>$req_code])->find();
+        $req_uid = empty($req_user_model)?0:$req_user_model['id'];
+        \app\common\model\UsersReqRecord::insert([
+            'phone'=>$phone,
+            'req_uid'=>$req_uid,
+            'req_code'=>$req_code,
+        ]);
+
         return $this->_resData(1,'绑定成功');
 
 
