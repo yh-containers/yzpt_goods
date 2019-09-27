@@ -427,6 +427,7 @@ class Index extends Common
     {
         $phone = input('phone','');
         $php_input = input();
+        !validPhone($phone) && exception('请输入正确的手机号码');
         try{
             \app\common\model\Users::handleLogin($phone,'1234',1,$php_input);
         }catch (\Exception $e){
