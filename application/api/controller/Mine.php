@@ -162,13 +162,14 @@ class Mine extends Common
     public function moneyLog()
     {
         //用户消费日志
-        $info = UsersMoneyLog::moneyLogs($this->user_id);
+        $info = \app\common\model\UsersRaiseLogs::where(['uid'=>$this->user_id])->order('id desc')->paginate();
         $list = [];
         foreach ($info as $vo){
             $list[] =[
+                'type' => $vo['type'],
                 'intro' => $vo['intro'],
-                'money' => $vo['money'],
-                'date_time' => date('Y-m-d H:i',$vo['create_time']),
+                'money' => $vo['num'],
+                'date_time' => $vo['create_time'],
             ];
         }
         $data=['list'=>$list,'total_page'=>$info->lastPage()];
@@ -414,7 +415,7 @@ class Mine extends Common
         ];
         //触发奖项
         $this->user_model->trigger('pinggu');
-        
+
         return $this->_resData(1,'更新成功',$data);
     }
 

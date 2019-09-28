@@ -253,15 +253,15 @@ class Users extends BaseModel
             $award_num = empty($num[0])?2:$num[0];
             $award_limit = isset($num[1])?$num[1]:1;
             //获取用户奖励次数
-            $award_times = UsersRaiseLogs::where([['uid','=',$model['uid']],['type','=',8],['create_time','>=',date('Y-m-d').' 00:00:00']])->count();
-            if(empty($award_limit) || empty($award_times) || $award_times<$award_limit){
+            $award_times = UsersRaiseLogs::where([['uid','=',$model['id']],['type','=',8],['create_time','>=',date('Y-m-d').' 00:00:00']])->count();
+            if($award_num>0 && (empty($award_limit) || empty($award_times) || $award_times<$award_limit)){
                 //验证用户是否有更新记录
-                UsersHealth::where(['date'=>date('Y-m-d'),'uid'=>$model['uid']])->find();
-                //增加养分
-                $user_model = Users::get($model['uid']);
-                if($award_num>0 && !empty($user_model)){
-                    $model->user_model->recordRaise($award_num, 8,'更新健康信息获得:'.$award_num.'养分');
+                $update_record_model = UsersHealth::where(['date'=>date('Y-m-d'),'uid'=>$model['uid']])->find();
+                if($update_record_model){
+                    //增加养分
+                    $model->recordRaise($award_num, 8,'更新健康信息获得:'.$award_num.'养分');
                 }
+
             }
         });
 
