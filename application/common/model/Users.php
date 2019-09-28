@@ -245,6 +245,7 @@ class Users extends BaseModel
 
         //评估
         self::event('pinggu',function($model){
+            echo 123;
             //增加养分
             $setting_content = SysSetting::getContent('normal');
             $setting_content = json_decode($setting_content,true);
@@ -253,7 +254,7 @@ class Users extends BaseModel
             $award_num = empty($num[0])?2:$num[0];
             $award_limit = isset($num[1])?$num[1]:1;
             //获取用户奖励次数
-            $award_times = UsersRaiseLogs::where([['uid','=',$model['id']],['type','=',8],['create_time','>=',date('Y-m-d').' 00:00:00']])->count();
+//            $award_times = UsersRaiseLogs::where([['uid','=',$model['id']],['type','=',8],['create_time','>=',date('Y-m-d').' 00:00:00']])->count();
 //            if($award_num>0 && (empty($award_limit) || empty($award_times) || $award_times<$award_limit)){
 //                //验证用户是否有更新记录
 //                $update_record_model = UsersHealth::where(['date'=>date('Y-m-d'),'uid'=>$model['id']])->find();
