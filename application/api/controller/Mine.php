@@ -423,15 +423,10 @@ class Mine extends Common
         $award_limit = isset($num[1])?$num[1]:1;
         //获取用户奖励次数
             $award_times = \app\common\model\UsersRaiseLogs::where([['uid','=',$this->user_id],['type','=',8],['create_time','>=',date('Y-m-d').' 00:00:00']])->count();
-            dump($award_limit);
-            dump($award_num);
-            dump($award_times);
             if($award_num>0 && (empty($award_limit) || empty($award_times) || $award_times<$award_limit)){
                 //验证用户是否有更新记录
                 $update_record_model = \app\common\model\UsersHealth::where(['date'=>date('Y-m-d'),'uid'=>$this->user_id])->find();
-                dump($this->user_model);
                 if($update_record_model) {
-                    dump($this->user_model);
                     //增加养分
                     $this->user_model->recordRaise($award_num, 8, '更新健康信息获得:' . $award_num . '养分');
 
