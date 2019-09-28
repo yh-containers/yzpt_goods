@@ -128,6 +128,10 @@ class BaseModel extends Model
 
         $model->save();
 
+        if($state==1){
+            //审核通过
+            $model->trigger('auth_success');
+        }
 
     }
 

@@ -18,6 +18,8 @@ class UsersRaiseLogs extends BaseModel
         ['name'=>'发布视频'],
         ['name'=>'参加活动'],
         ['name'=>'更新健康数据'],
+        ['name'=>'举办活动'],
+        ['name'=>'视频/动态点赞'],
     ];
 
     /**
@@ -26,8 +28,9 @@ class UsersRaiseLogs extends BaseModel
      * @param int $num 数量
      * @param int $type 类型
      * @param string $intro 说明
+     * @param $cond_info mixed 奖励信息
      * */
-    public static function recordLog($user_id,$num,$type=0,$intro='')
+    public static function recordLog($user_id,$num,$type=0,$intro='',$cond_info=null)
     {
         $model = new self();
         $model->data([
@@ -35,6 +38,7 @@ class UsersRaiseLogs extends BaseModel
             'num'=> $num,
             'type'=> $type,
             'intro'=> $intro,
+            'cond_info'=> $cond_info,
         ],true);
         $model->save();
 

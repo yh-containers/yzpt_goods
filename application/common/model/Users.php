@@ -7,6 +7,7 @@ use think\Validate;
 
 class Users extends BaseModel
 {
+
     use SoftDelete;
     //性别
     public static $fields_sex = ['','男','女','未知'];
@@ -19,7 +20,9 @@ class Users extends BaseModel
     protected $c_raise_type=0;//类型
     protected $c_raise_num=0;//数量
     protected $c_raise_intro='';//介绍
+    protected $c_raise_cond_info=null;//奖励信息
 
+    const PRAISE_TIMES_AWARD= 5;//点赞次数获得奖励
     /**
      * @var self
      * */
@@ -226,8 +229,20 @@ class Users extends BaseModel
         });
         //养分日志记录
         self::event('raise_logs', function ($model) {
-            UsersRaiseLogs::recordLog($model['id'],$model->c_raise_num,$model->c_raise_type,$model->c_raise_intro);
+            UsersRaiseLogs::recordLog($model['id'],$model->c_raise_num,$model->c_raise_type,$model->c_raise_intro,$model->c_raise_cond_info);
         });
+
+
+        //点赞奖励
+        self::event('praise_award', function ($user_model) {
+            $log_model = UsersRaiseLogs::where(['type'=>10,'uid'=>$user_model['id']])->order('id desc')->find();
+            //限制条件
+            if($log_model['cond_info']<$user_model['praise_num']){
+                $user_model->recordRaise(1,10,'视频/动态被点赞'.self::PRAISE_TIMES_AWARD.'次,获得:1养分',$user_model['praise_num']);
+            }
+        });
+
+
     }
 
     /**
@@ -477,13 +492,14 @@ class Users extends BaseModel
      * @param int $type 交易类型
      * @param string $intro 获得说明
      * */
-    public function recordRaise($num,$type=0,$intro='')
+    public function recordRaise($num,$type=0,$intro='',$cond_info=null)
     {
         $bool = $num>0?$this->setInc('raise_num',$num):$this->setDec('raise_num',$num);
         //绑定日志事件
         $this->c_raise_type=$type;
         $this->c_raise_num=$num;
         $this->c_raise_intro=$intro;
+        $this->c_raise_cond_info=$cond_info;
         $this->trigger('raise_logs');
     }
 
