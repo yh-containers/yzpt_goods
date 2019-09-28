@@ -60,7 +60,7 @@ class Info extends Common
         if(!empty($user_id)){
             //仅能开自己或公开的文章
             $where_fnc = function($query)use($user_id){
-              $query->whereOr([['status','=',1],['uid','=',$user_id]]);
+              $query->whereOr([['status','=',0],['uid','=',$user_id]]);
             };
 
             //无法查看黑名单数据--必须登录
