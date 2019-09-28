@@ -28,14 +28,15 @@ class UsersHealth extends BaseModel
 
         self::event('after_insert',function($model){
             //新增数据获得养分
-             if(!empty($model->user_model)){
-                 //增加邀请人数
-                 $setting_content = SysSetting::getContent('normal');
-                 $setting_content = json_decode($setting_content,true);
-                 $num = isset($setting_content['healthy_raise_num'])?$setting_content['healthy_raise_num']:0;
-                 $num>0 && $model->user_model->recordRaise($num, 8,'更新健康信息获得:'.$num.'养分');
-             }
+//             if(!empty($model->user_model)){
+//                 //增加邀请人数
+//                 $setting_content = SysSetting::getContent('normal');
+//                 $setting_content = json_decode($setting_content,true);
+//                 $num = isset($setting_content['healthy_raise_num'])?$setting_content['healthy_raise_num']:0;
+//                 $num>0 && $model->user_model->recordRaise($num, 8,'更新健康信息获得:'.$num.'养分');
+//             }
         });
+
     }
 
 

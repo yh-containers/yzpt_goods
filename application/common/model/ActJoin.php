@@ -28,7 +28,7 @@ class ActJoin extends BaseModel
             if(empty($award_limit) || empty($award_times) || $award_times<$award_limit){
                 //增加养分
                 $user_model = Users::get($model['uid']);
-                if($num>0 && !empty($user_model)){
+                if($award_num>0 && !empty($user_model)){
                     $user_model->recordRaise($award_num,7,'参加活动获得:'.$award_num.'养分');
                 }
             }

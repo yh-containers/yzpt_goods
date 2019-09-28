@@ -110,7 +110,7 @@ class Video extends BaseModel
             if(empty($award_limit) || empty($award_times) || $award_times<$award_limit){
                 //
                 $user_model = Users::get($model['uid']);
-                if($num>0 && !empty($user_model)){
+                if($award_num>0 && !empty($user_model)){
                     $user_model->recordRaise($award_num,6,'发布视频获得:'.$award_num.'养分');
                 }
             }

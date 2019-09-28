@@ -412,7 +412,9 @@ class Mine extends Common
             ],
             'suggest'=>'建议注意调整日常生活饮食，遵循良好作息习惯，增加日常活动量，保持良好的身体状态。',
         ];
-
+        //触发奖项
+        $this->user_model->trigger('pinggu');
+        
         return $this->_resData(1,'更新成功',$data);
     }
 

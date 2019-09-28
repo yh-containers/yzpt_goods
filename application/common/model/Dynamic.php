@@ -110,7 +110,7 @@ class Dynamic extends BaseModel
             $award_times = UsersRaiseLogs::where([['uid','=',$model['uid']],['type','=',5],['create_time','>=',date('Y-m-d').' 00:00:00']])->count();
             if(empty($award_limit) || empty($award_times) || $award_times<$award_limit){
                 $user_model = Users::get($model['uid']);
-                if($num>0 && !empty($user_model)){
+                if($award_num>0 && !empty($user_model)){
                     $user_model->recordRaise($award_num,5,'发布动态获得:'.$award_num.'养分');
                 }
             }
