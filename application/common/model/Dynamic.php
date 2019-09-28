@@ -106,10 +106,14 @@ class Dynamic extends BaseModel
             $num = isset($setting_content['dynamic_raise_num'])?explode(',',$setting_content['dynamic_raise_num']):[];
             $award_num = empty($num[0])?5:$num[0];
             $award_limit = isset($num[1])?$num[1]:3;
+            dump($award_limit);
             //获取用户奖励次数
             $award_times = UsersRaiseLogs::where([['uid','=',$model['uid']],['type','=',5],['create_time','>=',date('Y-m-d').' 00:00:00']])->count();
+            dump($award_times);
+            dump(empty($award_limit) || empty($award_times) || $award_times<$award_limit);
             if(empty($award_limit) || empty($award_times) || $award_times<$award_limit){
                 $user_model = Users::get($model['uid']);
+                dump($user_model);exit;
                 if($num>0 && !empty($user_model)){
                     $user_model->recordRaise($award_num,5,'发布动态获得:'.$award_num.'养分');
                 }

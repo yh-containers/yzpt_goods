@@ -128,7 +128,8 @@ class BaseModel extends Model
 
         $model->save();
 
-        if($state==1){
+        if($model->is_auth==1){
+            dump($model);
             //审核通过
             $model->trigger('auth_success');
         }
