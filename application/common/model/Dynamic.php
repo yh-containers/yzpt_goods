@@ -169,10 +169,12 @@ class Dynamic extends BaseModel
         $model->praise_date?$dy_model->setInc('praise_times'):$dy_model->setDec('praise_times');
         //增加用户点赞次数
         try{
-            $model->praise_date?$user_model->setInc('praise_num'):$user_model->setDec('praise_num');
+            //被点用户
+            $opt_user_model = Users::get($dy_model['uid']);
+            $model->praise_date?$opt_user_model->setInc('praise_num'):$opt_user_model->setDec('praise_num');
             //触发点赞奖励事件
-            if(empty($user_model->praise_num%Users::PRAISE_TIMES_AWARD)){
-                $model->trigger('praise_award');
+            if(!empty($opt_user_model)  && empty($opt_user_model->praise_num%Users::PRAISE_TIMES_AWARD)){
+                $opt_user_model->trigger('praise_award');
             }
 
         }catch (\Exception $e){
