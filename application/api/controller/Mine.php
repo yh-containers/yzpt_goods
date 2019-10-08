@@ -162,13 +162,14 @@ class Mine extends Common
     public function moneyLog()
     {
         //用户消费日志
-        $info = UsersMoneyLog::moneyLogs($this->user_id);
+        $info = \app\common\model\UsersRaiseLogs::where(['uid'=>$this->user_id])->order('id desc')->paginate();
         $list = [];
         foreach ($info as $vo){
             $list[] =[
+                'type' => $vo['type'],
                 'intro' => $vo['intro'],
-                'money' => $vo['money'],
-                'date_time' => date('Y-m-d H:i',$vo['create_time']),
+                'money' => $vo['num'],
+                'date_time' => $vo['create_time'],
             ];
         }
         $data=['list'=>$list,'total_page'=>$info->lastPage()];
@@ -412,7 +413,25 @@ class Mine extends Common
             ],
             'suggest'=>'建议注意调整日常生活饮食，遵循良好作息习惯，增加日常活动量，保持良好的身体状态。',
         ];
+        //触发奖项
+        //增加养分
+        $setting_content = \app\common\model\SysSetting::getContent('normal');
+        $setting_content = json_decode($setting_content,true);
 
+        $num = isset($setting_content['healthy_raise_num'])?explode(',',$setting_content['healthy_raise_num']):[];
+        $award_num = empty($num[0])?2:$num[0];
+        $award_limit = isset($num[1])?$num[1]:1;
+        //获取用户奖励次数
+            $award_times = \app\common\model\UsersRaiseLogs::where([['uid','=',$this->user_id],['type','=',8],['create_time','>=',date('Y-m-d').' 00:00:00']])->count();
+            if($award_num>0 && (empty($award_limit) || empty($award_times) || $award_times<$award_limit)){
+                //验证用户是否有更新记录
+                $update_record_model = \app\common\model\UsersHealth::where(['date'=>date('Y-m-d'),'uid'=>$this->user_id])->find();
+                if($update_record_model) {
+                    //增加养分
+                    $this->user_model->recordRaise($award_num, 8, '更新健康信息获得:' . $award_num . '养分');
+
+                }
+        }
         return $this->_resData(1,'更新成功',$data);
     }
 
