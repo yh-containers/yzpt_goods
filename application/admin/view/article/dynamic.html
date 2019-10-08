@@ -100,7 +100,7 @@
             yes:function(index, layero){
                 //按钮【按钮一】的回调
                 var content = $("#auth-block textarea[name='content']").val()
-                $.common.waitConfirm('确定通过审核?',"{:url('article/auth')}",{type:'dynamic',id:id,state:1,content:content},'post',(res)=>{
+                $.common.waitConfirm('确定通过审核?',"{:url('article/dyauth')}",{type:'dynamic',id:id,state:1,content:content},'post',(res)=>{
                     if(res.code===1){
                         setTimeout(function(){location.reload()},1000)
                     }
@@ -109,7 +109,7 @@
             }
             ,btn2:function(index){
                 var content = $("#auth-block textarea[name='content']").val()
-                $.common.waitConfirm('确定拒绝通过审核?',"{:url('article/auth')}",{type:'dynamic',id:id,state:2,content:content},'post',(res)=>{
+                $.common.waitConfirm('确定拒绝通过审核?',"{:url('article/dyauth')}",{type:'dynamic',id:id,state:2,content:content},'post',(res)=>{
                     if(res.code===1){
                         setTimeout(function(){location.reload()},1000)
                     }

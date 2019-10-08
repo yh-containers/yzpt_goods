@@ -477,9 +477,18 @@ class Article extends Common
         return $this->_resData(1,'删除成功');
     }
 
+    public function videoAuth(){
+        $this->_auth();
+    }
+    public function dyauth(){
+        $this->_auth();
+    }
+    public function actauth(){
+        $this->_auth();
+    }
 
     //审核动作
-    public function auth()
+    private function _auth()
     {
         $type = input('type');
         $id = input('id',0,'intval');
