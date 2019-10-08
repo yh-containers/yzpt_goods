@@ -120,6 +120,13 @@ class Video extends BaseModel
 
 
         });
+
+
+        //审核日志
+        self::event('auth_logs',function($model){
+            SysOptLogs::record($model,app()->session->get('user_info.user_id'),'审核状态:'.($model->is_auth==1?'通过':'拒绝').';;视频标题【'.$model->getData('title').'】');
+        });
+
     }
 
 

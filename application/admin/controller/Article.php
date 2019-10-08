@@ -478,13 +478,13 @@ class Article extends Common
     }
 
     public function videoAuth(){
-        $this->_auth();
+        return $this->_auth();
     }
     public function dyauth(){
-        $this->_auth();
+        return $this->_auth();
     }
     public function actauth(){
-        $this->_auth();
+        return $this->_auth();
     }
 
     //审核动作

@@ -9,14 +9,14 @@ class SysOptLogs extends BaseModel
 
     protected $json = ['info'];
 
-    public static function record(BaseModel $opt_model,$uid)
+    public static function record(BaseModel $opt_model,$uid,$intro=false)
     {
-        if(method_exists($opt_model,'getDelIntro')){
+        if($intro!==false || method_exists($opt_model,'getDelIntro')){
             $model = new self();
             $model->data([
                 'uid'=>empty($uid)?0:$uid,
                 'tab_class'=>get_class($opt_model),
-                'intro'=>$opt_model->getDelIntro(),
+                'intro'=>$intro!==false ? $intro : $opt_model->getDelIntro(),
                 'info'=>$opt_model->getData(),//操作数据
             ],true);
             $model->save();

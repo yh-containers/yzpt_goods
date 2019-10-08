@@ -20,7 +20,7 @@ class BaseModel extends Model
             //注册删除事件
             self::event('after_delete',function($model){
                 //记录删除日志
-                SysOptLogs::record($model,app()->session->get('user_info.user_id'),'123');
+                SysOptLogs::record($model,app()->session->get('user_info.user_id'));
             });
         }
 
@@ -136,6 +136,9 @@ class BaseModel extends Model
         $model->auth_content = empty($content)? $model->is_auth==1?'恭喜您,发布的信息已通过审核':'很遗憾,发布的信息审核被拒' :$content;
 
         $model->save();
+
+        //审核日志
+        $model->trigger('auth_logs');
 
         if($model->is_auth==1){
             //审核通过
