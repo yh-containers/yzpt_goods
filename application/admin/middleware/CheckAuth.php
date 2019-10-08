@@ -6,7 +6,7 @@ use think\facade\Response;
 class CheckAuth
 {
     //忽略权限认证的动作
-    protected $ignore_action=['index/index','index/login','index/logout','admin/captcha','system/settingsave'];
+    protected $ignore_action=['index/index','index/login','index/logout','admin/captcha','system/settingsave','article/showcomments'];
     protected $is_spe = 0; //特殊权限特殊处理
     protected $rid = 0; //角色id
     protected $roles_action = [];
