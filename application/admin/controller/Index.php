@@ -40,7 +40,7 @@ class Index extends Common
             if ($password == '') {
                 $this->error('密码不能为空');
             }
-            $model = SysManager::where('account',$account)->find();
+            $model = SysManager::with('linkRole')->where('account',$account)->find();
             if (!$model) $this->error('请检查账号是否正确');
             $status = $model['status'];
             if ($status!=1) $this->error('该账号已停用');
@@ -50,6 +50,8 @@ class Index extends Common
                 session('user_info',[
                     'user_id' => $model['id'],
                     'rid' => $model['rid'],
+                    'is_spe' => $model['is_spe'], //是否拥有特殊权限
+                    'role_name' => $model['link_role']['name'],
                     'user_name' => $model['name'],
                 ]);
                 //最后一次登陆时间

@@ -41,7 +41,7 @@
                         <th width="80">是否热卖</th>
                         <!--<th width="80">是否精品</th>-->
                         <th width="80">是否特价</th>
-                        <th width="80">排序</th>
+                        <!--<th width="80">排序</th>-->
                         <th width="80">发布时间</th>
                         <th width="120">操作</th>
                     </tr>
@@ -58,7 +58,7 @@
                         <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_hot',$vo['is_hot'])}</td>
                         <!--<td>{:\\app\\common\\model\\Goods::getPropInfo('fields_best',$vo['is_best'])}</td>-->
                         <td>{:\\app\\common\\model\\Goods::getPropInfo('fields_special',$vo['is_special'])}</td>
-                        <td><input type="text" value="{$vo['sort']}" class="form-control" onblur="editSort(this.value,{$vo.id});"></td>
+                        <!--<td><input type="text" value="{$vo['sort']}" class="form-control" onblur="editSort(this.value,{$vo.id});"></td>-->
                         <td>{:$vo['update_time']}</td>
                         <td>
                             <a class="layui-btn layui-btn-sm" href="{:url('goodsAdd',['id'=>$vo['id']])}">编辑</a>
