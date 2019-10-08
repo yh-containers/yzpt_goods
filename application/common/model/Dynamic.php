@@ -232,5 +232,9 @@ class Dynamic extends BaseModel
         return $this->hasOne('UsersBlack','b_uid','uid');
     }
 
-
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除动态'.$this->getData('content');
+    }
 }

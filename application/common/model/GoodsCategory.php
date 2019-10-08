@@ -30,4 +30,11 @@ class GoodsCategory extends BaseModel
     {
         return $this->hasMany('GoodsCategory','id','pid')->field('pid,cate_name,id')->order('sort asc');
     }
+
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除商品分类:'.$this->getData('cate_name');
+    }
 }

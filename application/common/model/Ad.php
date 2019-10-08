@@ -23,4 +23,11 @@ class Ad extends BaseModel
         return self::handleFile($value);
     }
 
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除【'.self::getPropInfo('fields_type',$this->getData('type'),'name').'】广告图';
+    }
+
 }

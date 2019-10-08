@@ -9,4 +9,12 @@ class UserAddress extends BaseModel
 {
     use SoftDelete;
     protected $table = 'gd_user_addr';
+
+
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除用户地址';
+    }
 }

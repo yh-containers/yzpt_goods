@@ -18,4 +18,11 @@ class GoodsSpec extends BaseModel
     {
         return $this->hasMany('GoodsSpec','pid')->order('sort asc');
     }
+
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除商品规格表:'.$this->getData('spec_name');
+    }
 }

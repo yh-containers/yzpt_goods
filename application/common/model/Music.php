@@ -44,4 +44,12 @@ class Music extends BaseModel
 
 
     }
+
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除音乐:'.$this->getData('name');
+    }
+
 }

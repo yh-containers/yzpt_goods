@@ -11,4 +11,10 @@ class SysRole extends BaseModel
     protected $table = 'sys_role';
 
 
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除管理员角色,角色名:'.$this->getData('name');
+    }
 }

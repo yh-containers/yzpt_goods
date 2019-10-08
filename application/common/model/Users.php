@@ -747,6 +747,11 @@ class Users extends BaseModel
         return $list;
     }
 
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除用户，用户名'.$this->getData('name').'手机号'.$this->getData('phone');
+    }
 
     //我是否关注
     public function linkHasFollow()

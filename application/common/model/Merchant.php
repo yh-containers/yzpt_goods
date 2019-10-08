@@ -24,4 +24,10 @@ class Merchant extends BaseModel
     {
         return (empty($value)||$value<=0) ? 0 : $value;
     }
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除商家:'.$this->getData('name');
+    }
 }

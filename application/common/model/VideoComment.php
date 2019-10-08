@@ -78,6 +78,11 @@ class VideoComment extends BaseModel
     }
 
 
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除视频评论';
+    }
 
 
     //是否点过赞

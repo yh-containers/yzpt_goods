@@ -15,6 +15,15 @@ class BaseModel extends Model
         //注册七牛文件删除事件
         self::observe(\app\common\event\DeleteQnResource::class);
 
+        if(app()->request->module()=='admin'){
+            //后台模块
+            //注册删除事件
+            self::event('after_delete',function($model){
+                //记录删除日志
+                SysOptLogs::record($model,app()->session->get('user_info.user_id'),'123');
+            });
+        }
+
     }
 
     //删除文件

@@ -1,8 +1,6 @@
 <?php
 namespace app\admin\middleware;
 
-use think\facade\Response;
-
 class CheckAuth
 {
     //忽略权限认证的动作

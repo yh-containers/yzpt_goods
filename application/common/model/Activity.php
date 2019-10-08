@@ -239,6 +239,12 @@ class Activity extends BaseModel
     }
 
 
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除活动，标题:'.$this->getData('title');
+    }
+
 
     //动态用户
     public function linkUsers()

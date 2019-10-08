@@ -29,4 +29,9 @@ class MchStore extends BaseModel
         return $this->belongsTo('MchService','ser_id');
     }
 
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除门店:'.$this->getData('name');
+    }
 }

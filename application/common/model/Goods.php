@@ -37,4 +37,11 @@ class Goods extends BaseModel
     {
         return $this->hasMany('GoodsSpecValue','goods_id')->order('id asc');
     }
+
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除商品:'.$this->getData('name');
+    }
 }

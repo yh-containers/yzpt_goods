@@ -25,4 +25,9 @@ class MchService extends BaseModel
         return $this->belongsTo('Merchant','mch_id');
     }
 
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除商家服务:'.$this->getData('name');
+    }
 }

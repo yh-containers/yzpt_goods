@@ -78,6 +78,11 @@ class DyComment extends BaseModel
     }
 
 
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除动态评论';
+    }
 
     //是否点过赞
     public function linkIsPraise()

@@ -134,6 +134,16 @@ class System extends Common
         return json(['code'=>(int)$bool,'msg'=>$bool?'操作成功':'操作失败']);
     }
 
+    public function logs()
+    {
+        $list = \app\common\model\SysOptLogs::order('id desc')->paginate();
+        // 获取分页显示
+        $page = $list->render();
+        return view('logs',[
+            'list' => $list,'page'=>$page
+        ]);
+    }
+
 
     //注册协议
     public function regProtocol()

@@ -254,4 +254,11 @@ class Order extends BaseModel
         $model->setAttr('pay_info',json_encode($data));
         return $model->order_success();
     }
+
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除订单,订单号:'.$this->getData('no');
+    }
 }

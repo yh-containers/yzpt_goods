@@ -25,4 +25,12 @@ class NewsCate extends BaseModel
     {
         return $this->hasMany('NewsCate','pid');
     }
+
+
+
+    //提供删除评论信息
+    public function getDelIntro()
+    {
+        return '删除新闻分类:'.$this->getData('name');
+    }
 }
