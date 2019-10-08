@@ -14,4 +14,9 @@ class SysNavigation extends BaseModel
     {
         return $this->belongsTo('SysNavigation','pid')->where('status',1);
     }
+
+    public function linkNode()
+    {
+        return $this->hasMany('SysNavigation','pid')->whereIn('status',[1,-1])->order('sort asc');
+    }
 }

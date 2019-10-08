@@ -22,7 +22,9 @@ class System extends Common
         //表单提交
         if($this->request->isAjax()){
             $php_input = $this->request->param();
-            if(empty($php_input['password']) && isset($php_input['password'])) unset($php_input['password']);
+            if(isset($php_input['node'])){
+                $php_input['node'] =  implode(',',array_filter($php_input['node']));
+            }
 
             $validate = new \app\common\validate\SysRole();
             try{
@@ -34,9 +36,12 @@ class System extends Common
         }
 
         $model = $model->get($id);
+        //页面所有节点
+        $node = \app\common\model\SysNavigation::with(['linkNode.linkNode.linkNode'])->where(['pid'=>0,'status'=>1])->select();
 
         return view('rolesAdd',[
-            'model' => $model
+            'model' => $model,
+            'node' => $node
         ]);
 
     }

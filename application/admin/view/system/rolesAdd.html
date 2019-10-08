@@ -14,12 +14,86 @@
                 <form id="form" action="" class="form-horizontal">
                     <input type="hidden" name="id" value="{$model['id']}"/>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">角色名</label>
+                        <label class="col-sm-1 control-label">角色名</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" placeholder="角色名" name="name" value="{$model['name']}" maxlength="20">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label  class="col-sm-1 control-label">权限</label>
 
+                        <div class="col-sm-10">
+                            <table class="table table-bordered">
+
+                                <thead>
+                                <tr>
+                                    <th width="120">顶级栏目</th>
+                                    <th>栏目节点</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <?php foreach($node as $vo){?>
+                                <tr>
+                                    <td rowspan="<?=count($vo['linkNode'])+1?>">
+                                        <label>
+                                            <input type="checkbox" name="node[]"  value="<?=$vo['url']?>" <?=stripos($model['node'],$vo['url'])!==false?'checked':''?> >
+                                            <?=$vo['name']?>
+                                        </label>
+                                    </td>
+                                    <td >--</td>
+                                </tr>
+                                <?php foreach($vo['linkNode'] as $one){?>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="node[]"  value="<?=$one['url']?>" <?=stripos($model['node'],$one['url'])!==false?'checked':''?> >
+                                            <?=$one['name']?>
+                                        </label>
+                                        <?php if(empty($one['url'])){?>
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                            <?php foreach($one['linkNode'] as $two){?>
+                                            <tr>
+                                                <td width="180">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <label>
+                                                        <input type="checkbox" name="node[]"  value="<?=$two['url']?>" <?=stripos($model['node'],$two['url'])!==false?'checked':''?> >
+                                                        <?=$two['name']?>
+                                                    </label>
+                                                </td>
+                                                <td>
+                                                    <?php foreach($two['linkNode'] as $three){?>
+                                                    <label>
+                                                        <input type="checkbox" name="node[]"  value="<?=$three['url']?>"  <?=stripos($model['node'],$three['url'])!==false?'checked':''?> >
+                                                        <?=$three['name']?>
+                                                    </label>
+                                                    <?php }?>
+                                                </td>
+                                            </tr>
+
+                                            <?php }?>
+
+
+                                            </tbody>
+                                        </table>
+                                        <?php }else{?>
+                                        <?php foreach($one['linkNode'] as $two){?>
+                                        <label>
+                                            <input type="checkbox" name="node[]"  value="<?=$two['url']?>" <?=stripos($model['node'],$two['url'])!==false?'checked':''?> >
+                                            <?=$two['name']?>
+                                        </label>
+                                        <?php }?>
+                                        <?php }?>
+
+                                    </td>
+                                </tr>
+                                <?php }?>
+                                <?php }?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </form>
 
             </div>
@@ -30,4 +104,30 @@
         </div>
     </div>
 
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        $("input[type='checkbox']").change(function () {
+            var is_checked = $(this).prop('checked');
+            var rowspan = $(this).parent().parent().prop('rowspan');
+            if(rowspan>1){
+                var index = $(this).parents('tr').index()
+                $(this).parents('tr').nextAll().each(function(){
+                    if($(this).index()>index && $(this).index()<(index+rowspan)){
+                        $(this).find("input[type='checkbox']").prop('checked',is_checked?true:false  )
+                    }
+                })
+            }else{
+                var label_len = $(this).parent().parent().find('label').length;
+                if(label_len>1){
+                    $(this).parent().nextAll().find("input[type='checkbox']").prop('checked',is_checked?true:false  )
+                }else{
+                    $(this).parent().parent().next().find("input[type='checkbox']").prop('checked',is_checked)
+                }
+            }
+
+        })
+    })
+</script>
 {/block}

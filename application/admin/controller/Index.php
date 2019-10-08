@@ -49,6 +49,7 @@ class Index extends Common
             if(SysManager::entryPwd($password,$model['salt'])===$model->password){
                 session('user_info',[
                     'user_id' => $model['id'],
+                    'rid' => $model['rid'],
                     'user_name' => $model['name'],
                 ]);
                 //最后一次登陆时间
