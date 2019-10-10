@@ -29,7 +29,7 @@ class Upload
     }
 
     //获取上传凭证
-    public function info($type='image')
+    public function info($type='image',$is_local=0)
     {
         $data = [
             'token' => '',
@@ -37,7 +37,7 @@ class Upload
             'url' => url('upload/upload',[],false,true).'?type='.$type,
         ];
         // 初始化签权对象
-        if(!empty(config('qiniu.is_use'))){
+        if(empty($is_local) && !empty(config('qiniu.is_use'))){
             //预览地址
             $data['preview_domain'] = config('qiniu.preview_domain');
 

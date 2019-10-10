@@ -13,6 +13,7 @@ class UserNotice extends BaseModel
     public static $fields_type = [
         ['name'=>'系统通知'],
         ['name'=>'投诉通知'],
+        ['name'=>'审核通知'],
     ];
 
     /**

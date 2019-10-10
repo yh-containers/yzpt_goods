@@ -18,10 +18,10 @@ class Upload extends Common
 
 
     //获取上传凭证
-    public function info($type='image',$accept='images')
+    public function info($type='image',$accept='images',$is_local=0)
     {
         try{
-            $data=$this->uploadSer->info($type);
+            $data=$this->uploadSer->info($type,$is_local);
         }catch (\Exception $e){
             return '';
         }

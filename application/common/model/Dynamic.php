@@ -108,12 +108,26 @@ class Dynamic extends BaseModel
             $award_limit = isset($num[1])?$num[1]:3;
             //获取用户奖励次数
             $award_times = UsersRaiseLogs::where([['uid','=',$model['uid']],['type','=',5],['create_time','>=',date('Y-m-d').' 00:00:00']])->count();
+            //审核通过
+            $notice_success_str = '恭喜!您在'.date("Y-m-d H:i",$model->getData("create_time")).' 发布的动态审核通过了';
+
             if(empty($award_limit) || empty($award_times) || $award_times<$award_limit){
                 $user_model = Users::get($model['uid']);
                 if($award_num>0 && !empty($user_model)){
+                    $notice_success_str .=',并且获得'.$award_num.'养分';
+
                     $user_model->recordRaise($award_num,5,'发布动态获得:'.$award_num.'养分');
                 }
             }
+            UserNotice::send('动态审核通知',$notice_success_str,2);
+
+        });
+
+        self::event('auth_fail',function($model){
+            $content = SysSetting::getContent('normal');
+            $content = empty($content)?[]:json_decode($content,true);
+            $qq = isset($content['qq'])?$content['qq']:'';
+            UserNotice::send('动态审核通知','抱歉!您在'.date("Y-m-d H:i",$model->getData("create_time")).' 发布的动态未通过平台审核,如有疑问可查看发布协议,或联系客服QQ:'.$qq,2);
 
         });
 

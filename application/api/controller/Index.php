@@ -359,11 +359,15 @@ class Index extends Common
             $model = \app\common\model\Users::get($this->user_id);
             $redirect_url = empty($model)?$redirect_url:$model->qr_code_info;
         }
+
+        $share_content = \app\common\model\SysSetting::getContent('share');
+        $share_content = empty($share_content)?[]:json_decode($share_content,true);
+
         return $this->_resData(1,'获取成功',[
             'type'=>'page',
-            'title'=>'分享图片',
-            'image'=>'http://chinacarechain.com/assets/images/share_img.png',
-            'desc'=>'我的图片分享',
+            'title'=>empty($share_content['title'])?'养众天使,关注你的身体健康':$share_content['title'],
+            'image'=>empty($share_content['img'])?'http://chinacarechain.com/assets/images/share_img.png':\app\common\model\BaseModel::handleFile($share_content['img']),
+            'desc'=>empty($share_content['content'])?'快加入我！让我们尽早预防各种疾病':$share_content['content'],
             'url'=>$redirect_url,
         ]);
     }

@@ -152,6 +152,8 @@ class BaseModel extends Model
         if($model->is_auth==1){
             //审核通过
             $model->trigger('auth_success');
+        }else{
+            $model->trigger('auth_fail');
         }
 
     }
