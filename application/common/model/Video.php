@@ -117,7 +117,7 @@ class Video extends BaseModel
                     $user_model->recordRaise($award_num,6,'发布视频获得:'.$award_num.'养分');
                 }
             }
-            UserNotice::send('视频审核通知',$notice_success_str,2);
+            UserNotice::send('视频审核通知',$notice_success_str,$model['uid'],2);
 
 
         });
@@ -126,7 +126,7 @@ class Video extends BaseModel
             $content = SysSetting::getContent('normal');
             $content = empty($content)?[]:json_decode($content,true);
             $qq = isset($content['qq'])?$content['qq']:'';
-            UserNotice::send('视频审核通知','抱歉!您在'.date("Y-m-d H:i",$model->getData("create_time")).' 发布的视频未通过平台审核,如有疑问可查看发布协议,或联系客服QQ:'.$qq,2);
+            UserNotice::send('视频审核通知','抱歉!您在'.date("Y-m-d H:i",$model->getData("create_time")).' 发布的视频未通过平台审核,如有疑问可查看发布协议,或联系客服QQ:'.$qq,$model['uid'],2);
 
         });
 

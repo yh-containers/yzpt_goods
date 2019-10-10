@@ -66,7 +66,7 @@ class Activity extends BaseModel
                     $user_model->recordRaise($award_num,9,'举办活动获得:'.$award_num.'养分');
                 }
             }
-            UserNotice::send('活动审核通知',$notice_success_str,2);
+            UserNotice::send('活动审核通知',$notice_success_str,$model['uid'],2);
 
         });
 
@@ -75,7 +75,7 @@ class Activity extends BaseModel
             $content = SysSetting::getContent('normal');
             $content = empty($content)?[]:json_decode($content,true);
             $qq = isset($content['qq'])?$content['qq']:'';
-            UserNotice::send('活动审核通知','抱歉!您在'.date("Y-m-d H:i",$model->getData("create_time")).' 举办的活动未通过平台审核,如有疑问可查看发布协议,或联系客服QQ:'.$qq,2);
+            UserNotice::send('活动审核通知','抱歉!您在'.date("Y-m-d H:i",$model->getData("create_time")).' 举办的活动未通过平台审核,如有疑问可查看发布协议,或联系客服QQ:'.$qq,$model['uid'],2);
 
         });
 
