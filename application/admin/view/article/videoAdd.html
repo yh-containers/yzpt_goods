@@ -12,6 +12,8 @@
             <div class="box-body">
                 <form id="form" action="" class="form-horizontal">
                     <input type="hidden" name="id" value="{$model['id']}"/>
+                    <!--选择平台用户-->
+                    {:widget('Components/platformUserSelect',['release_uid'=>$model['uid']])}
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label">标题</label>

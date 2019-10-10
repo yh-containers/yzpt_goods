@@ -33,18 +33,17 @@
                         <td>{$model['phone']}</td>
                         <td>性别</td>
                         <td>{:\\app\\common\\model\\Users::getPropInfo('fields_sex',$model['sex'])}</td>
-                        <td>状态</td>
-                        <td>{:\\app\\common\\model\\Users::getPropInfo('fields_status',$model['status'])}</td>
+                        <td></td>
+                        <td rowspan="2" class="text-center"><img width="80" height="80" src="{$model['face']}" /></td>
                     </tr>
+
                     <tr>
                         <td>养分</td>
                         <td>{$model['raise_num']}</td>
                         <td>余额</td>
                         <td>{$model['money']}</td>
-                        <td></td>
-                        <td></td>
                         <td>注册时间</td>
-                        <td>{$model['create_time']}</td>
+                        <td colspan="2">{$model['create_time']}</td>
                     </tr>
                     <tr>
                         <td>年龄</td>
@@ -61,8 +60,8 @@
                         <td>{:empty($model['qq_openid'])?'否':'是'}</td>
                         <td>绑定微博</td>
                         <td>{:empty($model['wb_openid'])?'否':'是'}</td>
-                        <td></td>
-                        <td></td>
+                        <td class="text-red">平台账号</td>
+                        <td class="text-red">{:empty($model['is_platform'])?'否':'是'}</td>
                     </tr>
                     <tr>
                         <td>邀请人数</td>
@@ -71,10 +70,8 @@
                         <td>{$model['req_raise_num']}</td>
                         <td>邀请码</td>
                         <td class="text-blue">{$model['qr_code']}</td>
-                        <td></td>
-                        <td></td>
-
-
+                        <td>状态</td>
+                        <td>{:\\app\\common\\model\\Users::getPropInfo('fields_status',$model['status'])}</td>
                     </tr>
                     <tr>
                         <td>用户标签</td>

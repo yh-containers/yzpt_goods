@@ -12,13 +12,15 @@ class Index extends Common
     public function index()
     {
 
+        //平台总用户
+        $user_count = (int)\app\common\model\Users::count('id');
 
-        //获取当前用户id写入session
-        $id = Session('user_id');
-        $data = SysManager::find($id);
+        //用户总积分
+        $user_raise_count = (int)\app\common\model\Users::sum('raise_num');
 
         return view('index',[
-            'data'=>$data
+            'user_count'=>$user_count,
+            'user_raise_count'=>$user_raise_count,
         ]);
     }
 

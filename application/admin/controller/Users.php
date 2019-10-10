@@ -8,13 +8,19 @@ class Users extends Common
 
     public function index()
     {
+        $platform_state = input('platform_state','0','intval');
         $keyword = input('keyword','','trim');
         $where=[];
         !empty($keyword) && $where[]=['name|phone','like','%'.$keyword.'%'];
+        if($platform_state==1){
+            //平台帐号
+            $where[]=['is_platform','=',1];
+        }
         $list = \app\common\model\Users::where($where)->paginate();
         // 获取分页显示
         $page = $list->render();
         return view('index',[
+            'platform_state' => $platform_state,
             'keyword' => $keyword,
             'list' => $list,
             'page'=>$page

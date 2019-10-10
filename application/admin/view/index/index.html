@@ -2,19 +2,40 @@
 
 {block name="content"}
 
-    <div class="box box-primary">
-        <div class="box-header with-border">
-            <!--<h3 class="box-title">Quick Example</h3>-->
+<section class="content">
+
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="fa fa-user"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">平台总用户</span>
+                    <span class="info-box-number">{$user_count}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
         </div>
-        <!-- /.box-header -->
-            <div class="box-body no-padding">
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
 
+                <div class="info-box-content">
+                    <h3 class="info-box-text">平台总养分</h3>
+                    <span class="info-box-number">{$user_raise_count}</span>
+                </div>
+                <!-- /.info-box-content -->
             </div>
-            <!-- /.box-body -->
+            <!-- /.info-box -->
+        </div>
 
-            <div class="box-footer clearfix">
-
-            </div>
     </div>
+    <!-- /.row -->
+
+
+
+</section>
     <!-- /.error-page -->
 {/block}

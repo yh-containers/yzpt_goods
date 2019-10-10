@@ -136,7 +136,7 @@ class System extends Common
 
     public function logs()
     {
-        $list = \app\common\model\SysOptLogs::order('id desc')->paginate();
+        $list = \app\common\model\SysOptLogs::with(['linkManager'])->order('id desc')->paginate();
         // 获取分页显示
         $page = $list->render();
         return view('logs',[

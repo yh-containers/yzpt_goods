@@ -6,6 +6,12 @@
 
     <div class="box box-primary">
         <div class="box-header with-border">
+            <div class="col-sm-2">
+                <div class="btn-group">
+                    <a class="btn  btn-sm  {:empty($platform_state)?'btn-primary':'btn-default'}" href="{:url('')}">全部</a>
+                    <a class="btn  btn-sm  {:$platform_state==1?'btn-primary':'btn-default'}" href="{:url('',['platform_state'=>1])}">平台账号</a>
+                </div>
+            </div>
             <form class="input-group col-sm-offset-2 col-sm-2">
                 <input type="text" class="form-control" name="keyword" value="{$keyword}" placeholder="用户名/手机号">
                 <span class="input-group-btn">

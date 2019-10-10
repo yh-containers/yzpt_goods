@@ -29,4 +29,16 @@ class Components
             'current_index'=>$current_index
         ])->getContent();
     }
+
+    //平台账号
+    public function platformUserSelect($release_uid=0)
+    {
+        $users = \app\common\model\Users::where(function($query){
+            $query->where(['is_platform'=>1,'status'=>1]);
+        })->whereOr(['id'=>$release_uid])->select();
+        return view('/common/platformUserSelect',[
+            'users'=>$users,
+            'release_uid'=>$release_uid
+        ])->getContent();
+    }
 }

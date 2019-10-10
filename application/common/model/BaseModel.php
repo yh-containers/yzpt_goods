@@ -131,9 +131,18 @@ class BaseModel extends Model
         empty($model) && exception('操作对象异常');
         !empty($model['is_auth']) && exception('操作对象未处于待审核状态,无法进行此操作');
 
+        $content = empty($content)? '' :$content;
+        if($model instanceof UsersComplaint){
+            //用户投诉审核
+            $model->status = $state===1?1:2;
+            $content = empty($content)?($model->status==1?'已处理该记录':'已忽略该记录'):$content;
+        }else{
+            $content = empty($content)?($model->is_auth==1?'恭喜您,发布的信息已通过审核':'很遗憾,发布的信息审核被拒'):$content;
+        }
+
         $model->is_auth = $state===1?1:2;
         $model->auth_time = date('Y-m-d H:i:s');
-        $model->auth_content = empty($content)? $model->is_auth==1?'恭喜您,发布的信息已通过审核':'很遗憾,发布的信息审核被拒' :$content;
+        $model->auth_content = $content;
 
         $model->save();
 

@@ -11,12 +11,12 @@ class Video extends BaseModel
 
     protected $name='video';
 
-    protected $insert = ['uid'];
+//    protected $insert = ['uid'];
 
-    protected function setUidAttr($value,$data)
-    {
-        return empty($value)?1:(int)$value;
-    }
+//    protected function setUidAttr($value,$data)
+//    {
+//        return empty($value)?1:(int)$value;
+//    }
 
     //状态
 //    public function setStatusAttr($value)

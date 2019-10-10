@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label">发布者</label>
+    <div class="col-sm-10">
+        <select name="uid" id="" class="form-control">
+            {volist name="users" id="vo"}
+            <option value="{$vo['id']}" {:$release_uid==$vo['id']?'selected':''}>{$vo['name']}</option>
+            {/volist}
+
+        </select>
+    </div>
+</div>

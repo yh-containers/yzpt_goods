@@ -10,16 +10,18 @@
         <!-- /.box-header -->
         <!-- form start -->
             <div class="box-body no-padding">
-                <table class="table table-striped">
+                <table class="table table-striped"   style="table-layout:fixed" >
                     <thead>
                         <tr>
-                            <th width="10">#</th>
+                            <th width="20">#</th>
                             <th width="80">用户名</th>
-                            <th width="100">投诉模块</th>
-                            <th width="80">投诉类型</th>
+                            <th width="80">投诉模块</th>
+                            <th width="200">投诉类型</th>
                             <th width="80">投诉信息</th>
                             <th width="120">投诉时间</th>
-                            <!--<th width="60">状态</th>-->
+                            <th width="120">审核时间</th>
+                            <th width="200">审核内容</th>
+                            <th width="60">状态</th>
                             <th width="120">操作</th>
                         </tr>
                     </thead>
@@ -32,11 +34,14 @@
                             <td>{:\\app\\common\\model\\UsersComplaint::getPropInfo('fields_report',$vo['cd_id'],'name')}</td>
                             <td><a href="{:url(\\app\\common\\model\\UsersComplaint::getPropInfo('fields_type',$vo['type'],'m_url'),['id'=>$vo['cond_id']])}">查看投诉类容</a></td>
                             <td>{$vo['create_time']}</td>
-                            <!--<td>{:\\app\\common\\model\\UsersComplaint::getPropInfo('fields_status',$vo['status'],'name')}</td>-->
+                            <td>{$vo['auth_time']}</td>
+                            <td style="word-wrap:break-word">{$vo['auth_content']}</td>
+                            <td>{:\\app\\common\\model\\UsersComplaint::getPropInfo('fields_status',$vo['status'],'name')}</td>
                             <td>
                                 {if(empty($vo['status']))}
-                                <!--<a class="layui-btn layui-btn-sm" href="javascript:alert('开发中..')">处理</a>-->
+                                <a class="layui-btn layui-btn-sm" href="javascript:;"  onclick="handleAuth(this,{$vo['id']})">处理</a>
                                 {/if}
+                                <a class="layui-btn layui-btn-danger layui-btn-sm" href="javascript:;"  onclick="$.common.waitConfirm('是否删除该条数据?','{:url("del",["id"=>$vo["id"]])}')">删除</a>
                             </td>
                         </tr>
                         {/volist}
@@ -50,4 +55,44 @@
             </div>
     </div>
     <!-- /.error-page -->
+<div class="form-group" id="auth-block" style="display: none;">
+    <div class="col-sm-12">
+        <textarea name="content" rows="5" placeholder="请输入审核内容.." class="form-control"></textarea>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+    var layer
+    layui.use(['layer'],function(){
+        layer = layui.layer;
+    })
+
+    function handleAuth(obj,id){
+        layer.open({
+            type:1,
+            title:'审核',
+            content:$('#auth-block'),
+            area:['300px','250px'],
+            btn:['处理','忽略'],
+            yes:function(index, layero){
+                //按钮【按钮一】的回调
+                var content = $("#auth-block textarea[name='content']").val()
+                $.common.waitConfirm('确定处理该记录?',"{:url('auth')}",{id:id,state:1,content:content},'post',(res)=>{
+                    if(res.code===1){
+                        setTimeout(function(){location.reload()},1000)
+                    }
+                })
+            }
+            ,btn2:function(index){
+                var content = $("#auth-block textarea[name='content']").val()
+                $.common.waitConfirm('确定忽略该记录?',"{:url('auth')}",{id:id,state:2,content:content},'post',(res)=>{
+                    if(res.code===1){
+                        setTimeout(function(){location.reload()},1000)
+                    }
+                })
+            }
+        })
+    }
+</script>
 {/block}

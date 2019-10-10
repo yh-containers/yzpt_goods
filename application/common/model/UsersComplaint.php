@@ -9,6 +9,7 @@ class UsersComplaint extends BaseModel
     public static $fields_status =[
         ['name'=>'待处理'],
         ['name'=>'已处理'],
+        ['name'=>'忽略'],
     ];
 
     public static $fields_type = [

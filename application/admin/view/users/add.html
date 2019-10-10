@@ -74,6 +74,20 @@
 
 
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">平台账号</label>
+                            <div class="col-sm-10">
+                                <label>
+                                    <input type="radio" name="is_platform" value="1" {:$model['is_platform']==1?'checked':''} />
+                                    是
+                                </label>
+                                <label>
+                                    <input type="radio" name="is_platform" value="0" {:$model['is_platform']!=1?'checked':''}>
+                                    否
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">状态</label>
                             <div class="col-sm-10">
                                 <label>
@@ -90,6 +104,16 @@
 
                     </div>
                     <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户头像</label>
+                            <div class="col-sm-10">
+                                <input type="hidden" name="face" value="{:empty($model)?'':$model->getData('face')}" />
+                                <button type="button" class="layui-btn upload-img" lay-data='{:action('upload/info',['type'=>'user_face'])}'>
+                                <i class="layui-icon">&#xe67c;</i>用户头像
+                                </button>
+                                <img width="80" height="80" src="{$model['face']}" />
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">养分</label>
                             <div class="col-sm-10">
@@ -121,8 +145,10 @@
 {block name="script"}
 <script>
     //引用上传组件
-    layui.use(['laydate'],function(){
+    layui.use(['laydate','upload'],function(){
         var laydate = layui.laydate;
+        var upload = layui.upload;
+        $.common.fileUpload(upload,'.upload-img')
         //执行一个laydate实例
         laydate.render({
             elem: '.datetime' //指定元素
