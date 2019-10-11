@@ -9,7 +9,7 @@ class Create extends Common {
 		if ($this->request->isPost()) {
             
 		    //屏蔽
-            return ['code'=>1,'msg'=>'接口已被屏蔽'];
+//            return ['code'=>1,'msg'=>'接口已被屏蔽'];
 		    
 			$video = request()->file('video');
 			if (empty($video)) return ['code'=>1,'msg'=>'请先选择视频'];
@@ -32,7 +32,7 @@ class Create extends Common {
 		if ($this->request->isPost()) {
 
             //屏蔽
-            return ['code'=>1,'msg'=>'接口已被屏蔽'];
+//            return ['code'=>1,'msg'=>'接口已被屏蔽'];
             
 			$video = str_replace('http://www.chinacarechain.com/uploads/', '../uploads/', input('video', ''));
 			$save = '';
@@ -64,7 +64,7 @@ class Create extends Common {
 		if ($this->request->isPost()) {
 
             //屏蔽
-            return ['code'=>1,'msg'=>'接口已被屏蔽'];
+//            return ['code'=>1,'msg'=>'接口已被屏蔽'];
             $audio = input('audio');
             if(!empty($audio)){
                 $audio_arr = explode('/',$audio);
