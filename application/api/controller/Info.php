@@ -672,6 +672,7 @@ class Info extends Common
     public function actDetail()
     {
         $id = input('id',0,'intval');
+        $join_info = input('join_info',0,'intval');
         $user_id = $this->user_id;
 
         $model=\app\common\model\Activity::with(['linkJoinCount','linkUsers'
@@ -682,7 +683,22 @@ class Info extends Common
             ->order('id desc')->find();
         empty($model) && exception('该活动已被禁止参与');
 
-
+        //加入人信息
+        $join_list = [];
+        if($join_info){
+            \app\common\model\ActJoin::with(['linkUser'])->where(['aid'=>$id])->select()->each(function($item,$index)use(&$join_list){
+                array_push($join_list,[
+                    'uid'=>$item['uid'],
+                    'face'=>$item['link_user']['face'],
+                    'name'=>$item['name'],
+                    'sex'=>$item['sex'],
+                    'age'=>$item['age'],
+                    'addr'=>$item['addr'],
+                    'phone'=>$item['phone'],
+                    'date'=>$item['create_time'],
+                ]);
+            });
+        }
         $info=[
             'id'=>$model['id'],
             'uid'=>$model['uid'],
@@ -707,6 +723,7 @@ class Info extends Common
             'is_join'=>empty($model['link_is_join'])?0:1,
             'state_intro'=> (string)$model['state_intro'],
             'state_show'=> (int)$model['state_show'],
+            'join_list'=> $join_list,
         ];
         return $this->_resData(1,'获取成功',$info);
     }

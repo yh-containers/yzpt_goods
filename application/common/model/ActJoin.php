@@ -36,4 +36,8 @@ class ActJoin extends BaseModel
         });
     }
 
+    public function linkUser()
+    {
+        return $this->belongsTo('Users','uid');
+    }
 }
