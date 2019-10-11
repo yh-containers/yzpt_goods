@@ -37,8 +37,13 @@ class Info extends Common
         $user_id = $this->user_id;
         $where = [];
         $where[]=['dynamic.status','<>',2];
-        $where[]=['is_auth','=',1];
         $order = 'id desc';
+
+        if(empty($user_id) || $uid!=$user_id){
+            //用户没有登录/当前登录者不等于要查看的用户
+            $where[]=['is_auth','=',1]; //只能查看审核通过的作品
+        }
+
         if($is_new){
 
         }
