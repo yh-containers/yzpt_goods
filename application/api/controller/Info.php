@@ -36,7 +36,7 @@ class Info extends Common
 
         $user_id = $this->user_id;
         $where = [];
-        $where[]=['status','<>',2];
+        $where[]=['dynamic.status','<>',2];
         $where[]=['is_auth','=',1];
         $order = 'id desc';
         if($is_new){
@@ -54,13 +54,14 @@ class Info extends Common
         }
 
         if($is_course){
-
+            //官方发布
+            $where[] = ['is_platform','=',1];
         }
         $where_fnc='';
         if(!empty($user_id)){
             //仅能开自己或公开的文章
             $where_fnc = function($query)use($user_id){
-              $query->whereOr([['status','=',0],['uid','=',$user_id]]);
+              $query->whereOr([['dynamic.status','=',0],['uid','=',$user_id]]);
             };
 
             //无法查看黑名单数据--必须登录
@@ -77,33 +78,34 @@ class Info extends Common
 
 
         }else{
-            $where[] =['status','=',0];//只能看公开的
+            $where[] =['dynamic.status','=',0];//只能看公开的
         }
 //        dump($where);exit;
 
         !empty($uid) && $where[] = ['uid','=',$uid];
         $list =[];
-        $info=\app\common\model\Dynamic::with(['linkCommentCount'
+        $info=\app\common\model\Dynamic::withjoin('linkUsers','left')->with(['linkCommentCount'
             //点赞
             ,'linkIsPraise'=>function($query)use($user_id){
                 $query->where('uid','=',$user_id);
             }
-            //用户
-            ,'linkUsers'=>function($query)use($user_id){
-            $query->with(['linkHasFollow'=>function($query)use($user_id){
-                $query->where('uid','=',$user_id);
-            }]);
-        }])->where($where)->where($where_fnc)
+            ])->where($where)->where($where_fnc)
             ->order($order)->paginate()
             ->each(function($item,$index)use(&$list,$user_id){
-                $is_follow = empty($item['link_users']['link_has_follow'])?0:1;
-                //验证对方是否关注了我
-                if($is_follow && $user_id){
-                    $is_ftf_me = \app\common\model\UsersFollow::where(['uid'=>$item['uid'],'f_uid'=>$user_id])->find();
-                    if(!empty($is_ftf_me)){
-                        $is_follow = 2;
+                $is_follow = 0;
+                //是否已关注对方
+                if($user_id){
+                    $follow_model = \app\common\model\UsersFollow::where(['uid'=>$user_id,'f_uid'=>$item['uid']])->whereNotNull('follow_time')->find();
+                    $is_follow = empty($follow_model)?0:1;
+                    //验证对方是否关注了我
+                    if($is_follow && $user_id){
+                        $is_ftf_me = \app\common\model\UsersFollow::where(['uid'=>$item['uid'],'f_uid'=>$user_id])->whereNotNull('follow_time')->find();
+                        if(!empty($is_ftf_me)){
+                            $is_follow = 2;
+                        }
                     }
                 }
+
                 empty($item['status']) && $item['status_info'] = '待审核';
 
                 array_push($list,[
@@ -271,7 +273,7 @@ class Info extends Common
             $is_follow = empty($model['link_users']['link_has_follow'])?0:1;
             //验证对方是否关注了我
             if($is_follow && $user_id){
-                $is_ftf_me = \app\common\model\UsersFollow::where(['uid'=>$model['uid'],'f_uid'=>$user_id])->find();
+                $is_ftf_me = \app\common\model\UsersFollow::where(['uid'=>$model['uid'],'f_uid'=>$user_id])->whereNotNull('follow_time')->find();
                 if(!empty($is_ftf_me)){
                     $is_follow = 2;
                 }
