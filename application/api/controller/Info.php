@@ -110,10 +110,7 @@ class Info extends Common
                         }
                     }
                 }
-
-                empty($item['status']) && $item['status_info'] = '待审核';
-
-                array_push($list,[
+                $_data = [
                     'id'=>$item['id'],
                     'uid'=>$item['uid'],
                     'face'=>$item['link_users']['face'],
@@ -127,7 +124,10 @@ class Info extends Common
                     'comment_times'=> isset($item['link_comment_count']['comment_count'])?$item['link_comment_count']['comment_count']:0,
                     'is_follow'=>$is_follow,
                     'is_praise'=>empty($item['link_is_praise'])?0:1,
-                ]);
+                ];
+                empty($item['is_auth']) && $_data['status_info'] = '待审核';
+
+                array_push($list,$_data);
             });
         $data = ['list'=>$list,'total_page'=>$info->lastPage()];
         return $this->_resData(1,'获取成功',$data);
@@ -593,7 +593,10 @@ class Info extends Common
 
         $user_id = $this->user_id;
         $where = [];
-        $where[]=['is_auth','=',1];
+        
+        if(empty($is_mine)){
+            $where[]=['is_auth','=',1];
+        }
 
         //默认查询方式
         $model=\app\common\model\Activity::with(['linkIsJoin'=>function($query)use($user_id){
@@ -616,10 +619,7 @@ class Info extends Common
             ->order('id desc')->paginate()
             ->each(function($item,$index)use(&$list){
 //                dump($item);exit;
-
-                empty($item['status']) && $item['status_info'] = '待审核';
-
-                array_push($list,[
+                $_data = [
                     'id'=>$item['id'],
                     'uid'=>$item['uid'],
                     'face'=>$item['link_users']['face'],
@@ -638,7 +638,11 @@ class Info extends Common
                     'addr'=> $item['addr'],
                     'addr_extra'=> $item['addr_extra'],
                     'is_join'=>empty($item['link_is_join'])?0:1,
-                ]);
+                ];
+
+                empty($item['is_auth']) && $_data['status_info'] = '待审核';
+
+                array_push($list,$_data);
             });
         $data = ['list'=>$list,'total_page'=>$info->lastPage()];
         return $this->_resData(1,'获取成功',$data);
