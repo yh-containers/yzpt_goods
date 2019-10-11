@@ -19,6 +19,15 @@ class Award extends Common
         $this->user_id>0 &&$this->user_model = \app\common\model\Users::get($this->user_id);
     }
 
+    //获取奖项
+//    public function info()
+//    {
+//
+//
+//        return $this->_resData(1,'获取成功',);
+//    }
+
+
     public function getList()
     {
         $award_info = \app\common\model\AwResult::getPropInfo('award_info');

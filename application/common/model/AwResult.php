@@ -15,6 +15,34 @@ class AwResult extends BaseModel
         ['name'=>'获得5个养分','num'=>5,'handle'=>''],
     ];
 
+    public static $all_award_info = [
+        [
+            ['name'=>'未中奖','num'=>0,'handle'=>''],
+            ['name'=>'获得1个养分','num'=>1,'handle'=>''],
+            ['name'=>'未中奖','num'=>0,'handle'=>''],
+            ['name'=>'获得2个养分','num'=>2,'handle'=>''],
+            ['name'=>'未中奖','num'=>0,'handle'=>''],
+            ['name'=>'获得3个养分','num'=>3,'handle'=>''],
+        ],
+        [
+            ['name'=>'未中奖','num'=>0,'handle'=>''],
+            ['name'=>'获得1个养分','num'=>1,'handle'=>''],
+            ['name'=>'未中奖','num'=>0,'handle'=>''],
+            ['name'=>'获得2个养分','num'=>2,'handle'=>''],
+            ['name'=>'未中奖','num'=>0,'handle'=>''],
+            ['name'=>'获得3个养分','num'=>3,'handle'=>''],
+        ]
+    ];
+
+    /*
+     * 获取抽奖信息
+     * */
+    public static function award_info()
+    {
+        return self::$all_award_info[0];
+    }
+
+
     /**
      * 用户抽奖
      * @param Users $users 用户模型
