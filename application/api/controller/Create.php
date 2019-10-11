@@ -36,7 +36,7 @@ class Create extends Common {
             
 			$video = str_replace('http://www.chinacarechain.com/uploads/', '../uploads/', input('video', ''));
 			$save = '';
-
+            return ['code'=>1,'msg'=>$video];
 			$duration = input('duration', 0, 'intval');
 			$start = input('start', 0, 'intval');
 			$end = input('end', 0, 'intval');
