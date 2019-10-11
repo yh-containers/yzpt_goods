@@ -628,12 +628,29 @@ class Index extends Common
     //投诉
     public function complaint()
     {
+        $type = input('type',0,'intval');
+        $cond_id = input('id',0,'intval');;
+
+        $type_info = \app\common\model\UsersComplaint::getPropInfo('fields_type',$type);
+        //
+        $info = '';
+        $info_key = 0;
+        if(!empty($type_info['is_record_content_field']) && isset($type_info['class'])){
+            $class = $type_info['class'];
+            $complaint_model = $class::where(['id'=>$cond_id])->find();
+            $info= empty($complaint_model[$type_info['is_record_content_field']])?'':$complaint_model[$type_info['is_record_content_field']];
+            $info_key= empty($complaint_model[$type_info['is_record_content_field_key']])?0:$complaint_model[$type_info['is_record_content_field_key']];
+
+        }
+
         $model = new \app\common\model\UsersComplaint();
-        $model->type = input('type',0,'intval');//投诉类型
-        $model->cond_id = input('id',0,'intval');//作品id
+        $model->type = $type;//投诉类型
+        $model->cond_id = $cond_id;//作品id
         $model->cd_id = input('cd_id',0,'intval'); //反馈类型
         $model->uid = $this->user_id;
         $model->content = input('content','','trim');
+        $model->info = $info;
+        $model->info_key = $info_key;
         $model->save();
         return $this->_resData(1,'举报提示：感谢您的举报，我们将通过站内信通知您举报的内容是否属实。谢谢！');
 

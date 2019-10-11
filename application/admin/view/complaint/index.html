@@ -16,8 +16,9 @@
                             <th width="20">#</th>
                             <th width="80">用户名</th>
                             <th width="80">投诉模块</th>
-                            <th width="200">投诉类型</th>
+                            <th width="120">投诉类型</th>
                             <th width="80">投诉信息</th>
+                            <th width="200">投诉内容</th>
                             <th width="120">投诉时间</th>
                             <th width="120">审核时间</th>
                             <th width="200">审核内容</th>
@@ -32,7 +33,8 @@
                             <td>{:empty($vo['link_users'])?'匿名投诉':$vo['link_users']['name']}</td>
                             <td>{:\\app\\common\\model\\UsersComplaint::getPropInfo('fields_type',$vo['type'],'name')}</td>
                             <td>{:\\app\\common\\model\\UsersComplaint::getPropInfo('fields_report',$vo['cd_id'],'name')}</td>
-                            <td><a href="{:url(\\app\\common\\model\\UsersComplaint::getPropInfo('fields_type',$vo['type'],'m_url'),['id'=>$vo['cond_id']])}">查看投诉类容</a></td>
+                            <td><a href="{:url(\\app\\common\\model\\UsersComplaint::getPropInfo('fields_type',$vo['type'],'m_url'),['id'=>($vo['info_key']?$vo['info_key']:$vo['cond_id'])])}">查看投诉类容</a></td>
+                            <td style="word-wrap:break-word">{$vo['info']}</td>
                             <td>{$vo['create_time']}</td>
                             <td>{$vo['auth_time']}</td>
                             <td style="word-wrap:break-word">{$vo['auth_content']}</td>

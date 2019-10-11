@@ -593,7 +593,7 @@ class Info extends Common
 
         $user_id = $this->user_id;
         $where = [];
-        
+
         if(empty($is_mine)){
             $where[]=['is_auth','=',1];
         }

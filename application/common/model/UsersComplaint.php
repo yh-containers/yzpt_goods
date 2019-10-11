@@ -14,9 +14,11 @@ class UsersComplaint extends BaseModel
 
     public static $fields_type = [
         ['name'=>'视频','m_url'=>'article/videoDetail'],
-        ['name'=>'动态','m_url'=>'article/dynamicAdd'],
+        ['name'=>'动态','m_url'=>'article/dynamicDetail'],
         ['name'=>'活动','m_url'=>''],
         ['name'=>'用户','m_url'=>''],
+        ['name'=>'视频评论','m_url'=>'article/videoDetail','is_record_content_field'=>'content','is_record_content_field_key'=>'vid','class'=>VideoComment::class],
+        ['name'=>'动态评论','m_url'=>'article/dynamicDetail','is_record_content_field'=>'content','is_record_content_field_key'=>'dy_id','class'=>DyComment::class],
     ];
 
     public static $fields_report = [
