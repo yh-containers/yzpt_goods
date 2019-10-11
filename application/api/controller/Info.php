@@ -466,86 +466,43 @@ class Info extends Common
     {
         try{
             $input_data = input();
+            $is_clip = input('is_clip',0,'intval');
 //            dump($input_data);exit;
 //            return $this->_resData(0, '请选择xxx');
-//            $file = input('file');
             $input_data['uid'] = $this->user_id;
-            //清空上传的图片信息
-//            $input_data['img']='';
-//            if(preg_match('/^https?:\/\//',$file)){
-//                try{
-//                    $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
-//                    $filePath = \think\facade\Env::get('root_path').$file;
-//                    //上传七牛
-//                    $upload = new \app\common\service\Upload($this->user_id);
-//                    $data = $upload->info('video');
-//                    if(isset($data['token'])){
-//                        $uploadMgr = new \Qiniu\Storage\UploadManager();
-//                        list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
-//                        if($err !== null) {
-//                            //处理失败
-//                        } else {
-//                            if(isset($ret['data'])){
-//                                $input_data['file'] = $ret['data']['key'];
-//                            }
-//                        }
-//                    }
-//                }catch (\Exception $e){
-//
-//                }
-//            }
+            if($is_clip){
+                //来源剪辑
+                $file = input('file');
+                //清空上传的图片信息
+                $input_data['img']='';
+                if(preg_match('/^https?:\/\//',$file)){
+                    try{
+                        $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
+                        $filePath = \think\facade\Env::get('root_path').$file;
+                        //上传七牛
+                        $upload = new \app\common\service\Upload($this->user_id);
+                        $data = $upload->info('video');
+                        if(isset($data['token'])){
+                            $uploadMgr = new \Qiniu\Storage\UploadManager();
+                            list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
+                            if($err !== null) {
+                                //处理失败
+                            } else {
+                                if(isset($ret['data'])){
+                                    $input_data['file'] = $ret['data']['key'];
+                                }
+                            }
+                        }
+                    }catch (\Exception $e){
+
+                    }
+                }
+            }
+            
             $validate =new \app\common\validate\Video();
             $validate->scene('api_release');
             $model = new \app\common\model\Video();
             $model->actionAdd($input_data,$validate);
-        }catch (\Exception $e){
-            return $this->_resData(0,$e->getMessage());
-        }
-
-        return $this->_resData(1,'审核中...');
-    }
-
-
-    //发布视频
-    public function videoRelease2()
-    {
-        try{
-            $input_data = input();
-//            dump($input_data);exit;
-//            return $this->_resData(0, '请选择xxx');
-            $file = input('file');
-            $input_data['uid'] = $this->user_id;
-            //清空上传的图片信息
-            $input_data['img']='';
-            if(preg_match('/^https?:\/\//',$file)){
-                try{
-                    $file=preg_replace('/^https?:\/\/[^\/]+\//','',$file);
-                    $filePath = \think\facade\Env::get('root_path').$file;
-                    //上传七牛
-                    $upload = new \app\common\service\Upload($this->user_id);
-                    $data = $upload->info('video');
-                    if(isset($data['token'])){
-                        $uploadMgr = new \Qiniu\Storage\UploadManager();
-                        list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
-                        dump($ret);
-                        dump($err);exit;
-                        if($err !== null) {
-                            //处理失败
-                        } else {
-                            if(isset($ret['data'])){
-                                $input_data['file'] = $ret['data']['key'];
-                            }
-                        }
-                    }
-                }catch (\Exception $e){
-                    dump($e);exit;
-                }
-            }
-            dump($data);exit;
-//            $validate =new \app\common\validate\Video();
-//            $validate->scene('api_release');
-//            $model = new \app\common\model\Video();
-//            $model->actionAdd($input_data,$validate);
         }catch (\Exception $e){
             return $this->_resData(0,$e->getMessage());
         }
