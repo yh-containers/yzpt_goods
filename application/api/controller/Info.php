@@ -527,6 +527,8 @@ class Info extends Common
                     if(isset($data['token'])){
                         $uploadMgr = new \Qiniu\Storage\UploadManager();
                         list($ret, $err) = $uploadMgr->putFile($data['token'], null, $filePath,['x:up_index'=>1]);
+                        dump($ret);
+                        dump($err);exit;
                         if($err !== null) {
                             //处理失败
                         } else {
@@ -536,13 +538,14 @@ class Info extends Common
                         }
                     }
                 }catch (\Exception $e){
-
+                    dump($e);exit;
                 }
             }
-            $validate =new \app\common\validate\Video();
-            $validate->scene('api_release');
-            $model = new \app\common\model\Video();
-            $model->actionAdd($input_data,$validate);
+            dump($data);exit;
+//            $validate =new \app\common\validate\Video();
+//            $validate->scene('api_release');
+//            $model = new \app\common\model\Video();
+//            $model->actionAdd($input_data,$validate);
         }catch (\Exception $e){
             return $this->_resData(0,$e->getMessage());
         }
