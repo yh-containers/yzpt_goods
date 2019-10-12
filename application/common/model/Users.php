@@ -27,6 +27,14 @@ class Users extends BaseModel
      * @var self
      * */
     public static $req_user_model;//邀请者用户对象
+    /**
+     * @var self
+     * */
+    public static $req_parent_user_model;//邀请者用户对象
+    /**
+     * @var self
+     * */
+    public static $req_parent_parent_user_model;//邀请者用户对象
 
     protected function  getIntroAttr($value)
     {
@@ -187,6 +195,40 @@ class Users extends BaseModel
             }
         });
 
+        self::event('before_insert',function($model){
+            //验证用户是存在被邀请记录
+            $req_model = UsersReqRecord::where(['phone'=>$model['phone']])->order('id desc')->find();
+            if(!empty($req_model)){
+                $req_user_model = self::where(['id'=>$req_model['req_uid']])->find();
+                !empty($req_user_model) && self::$req_user_model = $req_user_model;
+            }
+            if(!empty(self::$req_user_model)){
+                $model->r_uid1 = self::$req_user_model['id'];
+
+                if(self::$req_user_model['r_uid1']){
+                    //二级
+                    $req_parent_user_model = self::get(self::$req_user_model['r_uid1']);
+                    if(!empty($req_parent_user_model)){
+                        self::$req_parent_user_model = $req_parent_user_model;
+                        $model->r_uid2 = self::$req_parent_user_model['id'];
+
+                        if(self::$req_user_model['r_uid2']){
+                            //三级
+                            $req_parent_parent_user_model = self::get(self::$req_user_model['r_uid2']);
+                            if(!empty($req_parent_parent_user_model)){
+                                self::$req_parent_parent_user_model = $req_parent_parent_user_model;
+                                $model->r_uid3 = self::$req_parent_parent_user_model['id'];
+                            }
+                        }
+                    }
+                }
+
+            }
+
+//            dump($model);exit;
+
+        });
+
         //用户新增事件
         self::event('after_insert', function ($model) {
             //绑定用户
@@ -196,11 +238,11 @@ class Users extends BaseModel
             $setting_content = json_decode($setting_content,true);
 
             //验证用户是存在被邀请记录
-            $req_model = UsersReqRecord::where(['phone'=>$model['phone']])->order('id desc')->find();
-            if(!empty($req_model)){
-                $req_user_model = self::where(['id'=>$req_model['req_uid']])->find();
-                !empty($req_user_model) && self::$req_user_model = $req_user_model;
-            }
+//            $req_model = UsersReqRecord::where(['phone'=>$model['phone']])->order('id desc')->find();
+//            if(!empty($req_model)){
+//                $req_user_model = self::where(['id'=>$req_model['req_uid']])->find();
+//                !empty($req_user_model) && self::$req_user_model = $req_user_model;
+//            }
 
 
             //验证是邀请用户
@@ -211,15 +253,19 @@ class Users extends BaseModel
                 self::$req_user_model->setInc('req_raise_num',$num); //记录邀请获得养分总和
                 $num>0 && self::$req_user_model->recordRaise($num,2,'邀请用户获得:'.$num.'养分');
                 //第二级增加养分
-                if(!empty($model['r_uid2'])){
-                    $f_num = isset($setting_content['req_f_raise_num'])?$setting_content['req_f_raise_num']:0;
-                    if($f_num>0){
-                        $up_user_model = self::get($model['r_uid2']);
-                        if($up_user_model){
-                            $up_user_model->recordRaise($f_num,4,'有用户被邀请奖励:'.$f_num.'养分');
-                        }
-                    }
+                $f_num = isset($setting_content['req_f_raise_num'])?$setting_content['req_f_raise_num']:0;
+                if(!empty(self::$req_parent_user_model) && $f_num>0){
+                    self::$req_parent_user_model->recordRaise($f_num,4,'有用户被邀请奖励:'.$f_num.'养分');
                 }
+//                if(!empty($model['r_uid2'])){
+//                    $f_num = isset($setting_content['req_f_raise_num'])?$setting_content['req_f_raise_num']:0;
+//                    if($f_num>0){
+//                        $up_user_model = self::get($model['r_uid2']);
+//                        if($up_user_model){
+//                            $up_user_model->recordRaise($f_num,4,'有用户被邀请奖励:'.$f_num.'养分');
+//                        }
+//                    }
+//                }
             }
             //注册奖励养分
             $reg_num = isset($setting_content['reg_raise_num'])?$setting_content['reg_raise_num']:0;
