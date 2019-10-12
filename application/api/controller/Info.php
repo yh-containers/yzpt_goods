@@ -498,7 +498,7 @@ class Info extends Common
                     }
                 }
             }
-            
+
             $validate =new \app\common\validate\Video();
             $validate->scene('api_release');
             $model = new \app\common\model\Video();

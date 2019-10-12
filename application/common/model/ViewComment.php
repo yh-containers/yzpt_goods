@@ -30,13 +30,17 @@ class ViewComment extends BaseModel
 
         $where = [];
         $where[]=['status','=',1];
+        $model = self::with(['linkToUsers']);
         if($user_id){
-            $where[] =['to_uid','=',$user_id];
+//            $where[] =['to_uid','=',$user_id];
+            $model->where(function($query)use($user_id){
+                $query->whereOr(['to_uid'=>$user_id,'main_uid'=>$user_id]);
+            });
         }
         if(!empty($php_input['type'])){
             $where[] =['type','=',$php_input['type']];
         }
-        $list = self::with(['linkToUsers'])->where($where)->order('create_time desc')->paginate();
+        $list = $model->where($where)->order('create_time desc')->paginate();
         return $list;
     }
 
