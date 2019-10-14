@@ -13,6 +13,9 @@ class Pay extends Common
     {
         $order_id = input('order_id',0,'intval');
         $model = \app\common\model\Order::get($order_id);
+        if($model['pay_money'] <= 0){
+            header('Location:/');die;
+        }
         if($model['pay_way'] == 1){
             $mode = 'alipay';
             if(isMobile()){
@@ -20,7 +23,6 @@ class Pay extends Common
             }else{
                 $pay_way = 'webPay';
             }
-//            $pay_way = 'webPay';
         }else{
             $mode = 'wechat';
             if(isMobile()){

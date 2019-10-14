@@ -184,6 +184,7 @@ class Order extends Common
                 $inserts['money'] = $goods_info['total']+$goods_info['fare'];
                 $inserts['goods_money'] = $goods_info['total'];
                 $inserts['pay_money'] = $goods_info['total'] + $goods_info['fare'] - $goods_info['dis_money'];
+                $inserts['pay_money'] = $inserts['pay_money']? $inserts['pay_money']: 0;
                 $inserts['dis_money'] = $goods_info['dis_money'];
                 $inserts['freight_money'] = $goods_info['fare'];
                 $inserts['pay_way'] = ($php_input['pay'] == 'alipay') ? 1: 2;
