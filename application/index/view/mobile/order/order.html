@@ -93,6 +93,7 @@
 				}
                 zzmoney = (nums/100)*integral_money;
 				zzmoney = (all-zzmoney)>0 ? all-zzmoney: '0.00';
+                zzmoney = zzmoney.toFixed(2);
 				$('#zzprice').html('￥'+zzmoney);
 			}else{
                 $('#zzprice').html('￥'+all);

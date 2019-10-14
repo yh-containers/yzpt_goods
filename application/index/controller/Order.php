@@ -192,7 +192,7 @@ class Order extends Common
                 $inserts['remark'] = $php_input['remark'];
                 $order_model->actionAdd($inserts);
                 if($goods_info['dis_money']){
-                    \app\common\model\UsersRaiseLogs::recordLog(session('uid'),-($goods_info['dis_money']*100),'','商品折扣：'.($goods_info['dis_money']*100));
+                    \app\common\model\UsersRaiseLogs::recordLog(session('uid'),-$integral,'','商品折扣：'.$integral);
                     \app\common\model\Users::where(['id'=>session('uid')])->update(['raise_num'=>\app\common\model\Users::raw('raise_num-'.($goods_info['dis_money']*100))]);
 
                 }
