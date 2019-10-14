@@ -109,7 +109,7 @@
 				type:'post', 
 				success:function (re){
 					if(re.code){
-						window.location.href = "{:url('Pay/info')}?order_id="+re.order_id
+						window.location.href = "/pay/info?order_id="+re.order_id
 					}else{
 						alert(re.msg);
 					}
