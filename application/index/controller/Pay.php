@@ -15,7 +15,9 @@ class Pay extends Common
         $model = \app\common\model\Order::get($order_id);
         if($model['pay_money'] <= 0){
             \app\common\model\Order::where(['id'=>$order_id])->update(['step_flow'=>1,'status'=>1,'pay_time'=>time()]);
-            header('Location:/');die;
+            print_r('<script>alert("订单金额为0，成功");window.location.href="/"</script>');
+            //header('Location:/');
+            die;
         }
         if($model['pay_way'] == 1){
             $mode = 'alipay';
