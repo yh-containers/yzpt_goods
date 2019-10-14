@@ -67,6 +67,7 @@ class Wechat implements IPay
         $input->SetOpenid($open_id);
 
         $result = \WxPayApi::unifiedOrder($config, $input);
+                dump($input);
         if($result['return_code']!='SUCCESS'){
             exception('支付信息异常,请联系管理员');
         }
