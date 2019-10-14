@@ -12,11 +12,11 @@
                 {php}echo json_encode($code_url);{/php},
             function(res){
                 WeixinJSBridge.log(res.err_msg);
-                if(res.err_msg == 'ok'){
+                if(res.err_msg.indexOf("ok") != -1){
                     window.location.href= '/member/orderlist';
                 }else{
                     // alert(res.err_code+res.err_desc+res.err_msg);
-                    alert('支付失败'+res.err_msg);
+                    alert('支付失败');
                 }
             }
             );
