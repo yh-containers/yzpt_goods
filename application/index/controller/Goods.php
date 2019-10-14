@@ -100,7 +100,7 @@ class Goods extends Common
         $collect_count = $collect_model->where(['gid'=>$id])->count();
         //总评价
         $comment_count = \app\common\model\Comment::where(['gid'=>$id])->count();
-        return view('goods_detail',['goods'=>$data,'bread'=>$bread['bread'],'like_list'=>$goods_list,'sku_arr'=>$sku,'collect_count'=>$collect_count,'comment_count'=>$comment_count]);
+        return view('goods_detail',['goods'=>$data,'bread'=>$bread['bread'],'like_list'=>$goods_list,'sku_arr'=>$sku,'collect_count'=>$collect_count,'comment_count'=>$comment_count,'uid'=>session('uid')]);
     }
     //查询属性价格库存
     public function search_sku(){

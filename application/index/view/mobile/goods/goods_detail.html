@@ -206,8 +206,13 @@
                 dataType:'json',
                 type:'post',
                 success:function(e){
-                    if(!ajaxData.is_checked)
-                    	alert(e.msg);
+                    if(!ajaxData.is_checked || !e.code){
+                        alert(e.msg);
+                        {if($uid)}
+                        {else/}
+						window.location.href = '/Index/login';
+						{/if}
+					}
                     if(e.code && ajaxData.is_checked){
                         window.location.href="{:url('Order/detail')}";
                     }

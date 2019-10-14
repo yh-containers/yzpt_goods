@@ -217,7 +217,11 @@
             $('.tips_close').click(function(){
                 $('.remind_popup').hide();
                 $(".tips_bg").remove();
+                {if($uid)}
                 history.go(0);
+                {else/}
+                    window.location.href = '/Index/login';
+                {/if}
             });
         });
         function sendAjax(ajaxUrl,ajaxData){
@@ -227,7 +231,7 @@
                 dataType:'json',
                 type:'post',
                 success:function(e){
-                    if(!ajaxData.is_checked) {
+                    if(!ajaxData.is_checked || !e.code) {
                         $('#cart_msg').html('');
                         $('#cart_msg').html(e.msg);
                         $('.remind_popup').show();
