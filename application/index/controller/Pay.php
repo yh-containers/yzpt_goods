@@ -45,9 +45,10 @@ class Pay extends Common
             exception('订单错误:id');
         }
         try{
-            $html = $pay->$pay_way($model);
             if(strpos($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
                 $html = $pay->jssdkPay($model,session('openid'));
+            }else{
+                $html = $pay->$pay_way($model);
             }
             if($mode=='wechat'){
                 $redirect_url = urlencode('http://'.$_SERVER['SERVER_NAME'].'/order/redurl?oid='.$order_id);
