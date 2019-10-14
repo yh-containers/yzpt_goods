@@ -16,7 +16,7 @@
                     window.location.href= '/member/orderlist';
                 }else{
                     // alert(res.err_code+res.err_desc+res.err_msg);
-                    alert('支付失败');
+                    alert('支付失败'+res.err_msg);
                 }
             }
             );
