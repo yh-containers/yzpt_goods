@@ -68,7 +68,7 @@ class Cart extends BaseModel
             //查询用户可用积分
             $use = \app\common\model\Users::field('raise_num')->get(session('uid'));
             $ysy = $use['raise_num']+ \app\common\model\UsersRaiseLogs::where('num<=0 and uid='.session('uid'))->sum('num');
-            if($use['raise_num'] && $integral && $ysy){
+            if($use['raise_num'] && $integral){
                 if($use['raise_num'] < $integral) $integral = $use['raise_num'];
                 if($raise>$integral) $raise = $integral;
                 $normal_content = \app\common\model\SysSetting::getContent('normal');
