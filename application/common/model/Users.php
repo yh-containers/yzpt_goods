@@ -281,11 +281,20 @@ class Users extends BaseModel
 
         //点赞奖励
         self::event('praise_award', function ($user_model) {
-            $log_model = UsersRaiseLogs::where(['type'=>10,'uid'=>$user_model['id']])->order('id desc')->find();
-            //限制条件
-            if($log_model['cond_info']<$user_model['praise_num']){
-                $user_model->recordRaise(1,10,'视频/动态被点赞'.self::PRAISE_TIMES_AWARD.'次,获得:1养分',$user_model['praise_num']);
+            $setting_content = SysSetting::getContent('normal');
+            $setting_content = json_decode($setting_content,true);
+            //点赞养分
+            $num = isset($setting_content['praise_num'])?explode(',',$setting_content['praise_num']):[];
+            $praise_num = isset($num[0])?$num[0]:0;
+            $praise_num_up = isset($num[1])?$num[1]:0;
+            if($praise_num && $praise_num_up){
+                $log_model = UsersRaiseLogs::where(['type'=>10,'uid'=>$user_model['id']])->order('id desc')->find();
+                //限制条件
+                if($log_model['cond_info']<$user_model['praise_num']){
+                    $user_model->recordRaise($praise_num,10,'视频/动态被点赞'.self::PRAISE_TIMES_AWARD.'次,获得:'.$praise_num.'养分',$user_model['praise_num']);
+                }
             }
+
         });
 
 
