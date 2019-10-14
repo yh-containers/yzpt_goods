@@ -154,7 +154,10 @@ class Order extends Common
                 if(!$addr_default) $addr_default = $addr_list[0];
             }
         }
-        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'addr_default'=>$addr_default,'total'=>$total,'integral'=>$integral,'use_integral'=>$use['raise_num'],'fare'=>$fare]);
+        $normal_content = \app\common\model\SysSetting::getContent('normal');
+        $normal_content = empty($normal_content)?[]:json_decode($normal_content,true);
+        $integral_money = $normal_content['integral_money'];
+        return view('order',['goods_list'=>$cart_list,'addr_list'=>$addr_list,'addr_default'=>$addr_default,'total'=>$total,'integral'=>$integral,'use_integral'=>$use['raise_num'],'fare'=>$fare,'integral_money'=>$integral_money]);
     }
     //创建订单
     public function createorder(){

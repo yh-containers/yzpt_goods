@@ -129,7 +129,7 @@
 			</div>
 			<div class="order_btn">
 				<a href="javaScript:history.go(-1);" class="return">&lt; 返回购物车</a>
-				<div class="price">应付金额：<span>{$total+$fare}</span>元<a href="javascript:;" onclick="toCreateOrder();">提交订单</a></div>
+				<div class="price">应付金额：<span id="zzprice">{$total+$fare}</span>元<a href="javascript:;" onclick="toCreateOrder();">提交订单</a></div>
 			</div>
 			</form>
 		</div>
@@ -146,11 +146,17 @@
 		});
         function ckIntegral(nums) {
             var max_intes = {$integral};
+            var integral_money = {$integral_money},zzmoney = 0,all={$total+$fare};
             if(nums){
                 if(max_intes < parseInt(nums)){
                     $('input[name=integral]').val(max_intes);
+                    nums = max_intes;
                 }
-            }
+                zzmoney = (nums/100)*integral_money;
+                $('#zzprice').html(all-zzmoney);
+            }else{
+                $('#zzprice').html(all);
+			}
         }
 		/*选择支付方式*/
 		$(".payment_method ul li").on("click",function(){
