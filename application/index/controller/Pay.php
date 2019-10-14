@@ -56,7 +56,11 @@ class Pay extends Common
                     //$this->redirect($html['mweb_url'].'&redirect_url='.$redirect_url);
                     header('Location:'.$html['mweb_url'].'&redirect_url='.$redirect_url);
                 }
-                return view('order/pay_order',['order'=>$model,'code_url'=>$html,'payinfo'=>$html,'redirect_url'=>$redirect_url]);
+                if(strpos($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
+                    return view('order/wechatpay.html', ['code_url' => $html, 'payinfo' => $html]);
+                }else {
+                    return view('order/pay_order', ['order' => $model, 'code_url' => $html, 'payinfo' => $html, 'redirect_url' => $redirect_url]);
+                }
             }
             //elseif($mode=='alipay' && isMobile()){//
 
