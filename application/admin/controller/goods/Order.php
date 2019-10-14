@@ -35,6 +35,14 @@ class Order extends Common
                     $res['msg'] = '已取消';
                 }else if($handle == 'del'){//删除订单
                     $model->actionDel(['id'=>$oid]);
+                    $data = $model->get($oid);
+                    if($data['dis_money'] && ($data['status'] != 2)){
+                        $normal_content = \app\common\model\SysSetting::getContent('normal');
+                        $normal_content = empty($normal_content)?[]:json_decode($normal_content,true);
+                        $score = intval(($data['dis_money']/$normal_content['integral_money'])*100);
+                        \app\common\model\UsersRaiseLogs::recordLog($data['uid'],$score,'','订单取消，退回养分：'.$score);
+                        \app\common\model\Users::where(['id'=>$data['uid']])->update(['raise_num'=>\app\common\model\Users::raw('raise_num+'.$score)]);
+                    }
                     $res['msg'] = '已删除';
                 }else if($handle == 'sure-pay'){//确认付款
                     $model->orderPay($u['uid'],$oid);
