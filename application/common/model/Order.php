@@ -124,7 +124,12 @@ class Order extends BaseModel
         $model->step_flow = 0;
         $bool = $model->save();
         //可能产生的退款操作
-
+        if($model['dis_money']){
+            $normal_content = \app\common\model\SysSetting::getContent('normal');
+            $normal_content = empty($normal_content)?[]:json_decode($normal_content,true);
+            $score = intval(($model['dis_money']/$normal_content['integral_money'])*100);
+            \app\common\model\Users::where(['id'=>$model['uid']])->update(['raise_num'=>\app\common\model\Users::raw('raise_num-'.$score)]);
+        }
         !$bool && exception('操作异常');
         return $model;
     }
