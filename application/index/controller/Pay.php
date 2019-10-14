@@ -14,6 +14,7 @@ class Pay extends Common
         $order_id = input('order_id',0,'intval');
         $model = \app\common\model\Order::get($order_id);
         if($model['pay_money'] <= 0){
+            \app\common\model\Order::order_success();
             header('Location:/');die;
         }
         if($model['pay_way'] == 1){
