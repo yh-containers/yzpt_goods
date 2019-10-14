@@ -31,6 +31,9 @@ class Pay extends Common
             }else{
                 $pay_way = 'nativePay';
             }
+            if(strpos($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
+                $pay_way = 'jssdkPay';
+            }
         }
         //$mode = input('mode','alipay','trim');
         //$pay_way = input('pay_way','webPay','trim');
@@ -48,7 +51,7 @@ class Pay extends Common
             $html = $pay->$pay_way($model);
             if($mode=='wechat'){
                 $redirect_url = urlencode('http://'.$_SERVER['SERVER_NAME'].'/order/redurl?oid='.$order_id);
-                if(isMobile()){
+                if(isMobile() && !strpos($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
                     //$this->redirect($html['mweb_url'].'&redirect_url='.$redirect_url);
                     header('Location:'.$html['mweb_url'].'&redirect_url='.$redirect_url);
                 }
