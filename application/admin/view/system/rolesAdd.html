@@ -47,7 +47,7 @@
                                 <tr>
                                     <td>
                                         <label>
-                                            <input type="checkbox" name="node[]"  value="<?=$one['url']?>" <?=stripos($model['node'],$one['url'])!==false?'checked':''?> >
+                                            <input type="checkbox" name="node[]"  value="<?=$one['url']?>" <?=empty($one['url'])?'':stripos($model['node'],$one['url'])!==false?'checked':''?> >
                                             <?=$one['name']?>
                                         </label>
                                         <?php if(empty($one['url'])){?>
@@ -58,14 +58,14 @@
                                                 <td width="180">
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     <label>
-                                                        <input type="checkbox" name="node[]"  value="<?=$two['url']?>" <?=stripos($model['node'],$two['url'])!==false?'checked':''?> >
+                                                        <input type="checkbox" name="node[]"  value="<?=$two['url']?>" <?=empty($two['url'])?'':stripos($model['node'],$two['url'])!==false?'checked':''?> >
                                                         <?=$two['name']?>
                                                     </label>
                                                 </td>
                                                 <td>
                                                     <?php foreach($two['linkNode'] as $three){?>
                                                     <label>
-                                                        <input type="checkbox" name="node[]"  value="<?=$three['url']?>"  <?=stripos($model['node'],$three['url'])!==false?'checked':''?> >
+                                                        <input type="checkbox" name="node[]"  value="<?=$three['url']?>"  <?=empty($three['url'])?'':stripos($model['node'],$three['url'])!==false?'checked':''?> >
                                                         <?=$three['name']?>
                                                     </label>
                                                     <?php }?>
