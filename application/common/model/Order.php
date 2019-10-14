@@ -128,7 +128,8 @@ class Order extends BaseModel
             $normal_content = \app\common\model\SysSetting::getContent('normal');
             $normal_content = empty($normal_content)?[]:json_decode($normal_content,true);
             $score = intval(($model['dis_money']/$normal_content['integral_money'])*100);
-            \app\common\model\Users::where(['id'=>$model['uid']])->update(['raise_num'=>\app\common\model\Users::raw('raise_num-'.$score)]);
+            \app\common\model\UsersRaiseLogs::recordLog($model['uid'],$score,'','订单取消，退回养分：'.$score);
+            \app\common\model\Users::where(['id'=>$model['uid']])->update(['raise_num'=>\app\common\model\Users::raw('raise_num+'.$score)]);
         }
         !$bool && exception('操作异常');
         return $model;
