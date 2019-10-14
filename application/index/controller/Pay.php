@@ -57,7 +57,7 @@ class Pay extends Common
                     header('Location:'.$html['mweb_url'].'&redirect_url='.$redirect_url);
                 }
                 if(strpos($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
-                    return view('order/wechatpay.html', ['code_url' => $html, 'payinfo' => $html]);
+                    return view('order/wechatpay', ['code_url' => $html]);
                 }else {
                     return view('order/pay_order', ['order' => $model, 'code_url' => $html, 'payinfo' => $html, 'redirect_url' => $redirect_url]);
                 }
