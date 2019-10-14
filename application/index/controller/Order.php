@@ -193,7 +193,7 @@ class Order extends Common
                 $order_model->actionAdd($inserts);
                 if($goods_info['dis_money']){
                     \app\common\model\UsersRaiseLogs::recordLog(session('uid'),-$integral,'','商品折扣：'.$integral);
-                    \app\common\model\Users::where(['id'=>session('uid')])->update(['raise_num'=>\app\common\model\Users::raw('raise_num-'.($goods_info['dis_money']*100))]);
+                    \app\common\model\Users::where(['id'=>session('uid')])->update(['raise_num'=>\app\common\model\Users::raw('raise_num-'.$integral)]);
 
                 }
                 $og_model->createOrderGoods($goods_info['goods_list'],$order_model->id);
