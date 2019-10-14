@@ -23,11 +23,11 @@
 					<tbody>
 						<tr>
 							<td><span>订单编号号：{$data.no}</span></td>
-							<td><span>下单人：{$data.own_addrs.username}</span></td>
+							<td colspan="2"><span>下单人：{$data.own_addrs.username}</span></td>
 						</tr>
 						<tr>
 							<td><span>订单时间：{:$data.create_time}</span></td>
-							<td><span>支付方式：{:\\app\\common\\model\\Order::getPropInfo('fields_pay',$data['pay_way'])}</span></td>
+							<td colspan="2"><span>支付方式：{:\\app\\common\\model\\Order::getPropInfo('fields_pay',$data['pay_way'])}</span></td>
 						</tr>
 						<tr>
 							<td><span>订单价格：</span>￥{$data.money}</td>

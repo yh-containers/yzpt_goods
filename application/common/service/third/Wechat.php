@@ -67,6 +67,7 @@ class Wechat implements IPay
         $input->SetOpenid($open_id);
 
         $result = \WxPayApi::unifiedOrder($config, $input);
+        print_r($result);die;
         $result_data = array(
             'appId'  => $config->GetAppId(),
             'nonceStr' => $result['nonce_str'],
@@ -79,7 +80,7 @@ class Wechat implements IPay
         foreach($result_data as $key=>$vo){
             $str.=$key.'='.$vo.'&';
         }
-        $str.=$config->GetKey();
+        $str.='key='.$config->GetKey();
         if($config->GetSignType()=='MD5'){
             $sign = strtoupper(md5($str));
         }elseif($config->GetSignType()=='HMAC-SHA256'){
