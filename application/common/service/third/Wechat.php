@@ -68,13 +68,13 @@ class Wechat implements IPay
 
         $result = \WxPayApi::unifiedOrder($config, $input);
                 dump($input);
+        dump($result);
         if($result['return_code']!='SUCCESS'){
             exception('支付信息异常,请联系管理员');
         }
         if($result['result_code']!='SUCCESS'){
             exception($result['err_code'].','.$result['err_code_des']);
         }
-//        dump($result);
         $result_data = array(
             'appId'  => $config->GetAppId(),
             'nonceStr' => $result['nonce_str'],
