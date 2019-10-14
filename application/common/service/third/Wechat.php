@@ -67,7 +67,13 @@ class Wechat implements IPay
         $input->SetOpenid($open_id);
 
         $result = \WxPayApi::unifiedOrder($config, $input);
-        print_r($result);die;
+        if($result['return_code']!='SUCCESS'){
+            exception('支付信息异常,请联系管理员');
+        }
+        if($result['result_code']!='SUCCESS'){
+            exception($result['err_code'].','.$result['err_code_des']);
+        }
+//        dump($result);
         $result_data = array(
             'appId'  => $config->GetAppId(),
             'nonceStr' => $result['nonce_str'],
@@ -75,6 +81,7 @@ class Wechat implements IPay
             'signType' => $config->GetSignType(),
             'package' => 'prepay_id='.$result['prepay_id'],
         );
+//        dump($result_data);exit;
         ksort($result_data,SORT_STRING);
         $str = '';
         foreach($result_data as $key=>$vo){
@@ -88,7 +95,7 @@ class Wechat implements IPay
         }else{
             throw new \Exception('签名类型不支持!!');
         }
-        $result_data['sign'] =$sign;
+        $result_data['paySign'] =$sign;
 
         return $result_data;
     }
