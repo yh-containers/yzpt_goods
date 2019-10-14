@@ -81,7 +81,7 @@ class Wechat implements IPay
             'signType' => $config->GetSignType(),
             'package' => 'prepay_id='.$result['prepay_id'],
         );
-//        dump($result_data);exit;
+        dump($result_data);exit;
         ksort($result_data,SORT_STRING);
         $str = '';
         foreach($result_data as $key=>$vo){
