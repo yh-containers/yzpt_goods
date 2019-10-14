@@ -162,18 +162,19 @@ class Order extends Common
             $res = ['code' => 0, 'msg' => ''];
             $php_input = $this->request->param();
             $integral = $this->request->param('integral');
+            $address = $this->request->param('address');
             $order_model = new \app\common\model\Order();
             $cart_model = new \app\common\model\Cart();
             $og_model = new \app\common\model\OrderGoods();
             $od_model = new \app\common\model\OrderAddr();
             try{
                 \think\Db::startTrans();
-                //检查购物车商品状态及库存
-                $goods_info = $cart_model->checkCartGoods($integral);
-                /*if(!empty($php_input['address'])){
+                if(empty($address)){
                     $res['msg'] = '未选择收货地址';
                     echo json_encode($res);die;
-                }*/
+                }
+                //检查购物车商品状态及库存
+                $goods_info = $cart_model->checkCartGoods($integral);
                 $inserts = array();
                 $inserts['no'] = $order_model->getOrderSn();
                 $inserts['uid'] = session('uid');
