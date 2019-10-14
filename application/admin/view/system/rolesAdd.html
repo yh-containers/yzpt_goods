@@ -37,7 +37,7 @@
                                 <tr>
                                     <td rowspan="<?=count($vo['linkNode'])+1?>">
                                         <label>
-                                            <input type="checkbox" name="node[]"  value="<?=$vo['url']?>" <?=stripos($model['node'],$vo['url'])!==false?'checked':''?> >
+                                            <input type="checkbox" name="node[]"  value="<?=$vo['url']?>" <?=empty($vo['url'])?'':stripos($model['node'],$vo['url'])!==false?'checked':''?> >
                                             <?=$vo['name']?>
                                         </label>
                                     </td>
