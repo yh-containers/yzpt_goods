@@ -500,10 +500,12 @@ class Member extends Common
     }
     //我的养分
     public function myintegral(){
+        $use = \app\common\model\Users::field('raise_num')->get(session('uid'));
         $integralModel = new \app\common\model\UsersRaiseLogs();
         $addlog = $integralModel->where('num>0 and uid='.session('uid'))->order('create_time desc')->select();
         $lesslog = $integralModel->where('num<=0 and uid='.session('uid'))->order('create_time desc')->select();
-        $integral =  $integralModel->where(['uid'=>session('uid')])->sum('num');
+        //$integral =  $integralModel->where(['uid'=>session('uid')])->sum('num');
+        $integral = $use['raise_num']+$integralModel->where('num<=0 and uid='.session('uid'))->sum('num');
         return view('integral',['addlog'=>$addlog,'lesslog'=>$lesslog,'integral'=>$integral]);
     }
 }
