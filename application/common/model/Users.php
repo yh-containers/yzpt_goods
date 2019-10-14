@@ -287,7 +287,7 @@ class Users extends BaseModel
             $num = isset($setting_content['praise_num'])?explode(',',$setting_content['praise_num']):[];
             $praise_num = isset($num[0])?$num[0]:0;
             $praise_num_up = isset($num[1])?$num[1]:0;
-            if($praise_num && $praise_num_up){
+            if($user_model['praise_num']>0 && $praise_num && $praise_num_up && empty($user_model['praise_num']%$praise_num_up)){
                 $log_model = UsersRaiseLogs::where(['type'=>10,'uid'=>$user_model['id']])->order('id desc')->find();
                 //限制条件
                 if($log_model['cond_info']<$user_model['praise_num']){

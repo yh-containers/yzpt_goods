@@ -194,9 +194,9 @@ class Video extends BaseModel
         try{
             //被点用户
             $opt_user_model = Users::get($ex_model['uid']);
-            $model->praise_date?$opt_user_model->setInc('praise_num'):$opt_user_model->setDec('praise_num');
-            //触发点赞奖励事件
-            if(!empty($opt_user_model)  && empty($opt_user_model->praise_num%Users::PRAISE_TIMES_AWARD)){
+            if(!empty($opt_user_model)){
+                $model->praise_date?$opt_user_model->setInc('praise_num'):$opt_user_model->setDec('praise_num');
+                //触发点赞奖励事件
                 $opt_user_model->trigger('praise_award');
             }
 
