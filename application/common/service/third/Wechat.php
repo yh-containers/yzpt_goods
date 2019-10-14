@@ -67,8 +67,8 @@ class Wechat implements IPay
         $input->SetOpenid($open_id);
 
         $result = \WxPayApi::unifiedOrder($config, $input);
-                dump($input);
-        dump($result);
+                //dump($input);
+        //dump($result);
         if($result['return_code']!='SUCCESS'){
             exception('支付信息异常,请联系管理员');
         }
@@ -82,7 +82,7 @@ class Wechat implements IPay
             'signType' => $config->GetSignType(),
             'package' => 'prepay_id='.$result['prepay_id'],
         );
-        dump($result_data);exit;
+        //dump($result_data);exit;
         ksort($result_data,SORT_STRING);
         $str = '';
         foreach($result_data as $key=>$vo){
