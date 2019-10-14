@@ -54,7 +54,7 @@ class Cart extends BaseModel
             }else{
                 $gmodel = new \app\common\model\Goods();
                 if($cart['stock'] > $cart['num']){
-                    $gmodel->where(['id'=>$cart['sid']])->update(['stock'=>$gmodel->raw('stock-'.$cart['num'])]);
+                    $gmodel->where(['id'=>$cart['gid']])->update(['stock'=>$gmodel->raw('stock-'.$cart['num'])]);
                 }
             }
             empty($cart['stock']) && exception('商品库存不足');
