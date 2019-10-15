@@ -26,7 +26,7 @@ class Cart extends BaseModel
         $where['uid'] = $data['uid'];
         if($data['sid']) $where['sid'] = $data['sid'];
         $where['type'] = $data['is_checked'];
-        if($res = self::where($where)->find()){
+        if($res = self::where($where)->find() && !$data['is_checked']){
             $info['id'] = $res['id'];
             $info['is_checked'] = $data['is_checked'];
             $info['num'] = $res['num']+$data['num'];//array(self::raw('num+'.$data['num']));
