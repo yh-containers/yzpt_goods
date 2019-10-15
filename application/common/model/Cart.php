@@ -32,6 +32,7 @@ class Cart extends BaseModel
             $info['num'] = $res['num']+$data['num'];//array(self::raw('num+'.$data['num']));
             return $info;
         }else{
+            $data['type'] = $data['is_checked'];
             $data['id'] = '';
             return $data;
         }
