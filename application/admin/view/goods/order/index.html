@@ -4,14 +4,14 @@
 
 <div class="box box-primary">
     <div class="box-header with-border">
-        <div class="col-sm-4">
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <form action="{:url('index')}">
-                    <input type="text" class="form-control" placeholder="搜索订单号" id="order_no" name="order_no" value="{$order_no}">
-                    </form>
-                </div>
-                <label class="col-sm-3 control-label" onclick="toSearch();">搜索</label>
+        <div class="col-sm-6">
+            <div class="col-sm-9">
+                <form class="input-group  col-sm-4">
+                    <input type="text" class="form-control" name="order_no" value="{$order_no}" placeholder="">
+                    <span class="input-group-btn">
+                      <button type="submit" class="btn btn-info btn-flat">搜索</button>
+                    </span>
+                </form>
             </div>
         </div>
         <div class="col-sm-6 col-sm-offset-1 inline">
