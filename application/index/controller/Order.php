@@ -108,7 +108,7 @@ class Order extends Common
         $gids = array();
         $cid = $this->request->param('cid');
         if($cid){
-            $where = 'c.uid='.session('uid').'and c.id ='.$cid;
+            $where = 'c.uid='.session('uid').' and c.id ='.$cid;
         }else{
             $where = 'c.uid='.session('uid').' and c.is_checked=1';
         }
