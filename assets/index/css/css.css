@@ -201,8 +201,9 @@ table{border-collapse:collapse; border-spacing:0;}
 
 .page{padding:40px 15px;text-align: right;}
 .page .page_num a{width:60px;height:40px;line-height: 40px;text-align: center;background-color: #eee;float: left;margin:0 5px;border-radius: 2px;color: #666;font-size: 16px;}
-.page .page_num a .cur{background-color: #e52346;color: #fff;}
 .page .page_num a.cur,.page .page_num a:hover{background-color: #ff0000;color:#fff;}
+.page .page_num a.cur1,.page .page_num a:hover{background-color: #ff0000;color:#fff;}
+.page .page_num a.cur2,.page .page_num a:hover{background-color: #ff0000;color:#fff;}
 .page .jump,.page .page_num{display: inline-block;vertical-align: top;}
 .page .jump span{color:#999;}
 .page .jump input{text-align: center;color:#666;}
