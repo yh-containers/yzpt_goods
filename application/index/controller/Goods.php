@@ -222,7 +222,7 @@ class Goods extends Common
                 $post_data = $cart_model->checkCart($post_data);
                 $cart_model->actionAdd($post_data);
                 $cid = $post_data['id'];
-                if($post_data['id']){
+                if(!$post_data['id']){
                     $cid = $cart_model->id;
                 }
             } catch (\Exception $e) {
