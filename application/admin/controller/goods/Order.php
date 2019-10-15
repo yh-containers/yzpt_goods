@@ -8,8 +8,12 @@ class Order extends Common
 	public function index(){
         $where = [];
 	    $t_id = $this->request->param('t_id');
+	    $order_no = $this->request->param('order_no');
 	    if(is_numeric($t_id)){
             $where['step_flow'] = $t_id;
+        }
+        if(is_numeric($order_no)){
+            $where['no'] = $order_no;
         }
         $list = \app\common\model\Order::with('ownAddrs')->where('status!=5')->where($where)->order('create_time desc')->paginate();
         foreach ($list as &$v){
@@ -18,7 +22,7 @@ class Order extends Common
         }
 //        print_r($list);
         $page = $list->render();
-        return view('index',['list'=>$list,'page'=>$page,'t_id'=>$t_id]);
+        return view('index',['list'=>$list,'page'=>$page,'t_id'=>$t_id,'order_no'=>$order_no]);
     }
     //订单详情
     public function orderdetail(){
