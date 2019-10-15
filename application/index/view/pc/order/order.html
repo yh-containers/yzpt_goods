@@ -112,6 +112,7 @@
 							<div class="num">X{$goods.num}</div>
 							<div class="subtotal">￥{$goods.price*$goods.num}</div>
 						</li>
+						<input type="hidden" name="cid[]" value="{$goods.id}">
 						{/volist}
 					</ul>
 				</div>

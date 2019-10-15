@@ -221,11 +221,15 @@ class Goods extends Common
                 $cart_model = new \app\common\model\Cart();
                 $post_data = $cart_model->checkCart($post_data);
                 $cart_model->actionAdd($post_data);
+                $cid = $post_data['id'];
+                if($post_data['id']){
+                    $cid = $cart_model->id;
+                }
             } catch (\Exception $e) {
                 $res['msg'] = $e->getMessage();
                 echo json_encode($res);die;
             }
-            echo json_encode(['code'=>1,'msg'=>'已加入购物车']);die;
+            echo json_encode(['code'=>1,'msg'=>'已加入购物车','cid'=>$cid]);die;
         }
     }
     //查询界面
