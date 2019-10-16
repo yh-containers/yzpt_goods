@@ -263,6 +263,7 @@ class Order extends Common
         }
         $order['handle'] = str_replace('{order_id}',$order['id'],$order['handle']);
         $order['state'] = is_array($state['name']) ? $state['name'][$order['status']] : $state['name'];
+        $order['step'] = 0;
         if($order['status'] == 0) $order['step'] = 1;
         if($order['status'] == 1) $order['step'] = 2;
         if($order['status'] == 2) $order['step'] = 1;
