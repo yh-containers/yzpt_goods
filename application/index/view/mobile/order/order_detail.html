@@ -38,8 +38,8 @@
 			<div class="order_time">
 				<p>订单编号：{$order.no}</p>
 				<p>下单时间：{:$order.create_time}</p>
-				<p>付款时间：{:$order.pay_time}</p>
-				<p>发货时间：{:$order.send_end_time}</p>
+				<p>付款时间：{:$order['pay_time']?date('Y-m-d H:i:s',$order['pay_time']):''}</p>
+				<p>发货时间：{:$order['send_end_time']?date('Y-m-d H:i:s',$order['send_end_time']):''}</p>
 			</div>
 		</div>
 	</main>
@@ -48,5 +48,93 @@
 			{$order['handle']|raw}
 		</div>
 	</div>
+<!--取消订单弹窗-->
+<div class="cancel_pop tip_popup">
+	<div class="content">
+		<div class="text">
+			<h3>温馨提示</h3>
+			<p>取消订单将不能恢复，确定要取消吗？</p>
+		</div>
+		<div class="operating">
+			<a href="javascript:;" class="close">我再想想</a>
+			<a href="javascript:;" class="determine" onclick="handleCancel(this);">确定取消</a>
+		</div>
+	</div>
+</div>
+
+<!--删除订单弹窗-->
+<div class="del_pop tip_popup">
+	<div class="content">
+		<div class="text">
+			<h3>温馨提示</h3>
+			<p>删除订单将不能恢复，确定要删除吗？</p>
+		</div>
+		<div class="operating">
+			<a href="javascript:;" class="close">我再想想</a>
+			<a href="javascript:;" class="determine" onclick="handleDel(this);">确定删除</a>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+    /*取消订单*/
+    function orderCancel(order_id){
+        $(".cancel_pop").find('.determine').attr('data-id',order_id);
+        $(".cancel_pop").show();
+    }
+    /*删除订单*/
+    function orderDel(order_id){
+        $(".del_pop").find('.determine').attr('data-id',order_id);
+        $(".del_pop").show();
+    }
+    function handleDel(obj){
+        var oid = $(obj).attr('data-id');
+        if(oid){
+            sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'del'},1);
+        }
+    }
+
+    $(".tip_popup .close").click(function(){
+        $(".cancel_pop").hide();
+        $(".del_pop").hide();
+    });
+    function handleCancel(obj){
+        var oid = $(obj).attr('data-id');
+        if(oid){
+            sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'cancel'},1);
+        }
+    }
+    function remindOrder(oid){
+        if(oid){
+            sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'remind'},1);
+        }
+    }
+    function receiveOrder(oid){
+        if(oid){
+            sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'receive'},1);
+        }
+    }
+    function retreatOrder(oid){
+        if(oid){
+            //sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'retreat'},1);
+            window.location.href = '/Member/return_order?id='+oid;
+        }
+    }
+    function sendAjax(ajaxUrl,ajaxData,isre){
+        $.ajax({
+            url:ajaxUrl,
+            data:ajaxData,
+            dataType:'json',
+            type:'post',
+            success:function (re){
+                alert(re.msg);
+                if(re.code && isre){
+                    history.go(0);
+                }
+            }
+        })
+    }
+</script>
 {/block}
 {block name="footer"}{/block}
