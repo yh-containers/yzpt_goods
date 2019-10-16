@@ -266,10 +266,12 @@ class Order extends Common
         if($order['status'] == 0) $order['step'] = 1;
         if($order['status'] == 1) $order['step'] = 2;
         if($order['status'] == 2) $order['step'] = 1;
+        if($order['status'] == 3 && ($order['step_flow']==3)) $order['step'] = 5;
         if($order['step_flow'] == 1) $order['step'] = 3;
         if($order['step_flow'] == 2) $order['step'] = 4;
         if($order['status'] == 4) $order['step'] = 5;
         if($order['status'] == 5) $order['step'] = 1;
+//        print_r($order['step_flow']);
 //        print_r($order['status']);
         $order['wl'] = '';
         if($order['step_flow'] >= 2){
