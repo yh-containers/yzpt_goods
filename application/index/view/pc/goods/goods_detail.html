@@ -106,7 +106,7 @@
                         </div>
                         <div class="bd">
                             <!-- 商品详情介绍 -->
-                            <div class="con">
+                            <div class="con" id="brief">
                                 {$goods.content|raw}
                             </div>
                             <!-- 商品规格 -->
@@ -136,7 +136,12 @@
         /*多页签栏目监控*/
         $(function(){
             var ifm= document.getElementById("myiframe");
-            ifm.height=document.documentElement.clientHeight;
+            var zh = document.getElementById('brief').clientHeight;
+            if(zh>769){
+                ifm.height=zh;
+            }else{
+                ifm.height=document.documentElement.clientHeight;
+            }
             var win=$(window); 
             var sc=$(document);
             win.scroll(function(){
