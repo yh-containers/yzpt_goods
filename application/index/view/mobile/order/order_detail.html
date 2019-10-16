@@ -40,6 +40,10 @@
 				<p>下单时间：{:$order.create_time}</p>
 				<p>付款时间：{:$order['pay_time']?date('Y-m-d H:i:s',$order['pay_time']):''}</p>
 				<p>发货时间：{:$order['send_end_time']?date('Y-m-d H:i:s',$order['send_end_time']):''}</p>
+				{if condition="$order['step_flow'] egt 2"}
+				<p>物流公司：{if($order['wl'])}{$order.wl.company}{/if}</p>
+				<p>物流单号：{if($order['wl'])}{$order.wl.no}{/if}</p>
+				{/if}
 			</div>
 		</div>
 	</main>
