@@ -17,7 +17,7 @@ class Components
     {
         $cartCount = 0;
         if(session('uid')){
-            $cartCount = \app\common\model\Cart::where(['uid'=>session('uid')])->sum('num');
+            $cartCount = \app\common\model\Cart::where(['uid'=>session('uid'),'type'=>0])->sum('num');
         }
         return view('common/header_center',['show_search'=>$show_search,'step'=>$step,'cart_count'=>$cartCount])->getContent();
     }
