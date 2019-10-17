@@ -144,8 +144,9 @@ class Goods extends Common
         //总评
         $comment_count = $com_model->where($where)->count();
         //好评
-        $where['grade'] = ['in','4,5'];
-        $count['best'] = $com_model->where($where)->count();
+        //$where['grade'] = ['in','4,5'];
+        $wheres = 'gid='.$gid.' and grade in(4,5)';
+        $count['best'] = $com_model->where($wheres)->count();
         //好评率
         $count['best_pro'] = $count['best'] ? round($count['best']/$comment_count,2)*100 : 0;
         //中评
@@ -180,6 +181,7 @@ class Goods extends Common
         foreach ($com_list as &$com){
             $com['user'] = $user_model->field('name,face')->find($com['uid']);
         }
+        //print_r($count);
         $page = $com_list->render();
         return view('goods_comment',['com_list'=>$com_list,'comment_count'=>$comment_count,'pjnum'=>$count,'gid'=>$gid,'page'=>$page,'step'=>$state]);
     }
