@@ -67,7 +67,7 @@ class Index extends Common
             $spec['value_name'] = $this->request->param('value_name');
             $spec['value_id'] = $this->request->param('value_id');
             //$php_input['goods_image'] = isset($image_arr[0])?$image_arr[0]:'';
-            $php_input['image_arr'] = implode(',',$php_input['image_arr']);
+            if($image_arr) $php_input['image_arr'] = implode(',',$image_arr);
             try {
                 $validate = new \app\common\validate\Goods();
                 //商品属性
