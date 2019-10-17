@@ -74,7 +74,7 @@
 											<div class="title">{$goods.name}</div>
 										</div>
 										<div class="price">￥{$goods.price}</div>
-										<div class="num">X1{$goods.num}</div>
+										<div class="num">X{$goods.num}</div>
 										<div class="total">￥{$goods.num*$goods.price}</div>
 									</li>
 									{/volist}
@@ -129,12 +129,9 @@
 	<!-- 弹框提示 -->
 	<script type="text/javascript">
 	    $(function(){
+        });
 
-	    	/*取消订单
-	        $('.orders .cancel_order').click(function(){
-	            $('.cancel_popup').show();
-	            $("body").append("<div class='tips_bg'></div>");
-	        });*/
+	    	/*取消订单*/
 	        function orderCancel(order_id){
 				$(".cancel_popup").find('.define').attr('data-id',order_id);
 				$(".cancel_popup").show();
@@ -152,11 +149,7 @@
 	            $("body").append("<div class='tips_bg'></div>");
 	        });
 
-	        /*确认收货
-	        $('.orders .confirm').click(function(){
-	            $('.confirm_popup').show();
-	            $("body").append("<div class='tips_bg'></div>");
-	        });*/
+	        /*确认收货*/
 	        function receiveOrder(oid){
 				if(oid){
 					$('.confirm_popup').find('.define').attr('data-id',oid);
@@ -171,11 +164,7 @@
 				}
 			}
 
-	        /*提醒发货
-	        $('.orders .tixing').click(function(){
-	            $('.remind_popup').show();
-	            $("body").append("<div class='tips_bg'></div>");
-	        });*/
+	        /*提醒发货*/
 	        function remindOrder(oid){
 				if(oid){
 					sendAjax("{:url('Member/handleorder')}",{'order_id':oid,'handle':'remind'},1);
@@ -205,7 +194,6 @@
 				  	}	
 			  	})
 			}
-	    });
 
 	</script>
 {/block}

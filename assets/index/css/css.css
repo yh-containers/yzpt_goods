@@ -200,8 +200,10 @@ table{border-collapse:collapse; border-spacing:0;}
 .products_list ul li .operating .join img{margin-right:5px;}
 
 .page{padding:40px 15px;text-align: right;}
-.page .page_num a{width:40px;height:40px;line-height: 40px;text-align: center;background-color: #eee;float: left;margin:0 5px;border-radius: 2px;color: #666;font-size: 16px;}
+.page .page_num a{width:60px;height:40px;line-height: 40px;text-align: center;background-color: #eee;float: left;margin:0 5px;border-radius: 2px;color: #666;font-size: 16px;}
 .page .page_num a.cur,.page .page_num a:hover{background-color: #ff0000;color:#fff;}
+.page .page_num a.cur1,.page .page_num a:hover{background-color: #ff0000;color:#fff;}
+.page .page_num a.cur2,.page .page_num a:hover{background-color: #ff0000;color:#fff;}
 .page .jump,.page .page_num{display: inline-block;vertical-align: top;}
 .page .jump span{color:#999;}
 .page .jump input{text-align: center;color:#666;}
@@ -321,11 +323,11 @@ table{border-collapse:collapse; border-spacing:0;}
 .product_description .evaluation .inBd .con > ul > li .eva_avatar p{line-height:40px;font-size: 15px;color:#666;}
 .product_description .evaluation .inBd .con > ul > li .eva_content{float: left;width:840px;}
 .product_description .evaluation .inBd .con > ul > li .eva_content .eva_star em{width: 78px;height: 14px;background: url(../images/star.png);background-repeat:no-repeat;display: inline-block;vertical-align: text-top;}
-.product_description .evaluation .inBd .con > ul > li .eva_content .star1{background-position: -64px 0;}
-.product_description .evaluation .inBd .con > ul > li .eva_content .star2{background-position: -48px 0;}
-.product_description .evaluation .inBd .con > ul > li .eva_content .star3{background-position: -32px 0;}
-.product_description .evaluation .inBd .con > ul > li .eva_content .star4{background-position: -16px 0;}
-.product_description .evaluation .inBd .con > ul > li .eva_content .star5{background-position: 0 0;}
+.product_description .evaluation .inBd .con > ul > li .eva_content .eva_star .star1{background-position: -64px 0;}
+.product_description .evaluation .inBd .con > ul > li .eva_content .eva_star .star2{background-position: -48px 0;}
+.product_description .evaluation .inBd .con > ul > li .eva_content .eva_star .star3{background-position: -32px 0;}
+.product_description .evaluation .inBd .con > ul > li .eva_content .eva_star .star4{background-position: -16px 0;}
+.product_description .evaluation .inBd .con > ul > li .eva_content .eva_star .star5{background-position: 0 0;}
 .product_description .evaluation .inBd .con > ul > li .eva_content p{line-height:26px;padding:10px 0;color:#666;}
 .product_description .evaluation .inBd .con > ul > li .eva_content ul{padding-bottom:15px;}
 .product_description .evaluation .inBd .con > ul > li .eva_content ul li{float: left;margin-right: 15px;}

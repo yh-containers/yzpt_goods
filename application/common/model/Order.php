@@ -69,26 +69,26 @@ class Order extends BaseModel
     public static $fields_mobile_step = [
         [
             'name'=>['待支付','已支付','已取消','','','申请退款'],
-            'handle'=>['<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="/pay/info?order_id={order_id}" class="red">立即付款</a>','<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="javascript:;" class="red" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" onclick="orderDel({order_id});" class="red">删除订单</a>','','',''],
+            'handle'=>['<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="/pay/info?order_id={order_id}" class="red">立即付款</a>','<a href="javascript:;" class="red" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" onclick="orderDel({order_id});" class="red">删除订单</a>','','',''],
             'w_handle'=>['<a href="/Pay/info?order_id={order_id}" class="fukuan orange">立即付款</a><a href="javascript:;" class="cancel_order" onclick="orderCancel({order_id});">取消订单</a>','<a href="javascript:;" class="tixing orange_bg" onclick="remindOrder({order_id});">提醒发货</a>','<a href="javascript:;" class="cancel_order orange"  onclick="orderDel({order_id});">删除订单</a>','','',''],
             'field'=>'status'
         ],
         [
             'name'=>'待发货',
-            'handle'=>'<a href="javascript:;" class="cancel" onclick="orderCancel({order_id});">取消订单</a><a href="javascript:;" class="red" onclick="remindOrder({order_id});">提醒发货</a>',
+            'handle'=>'<a href="javascript:;" class="red" onclick="remindOrder({order_id});">提醒发货</a>',
             'w_handle'=>'<a href="javascript:;" class="tixing orange_bg" onclick="remindOrder({order_id});">提醒发货</a>',
             'field'=>'is_send'
         ],
         [
             'name'=>'待收货',
-            'handle'=>'<a href="javascript:;" onclick="retreatOrder({order_id});">申请退货</a><a href="javascript:;" onclick="receiveOrder({order_id});" class="red">确认收货</a>',
-            'w_handle'=>'<a href="javascript:;" onclick="receiveOrder({order_id});" class="confirm orange_bg">确认收货</a><a href="javascript:;" onclick="retreatOrder({order_id});" class="sqth">申请退货</a>',
+            'handle'=>'<a href="javascript:;" onclick="receiveOrder({order_id});" class="red">确认收货</a>',
+            'w_handle'=>'<a href="javascript:;" onclick="receiveOrder({order_id});" class="confirm orange_bg">确认收货</a>',
             'field'=>'is_receive'
         ],
         [
             'name'=>['','','','待评价','已完成'],
-            'handle'=>['','','','<a href="javascript:;" onclick="retreatOrder({order_id});">申请退款</a><a href="/Member/comment/order_id/{order_id}" class="red">评价</a>','<a href="javascript:;">已完成</a><a href="javascript:;" onclick="orderDel({order_id});" class="red">删除订单</a>'],
-            'w_handle'=>['','','','<a href="/Member/comment/order_id/{order_id}" class="orange">去评价</a>','<a href="javascript:;">已完成</a><a href="javascript:;" class="cancel_order orange"  onclick="orderDel({order_id});">删除订单</a>'],
+            'handle'=>['','','','<a href="javascript:;" onclick="retreatOrder({order_id});">申请退款</a><a href="/Member/comment/order_id/{order_id}" class="red">评价</a>','<a href="javascript:;" onclick="retreatOrder({order_id});">申请退款</a><a href="javascript:;" onclick="orderDel({order_id});" class="red">删除订单</a>'],
+            'w_handle'=>['','','','<a href="javascript:;" onclick="retreatOrder({order_id});" class="sqth">申请退货</a><a href="/Member/comment/order_id/{order_id}" class="orange">去评价</a>','<a href="javascript:;">已完成</a><a href="javascript:;" class="cancel_order orange"  onclick="orderDel({order_id});">删除订单</a>'],
             'field'=>'status'
         ]
     ];
@@ -128,7 +128,13 @@ class Order extends BaseModel
             $normal_content = \app\common\model\SysSetting::getContent('normal');
             $normal_content = empty($normal_content)?[]:json_decode($normal_content,true);
             $score = intval(($model['dis_money']/$normal_content['integral_money'])*100);
-            \app\common\model\Users::where(['id'=>$model['uid']])->update(['raise_num'=>\app\common\model\Users::raw('raise_num-'.$score)]);
+            \app\common\model\UsersRaiseLogs::recordLog($model['uid'],$score,'','订单取消，退回养分：'.$score);
+            \app\common\model\Users::where(['id'=>$model['uid']])->update(['raise_num'=>\app\common\model\Users::raw('raise_num+'.$score)]);
+        }
+        $og_model = new \app\common\model\OrderGoods();
+        $gids = $og_model->where(array('oid'=>$order_id))->field('gid,num')->select();
+        foreach ($gids as $g){
+            \app\common\model\Goods::where(['id'=>$g['gid']])->update(['stock'=>\app\common\model\Goods::raw('stock+'.$g['num'])]);
         }
         !$bool && exception('操作异常');
         return $model;

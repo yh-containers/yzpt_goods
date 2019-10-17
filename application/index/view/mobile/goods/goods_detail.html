@@ -214,7 +214,7 @@
 						{/if}
 					}
                     if(e.code && ajaxData.is_checked){
-                        window.location.href="{:url('Order/detail')}";
+                        window.location.href="{:url('Order/detail')}?cid="+e.cid;
                     }
                 }
             });

@@ -35,7 +35,7 @@ class Order extends Common
         $spec_model = new \app\common\model\GoodsSpecValue();
         $collect_model = new \app\common\model\Collect();
         $goods_model = new \app\common\model\Goods();
-        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid'))->field('c.*,g.goods_name,g.goods_image,g.price,g.status')->select();
+        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and type=0')->field('c.*,g.goods_name,g.goods_image,g.price,g.status')->select();
         foreach ($cart_list as &$cart){
             if($cart['sid']){
                 $sku = $sku_model->where(['id'=>$cart['sid']])->field('price,sv_ids')->find();
@@ -105,7 +105,14 @@ class Order extends Common
         $total = 0;
         $integral = 0;
         $fare = 0;
-        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.*,g.goods_name,g.goods_image,g.price,g.status,g.integral,g.fare')->select();
+        $gids = array();
+        $cid = $this->request->param('cid');
+        if($cid){
+            $where = 'c.uid='.session('uid').' and c.id ='.$cid;
+        }else{
+            $where = 'c.uid='.session('uid').' and c.is_checked=1';
+        }
+        $cart_list = $cart_model->alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where($where)->field('c.*,g.goods_name,g.goods_image,g.price,g.status,g.integral,g.fare')->select();
         if(count($cart_list) == 0){
             $this->error('未选择购物车商品');
         }
@@ -127,9 +134,13 @@ class Order extends Common
             if($cart['status'] != 1){
                 $this->error('购物车中存在下架的商品');
             }
+            $gids[$cart['gid']] = $cart['fare'];
             $total += $cart['price'] * $cart['num'];
             $integral += $cart['integral'] * $cart['num'];
-            $fare += $cart['fare'] * $cart['num'];
+            //$fare += $cart['fare'] * $cart['num'];
+        }
+        foreach ($gids as $f){
+            $fare += $f;
         }
         //查询用户可用积分
         $use = \app\common\model\Users::field('raise_num')->get(session('uid'));
@@ -167,6 +178,7 @@ class Order extends Common
             $php_input = $this->request->param();
             $integral = $this->request->param('integral');
             $address = $this->request->param('address');
+            $cid = $this->request->param('cid');
             $order_model = new \app\common\model\Order();
             $cart_model = new \app\common\model\Cart();
             $og_model = new \app\common\model\OrderGoods();
@@ -177,8 +189,13 @@ class Order extends Common
                     $res['msg'] = '未选择收货地址';
                     echo json_encode($res);die;
                 }
+                if(!$cid){
+                    $res['msg'] = '未选择支付商品';
+                    echo json_encode($res);die;
+                }
+                $cid = implode(',',$cid);
                 //检查购物车商品状态及库存
-                $goods_info = $cart_model->checkCartGoods($integral);
+                $goods_info = $cart_model->checkCartGoods($integral,$cid);
                 $inserts = array();
                 $inserts['no'] = $order_model->getOrderSn();
                 $inserts['uid'] = session('uid');
@@ -246,16 +263,19 @@ class Order extends Common
         }
         $order['handle'] = str_replace('{order_id}',$order['id'],$order['handle']);
         $order['state'] = is_array($state['name']) ? $state['name'][$order['status']] : $state['name'];
+        $order['step'] = 0;
         if($order['status'] == 0) $order['step'] = 1;
         if($order['status'] == 1) $order['step'] = 2;
         if($order['status'] == 2) $order['step'] = 1;
+        if($order['status'] == 3 && ($order['step_flow']==3)) $order['step'] = 5;
         if($order['step_flow'] == 1) $order['step'] = 3;
         if($order['step_flow'] == 2) $order['step'] = 4;
         if($order['status'] == 4) $order['step'] = 5;
         if($order['status'] == 5) $order['step'] = 1;
+//        print_r($order['step_flow']);
 //        print_r($order['status']);
         $order['wl'] = '';
-        if($order['step_flow'] > 2){
+        if($order['step_flow'] >= 2){
             $order['wl'] = $wlModel->where(['oid'=>$id])->find();
         }
         $order['number'] = 0;

@@ -89,7 +89,7 @@
 						<!-- 确认发货 -->
 						{php} 
 						if(in_array(\app\common\model\Order::M_ORDER_HANDLE_SEND,$handle)){
-							echo '<input type="submit" value="发货" name="'.\app\common\model\Order::M_ORDER_HANDLE_SEND.'" class="btn btn-default" style="margin-left: 20px;" onclick="$(\'#type\').val(this.name),showAdd();history.go(0);">';
+							echo '<input type="submit" value="发货" name="'.\app\common\model\Order::M_ORDER_HANDLE_SEND.'" class="btn btn-default" style="margin-left: 20px;" onclick="$(\'#type\').val(this.name),showAdd();">';
 						}
 						{/php}
 						<!-- 删除订单 -->

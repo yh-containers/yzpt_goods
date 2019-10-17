@@ -102,6 +102,14 @@ class Member extends Common
                     $order_model->orderRetreat(session('uid'),$oid);
                     $res['msg'] = '操作成功';
                 }else if($handle == 'del'){//用户删除
+                    $model = $order_model->get($oid);
+                    if($model['dis_money'] && ($model['status'] != 2)){
+                        $normal_content = \app\common\model\SysSetting::getContent('normal');
+                        $normal_content = empty($normal_content)?[]:json_decode($normal_content,true);
+                        $score = intval(($model['dis_money']/$normal_content['integral_money'])*100);
+                        \app\common\model\UsersRaiseLogs::recordLog($model['uid'],$score,'','订单取消，退回养分：'.$score);
+                        \app\common\model\Users::where(['id'=>$model['uid']])->update(['raise_num'=>\app\common\model\Users::raw('raise_num+'.$score)]);
+                    }
                     $order_model->where(['id'=>$oid])->update(['is_del'=>1]);
                     $res['msg'] = '已删除';
                 }else if($handle == 'cancel_retreat'){//取消退款

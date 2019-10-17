@@ -8,8 +8,14 @@ class Order extends Common
 	public function index(){
         $where = [];
 	    $t_id = $this->request->param('t_id');
+	    $order_no = $this->request->param('order_no');
 	    if(is_numeric($t_id)){
-            $where['step_flow'] = $t_id;
+            //$where['step_flow'] = $t_id;
+            $where[] = ['step_flow','=',$t_id];
+        }
+        if(is_numeric($order_no)){
+            //$where['no'] = ['like','%'.$order_no.'%'];
+            $where[] = ['no','like','%'.$order_no.'%'];
         }
         $list = \app\common\model\Order::with('ownAddrs')->where('status!=5')->where($where)->order('create_time desc')->paginate();
         foreach ($list as &$v){
@@ -18,7 +24,7 @@ class Order extends Common
         }
 //        print_r($list);
         $page = $list->render();
-        return view('index',['list'=>$list,'page'=>$page,'t_id'=>$t_id]);
+        return view('index',['list'=>$list,'page'=>$page,'t_id'=>$t_id,'order_no'=>$order_no]);
     }
     //订单详情
     public function orderdetail(){
@@ -34,6 +40,14 @@ class Order extends Common
                     $model->cancelOrder($u['uid'],$oid);
                     $res['msg'] = '已取消';
                 }else if($handle == 'del'){//删除订单
+                    $data = $model->get($oid);
+                    if($data['dis_money'] && ($data['status'] != 2)){
+                        $normal_content = \app\common\model\SysSetting::getContent('normal');
+                        $normal_content = empty($normal_content)?[]:json_decode($normal_content,true);
+                        $score = intval(($data['dis_money']/$normal_content['integral_money'])*100);
+                        \app\common\model\UsersRaiseLogs::recordLog($data['uid'],$score,'','订单取消，退回养分：'.$score);
+                        \app\common\model\Users::where(['id'=>$data['uid']])->update(['raise_num'=>\app\common\model\Users::raw('raise_num+'.$score)]);
+                    }
                     $model->actionDel(['id'=>$oid]);
                     $res['msg'] = '已删除';
                 }else if($handle == 'sure-pay'){//确认付款

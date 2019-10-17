@@ -25,23 +25,27 @@ class Cart extends BaseModel
         $where['gid'] = $data['gid'];
         $where['uid'] = $data['uid'];
         if($data['sid']) $where['sid'] = $data['sid'];
-        if($res = self::where($where)->find()){
+        $where['type'] = $data['is_checked'];
+        if($res = self::where($where)->find() && !$data['is_checked']){
             $info['id'] = $res['id'];
             $info['is_checked'] = $data['is_checked'];
             $info['num'] = $res['num']+$data['num'];//array(self::raw('num+'.$data['num']));
             return $info;
         }else{
+            $data['type'] = $data['is_checked'];
+            $data['id'] = '';
             return $data;
         }
     }
     //检测商品状态及库存
-    public function checkCartGoods($raise){
-        $cart_list = self::alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.is_checked=1')->field('c.id,c.gid,c.uid,c.sid,c.num,g.goods_name,g.goods_image,g.price,g.stock,g.status,g.integral,g.fare')->select();
+    public function checkCartGoods($raise,$cid){
+        $cart_list = self::alias('c')->leftJoin(['gd_goods'=>'g'],'c.gid=g.id')->where('c.uid='.session('uid').' and c.id in('.$cid.')')->field('c.id,c.gid,c.uid,c.sid,c.num,g.goods_name,g.goods_image,g.price,g.stock,g.status,g.integral,g.fare')->select();
         empty($cart_list) && exception('未选中商品');
         $total = 0;
         $dis_money = 0;
         $integral = 0;
         $fare = 0;
+        $gids = array();
         $gmodel = new \app\common\model\GoodsSpecStock();
         foreach ($cart_list as &$cart){
             if($cart['sid']){
@@ -62,7 +66,11 @@ class Cart extends BaseModel
             ($cart['status'] != 1) && exception('商品库存不足');
             $total += $cart['price']*$cart['num'];
             $integral += $cart['integral']*$cart['num'];
-            $fare += $cart['fare']*$cart['num'];
+            //$fare += $cart['fare']*$cart['num'];
+            $gids[$cart['gid']] = $cart['fare'];
+        }
+        foreach ($gids as $f){
+            $fare += $f;
         }
         if($raise){
             //查询用户可用积分

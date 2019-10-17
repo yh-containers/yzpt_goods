@@ -23,7 +23,7 @@
 							<div class="img"><img src="{$goods.goods_image}"></div>
 							<div class="text">
 								<h2>{$goods.goods_name}</h2>
-								<p>￥{$goods.price}<s>￥{$goods.original_price}</s></p>
+								<p>￥{$goods.price}<s>￥{$goods.original_price}</s> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销量：{$goods.sales}</p>
 							</div>
 						</a>
 						<div class="operating">
@@ -34,7 +34,7 @@
 					{/volist}
 				</ul>
 				<div class="page">
-					{$page}
+					{$page|raw}
 				</div>
 			</div>
 		</div>

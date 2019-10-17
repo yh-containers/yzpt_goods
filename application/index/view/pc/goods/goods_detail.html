@@ -44,6 +44,7 @@
                             <p>
                                 <span>累计评价：</span><a href="javascript:;">{$comment_count}</a>
                                 <span>运费：</span><a href="javascript:;">{if($goods['fare']>0)}{$goods.fare}{else/}免运费{/if}</a>
+                                <span>库存：</span><a href="javascript:;">{$goods.stock}</a>
                             </p>
                         </div>
                         <div class="product_det_type">
@@ -105,7 +106,7 @@
                         </div>
                         <div class="bd">
                             <!-- 商品详情介绍 -->
-                            <div class="con">
+                            <div class="con" id="brief">
                                 {$goods.content|raw}
                             </div>
                             <!-- 商品规格 -->
@@ -135,7 +136,12 @@
         /*多页签栏目监控*/
         $(function(){
             var ifm= document.getElementById("myiframe");
-            ifm.height=document.documentElement.clientHeight;
+            var zh = document.getElementById('brief').clientHeight;
+            if(zh>769){
+                ifm.height=zh;
+            }else{
+                ifm.height=document.documentElement.clientHeight;
+            }
             var win=$(window); 
             var sc=$(document);
             win.scroll(function(){
@@ -238,7 +244,7 @@
                         $("body").append("<div class='tips_bg'></div>");
                     }
                     if(e.code && ajaxData.is_checked){
-                        window.location.href="{:url('Order/detail')}";
+                        window.location.href="{:url('Order/detail')}?cid="+e.cid;
                     }
                 }
             });
