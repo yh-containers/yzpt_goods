@@ -33,7 +33,7 @@ class Goods extends Validate
         'norm_brief.require'    => '商品规格介绍必须输入',
         'goods_image.require'   => '商品图片必须上传',
         'image_arr.require'   => '商品图片必须上传',
-        'state.require'     => '选择状态',
+        //'state.require'     => '选择状态',
     ];
 
 }
