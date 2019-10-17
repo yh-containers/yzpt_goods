@@ -49,10 +49,11 @@ class Order extends BaseModel
     ];
     //发货状态
     public static $fields_is_send = [
-        ['name'=>'待发貨','m_handle'=>[
+        ['name'=>'待发货','m_handle'=>[
             self::M_ORDER_HANDLE_SEND,
-        ]],
-        ['name'=>'已发貨','m_handle'=>[]],
+        ]
+        ],
+        ['name'=>'已发货','m_handle'=>[]],
     ];
     //收货状态
     public static $fields_is_recive = [
