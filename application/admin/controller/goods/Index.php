@@ -68,66 +68,70 @@ class Index extends Common
             $spec['value_id'] = $this->request->param('value_id');
             //$php_input['goods_image'] = isset($image_arr[0])?$image_arr[0]:'';
             $php_input['image_arr'] = implode(',',$php_input['image_arr']);
-            $validate = new \app\common\validate\Goods();
-            //商品属性
+            try {
+                $validate = new \app\common\validate\Goods();
+                //商品属性
 //            if($php_input['value_name']){
 //                unset($php_input['value_name']);
 //                unset($php_input['value_id']);
 //            }
-            $model->actionAdd($php_input,$validate);
-            $goods_id = $php_input['id'];
-            if(empty($php_input['id'])){
-                $goods_id = $model->id;
-            }
-            $svIdsArr = array();
-            if($spec['value_name']) {
-                foreach ($spec['value_name'] as $sid => $v) {
-                    if($v){
-                        foreach ($v as $k => $sv) {
-                            $specArr = array();
-                            $specArr['id'] = $spec['value_id'][$sid][$k];
-                            $specArr['spec_id'] = $sid;
-                            $specArr['goods_id'] = $goods_id;
-                            $specArr['value_name'] = $spec['value_name'][$sid][$k];
-                            $spec_model = new \app\common\model\GoodsSpecValue();
-                            $spec_model->actionAdd($specArr);
-                            $svIdsArr[$specArr['value_name']] = $specArr['id'];
-                            if (empty($specArr['id'])) {
-                                $svIdsArr[$specArr['value_name']] = $spec_model->id;
+                $model->actionAdd($php_input, $validate);
+                $goods_id = $php_input['id'];
+                if (empty($php_input['id'])) {
+                    $goods_id = $model->id;
+                }
+                $svIdsArr = array();
+                if ($spec['value_name']) {
+                    foreach ($spec['value_name'] as $sid => $v) {
+                        if ($v) {
+                            foreach ($v as $k => $sv) {
+                                $specArr = array();
+                                $specArr['id'] = $spec['value_id'][$sid][$k];
+                                $specArr['spec_id'] = $sid;
+                                $specArr['goods_id'] = $goods_id;
+                                $specArr['value_name'] = $spec['value_name'][$sid][$k];
+                                $spec_model = new \app\common\model\GoodsSpecValue();
+                                $spec_model->actionAdd($specArr);
+                                $svIdsArr[$specArr['value_name']] = $specArr['id'];
+                                if (empty($specArr['id'])) {
+                                    $svIdsArr[$specArr['value_name']] = $spec_model->id;
+                                }
                             }
                         }
                     }
                 }
-            }
-            if($sku){
-                if($sku['price'] || $sku['stock']){
-                    foreach ($sku['price'] as $sk=>$row){
-                        $upinfo = array();
-                        $upinfo['price'] = $row;
-                        $upinfo['stock'] = $sku['stock'][$sk];
-                        $upinfo['id'] = $sku['id'][$sk];
-                        $addSpecStock = new \app\common\model\GoodsSpecStock();
-                        $addSpecStock->actionAdd($upinfo);
-                    }
-                }
-            }
-            if($new_sku) {
-                if ($new_sku['price'] || $new_sku['stock']) {
-                    foreach ($new_sku['price'] as $sk1 => $sku_price) {
-                        $addSku = array();
-                        $addSku['goods_id'] = $goods_id;
-                        $addSku['price'] = $sku_price;
-                        $addSku['stock'] = $new_sku['stock'][$sk1];
-                        $nameArr = explode('|', $new_sku['name'][$sk1]);
-                        $addSku['sv_ids'] = array();
-                        foreach ($nameArr as $nk => $name) {
-                            $addSku['sv_ids'][$nk] = $svIdsArr[trim($name)];
+                if ($sku) {
+                    if ($sku['price'] || $sku['stock']) {
+                        foreach ($sku['price'] as $sk => $row) {
+                            $upinfo = array();
+                            $upinfo['price'] = $row;
+                            $upinfo['stock'] = $sku['stock'][$sk];
+                            $upinfo['id'] = $sku['id'][$sk];
+                            $addSpecStock = new \app\common\model\GoodsSpecStock();
+                            $addSpecStock->actionAdd($upinfo);
                         }
-                        $addSku['sv_ids'] = implode(',', $addSku['sv_ids']);
-                        $addSpecStockModel = new \app\common\model\GoodsSpecStock();
-                        $addSpecStockModel->actionAdd($addSku);
                     }
                 }
+                if ($new_sku) {
+                    if ($new_sku['price'] || $new_sku['stock']) {
+                        foreach ($new_sku['price'] as $sk1 => $sku_price) {
+                            $addSku = array();
+                            $addSku['goods_id'] = $goods_id;
+                            $addSku['price'] = $sku_price;
+                            $addSku['stock'] = $new_sku['stock'][$sk1];
+                            $nameArr = explode('|', $new_sku['name'][$sk1]);
+                            $addSku['sv_ids'] = array();
+                            foreach ($nameArr as $nk => $name) {
+                                $addSku['sv_ids'][$nk] = $svIdsArr[trim($name)];
+                            }
+                            $addSku['sv_ids'] = implode(',', $addSku['sv_ids']);
+                            $addSpecStockModel = new \app\common\model\GoodsSpecStock();
+                            $addSpecStockModel->actionAdd($addSku);
+                        }
+                    }
+                }
+            }catch (\Exception $e){
+                return json(['code'=>0,'msg'=>$e->getMessage()]);
             }
             return json(['code'=>1,'msg'=>'操作成功']);
         }
