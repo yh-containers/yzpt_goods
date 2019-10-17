@@ -7,6 +7,16 @@ use think\Request;
 class Index extends Common
 {
     public function index(){
+
+        //调整app跳转
+        $app_redirect_mode = input('mode','','trim');
+        $app_redirect_id = input('id',0,'intval');
+
+        if($app_redirect_mode=='goods'){
+            //跳转到商城
+            $this->redirect('goods/detail',['id'=>$app_redirect_id]);
+        }
+
         $goods_model = new \app\common\model\Goods();
         //今日特惠
         //$et = strtotime(date('Y-m-d').' 23:59:59');
