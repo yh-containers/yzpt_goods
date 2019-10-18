@@ -409,15 +409,22 @@ class Users extends BaseModel
         if(!empty($auth_info) && isset($auth_info['mode']) && isset($auth_info['open_id']) && isset($auth_info['access_token'])){
             //绑定第三方信息
             if($auth_info['mode']=='wechat'){
+
                 $auth_user_info = \app\common\service\third\OpenWx::actToUserInfo($auth_info['access_token'],$auth_info['open_id']);
                 $data['wx_openid'] = (empty($auth_user_info)||empty($auth_user_info['unionid']))?$auth_info['open_id']:$auth_user_info['unionid'];
+                $clear_open_field='wx_openid';
+                $clear_open_id=$data['wx_openid'];
 //                $data['wx_openid'] = $auth_info['open_id'];
                 $third_update['wx_openid']='';
             }elseif ($auth_info['mode']=='qq'){
                 $data['qq_openid'] = $auth_info['open_id'];
+                $clear_open_id=$data['qq_openid'];
+                $clear_open_field='qq_openid';
                 $third_update['qq_openid']='';
             }elseif ($auth_info['mode']=='weibo'){
                 $data['wb_openid'] = $auth_info['open_id'];
+                $clear_open_field='wb_openid';
+                $clear_open_id=$data['wb_openid'];
                 $third_update['wb_openid']='';
             }
         }
@@ -477,7 +484,7 @@ class Users extends BaseModel
         isset($model_data['status']) && $model->getAttr('status') !=1 && exception('非正常状态,无法进行登录');
 
         //移除其它用户绑定的第三方信息
-        !empty($third_update) && self::update($third_update,[['id','<>',$model->id]]);
+        !empty($third_update) && self::update($third_update,[['id','<>',$model->id],[$clear_open_field,'=',$clear_open_id]]);
 
 
 
