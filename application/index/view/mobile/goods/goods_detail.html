@@ -138,7 +138,7 @@
 		$(function(){
             //加载获取属性价格
             if($(".pro_norm")){
-                getSkuAttrVal();
+				{if($sku_arr)}getSkuAttrVal();{/if}
             }
         });
 		var goods_id = {$goods.id},sku_id = 0;
@@ -170,7 +170,7 @@
         }
         function addCart(isck){
             if(!sku_id){
-              getSkuAttrVal();  
+                {if($sku_arr)}getSkuAttrVal();{/if}
             }
             var num = $('#num').val();
             sendAjax("{:url('Goods/addcart')}",{'gid':goods_id,'sid':sku_id,'num':num,'is_checked':isck});
