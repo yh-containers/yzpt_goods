@@ -51,6 +51,7 @@ class Pay extends Common
                 if(empty(session('openid'))){
                     $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.\app\common\service\third\OpenWx::config('mobile','app_id').'&redirect_uri='.url('index/thirdlogin',['mode'=>'wechat','mobile'=>1],false,true).'&response_type=code&scope=
                     &state=#wechat_redirect';
+                    print_r($url);die;
                     header('Location:'.$url);exit;
                 }
                 $html = $pay->jssdkPay($model,session('openid'));
