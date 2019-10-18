@@ -19,6 +19,11 @@ class Pay extends Common
             //header('Location:/');
             die;
         }
+        $code = input('code');
+        if($code){
+            $auth_info = \app\common\service\third\OpenWx::codeToAct('mobile',$code);
+            session('openid',$auth_info['openid']);
+        }
         if($model['pay_way'] == 1){
             $mode = 'alipay';
             if(isMobile()){
@@ -49,7 +54,7 @@ class Pay extends Common
         try{
             if(strpos($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
                 if(empty(session('openid'))){
-                    $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.\app\common\service\third\OpenWx::config('mobile','app_id').'&redirect_uri='.rawurlencode(url('index/thirdlogin',['mode'=>'wechat','mobile'=>1],false,true)).'&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect';
+                    $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.\app\common\service\third\OpenWx::config('mobile','app_id').'&redirect_uri='.rawurlencode(url('pay/info',['mode'=>'wechat','order_id'=>$order_id],false,true)).'&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect';
                     //print_r($url);die;
                     header('Location:'.$url);exit;
                 }
