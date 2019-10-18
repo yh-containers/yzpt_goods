@@ -78,7 +78,7 @@ class Wechat implements IPay
         $result_data = array(
             'appId'  => $config->GetAppId(),
             'nonceStr' => $result['nonce_str'],
-            'timeStamp' => time(),
+            'timeStamp' => (string) time(),
             'signType' => $config->GetSignType(),
             'package' => 'prepay_id='.$result['prepay_id'],
         );
