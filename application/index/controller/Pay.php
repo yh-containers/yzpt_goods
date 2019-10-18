@@ -54,7 +54,7 @@ class Pay extends Common
         try{
             if(strpos($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
                 if(empty(session('openid'))){
-                    $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.\app\common\service\third\OpenWx::config('mobile','app_id').'&redirect_uri='.rawurlencode('http://'.$_SERVER['HTTP_HOST'].'?mode=wechat&order_id='.$order_id).'&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect';
+                    $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.\app\common\service\third\OpenWx::config('mobile','app_id').'&redirect_uri='.rawurlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']).'&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect';
                     //print_r($url);die;url('pay/info',['mode'=>'wechat','order_id'=>$order_id],false,true)
                     header('Location:'.$url);exit;
                 }
