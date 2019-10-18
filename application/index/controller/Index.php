@@ -123,6 +123,7 @@ class Index extends Common
     public function loginout(){
         session('userinfo',null);
         session('uid',null);
+        session('openid',null);
         //$this->success("退出成功");
         $this->redirect('Index/index');
     }

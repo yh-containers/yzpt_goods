@@ -48,6 +48,11 @@ class Pay extends Common
         }
         try{
             if(strpos($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
+                if(empty(session('openid'))){
+                    $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.\app\common\service\third\OpenWx::config('mobile','app_id').'&redirect_uri='.url('index/thirdlogin',['mode'=>'wechat','mobile'=>1],false,true).'&response_type=code&scope=
+                    &state=#wechat_redirect';
+                    header('Location:'.$url);exit;
+                }
                 $html = $pay->jssdkPay($model,session('openid'));
             }else{
                 $html = $pay->$pay_way($model);
