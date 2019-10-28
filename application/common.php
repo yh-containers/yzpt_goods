@@ -9,6 +9,7 @@ function validPhone($phone){
 
 function isMobile()
 {
+	return false;
     $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
     $is_pc = (strpos($agent, 'windows nt')) ? true : false;
     $is_mac = (strpos($agent, 'mac os')) ? true : false;
